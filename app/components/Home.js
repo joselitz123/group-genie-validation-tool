@@ -18,7 +18,7 @@ const Home = () => {
             </Col>
             <Col xs="4">
               <FormGroup>
-                <Label>Groups to check:</Label>
+                <Label>Groups to check: <Link to={routes.VALIDATION_SETUP} style={{textDecoration: 'underline'}}>Setup Groups</Link></Label>
                 <Input type="select" multiple={true}>
                   <option>1</option>
                   <option>2</option>

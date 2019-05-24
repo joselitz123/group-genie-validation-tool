@@ -1,20 +1,43 @@
 // @flow
-import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
-import routes from '../constants/routes';
-import styles from './Home.css';
+import React, { Component } from "react";
+import { Link } from "react-router-dom";
+import routes from "../constants/routes";
+import { Container, Row, Col, FormGroup, Label, Input } from "reactstrap";
 
-type Props = {};
-
-export default class Home extends Component<Props> {
-  props: Props;
-
-  render() {
-    return (
-      <div className={styles.container} data-tid="container">
-        <h2>Home</h2>
-        <Link to={routes.VALIDATION_SETUP}>to Counter</Link>
-      </div>
-    );
-  }
-}
+const Home = () => {
+  return (
+    <Container style={{margin: '50px 0px'}}>
+      <Row>
+        <Col>
+          <Row>
+            <Col xs="4">
+              <FormGroup>
+                <Label>User/s to validate access:</Label>
+                <Input type="textarea" name="users" style={{height: 90+'px'}} />
+              </FormGroup>
+            </Col>
+            <Col xs="4">
+              <FormGroup>
+                <Label>Groups to check:</Label>
+                <Input type="select" multiple={true}>
+                  <option>1</option>
+                  <option>2</option>
+                  <option>3</option>
+                  <option>4</option>
+                  <option>5</option>
+                </Input>
+              </FormGroup>
+            </Col>
+            <Col xs="4" />
+          </Row>
+          <Row>
+            <Col>
+              <h4>Users Validated:</h4>
+            </Col>
+          </Row>
+        </Col>
+      </Row>
+    </Container>
+  );
+};
+export default Home;

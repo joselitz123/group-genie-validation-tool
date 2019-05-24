@@ -10,9 +10,12 @@ const ValidationSetup = () => {
   return (
 
     <div>
-      <Link to={routes.Home}>Home</Link>
+      <Link to={routes.HOME}>Homes</Link>
     </div>
     
   )
 
 }
+
+
+export default ValidationSetup;

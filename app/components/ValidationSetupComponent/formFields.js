@@ -1,26 +1,17 @@
 import React from "react";
 import { connect } from "react-redux";
-import {
-  Row,
-  Col,
-  FormGroup,
-  Label,
-  Input,
-  Button
-} from "reactstrap";
-import PropTypes from 'prop-types';
-import GroupAliasField from './groupAliasField';
-import GroupNameField from './groupNameField';
+import { Row, Col, FormGroup, Label, Input, Button } from "reactstrap";
+import PropTypes from "prop-types";
+import GroupAliasField from "./groupAliasField";
+import GroupNameField from "./groupNameField";
+import storage from "electron-json-storage";
+import Proptypes from "prop-types";
+import { setGroupFilters } from '../../actions/groupFiltersActions/actions';
 
-const FormFields = ({ groupAlias, groupName }) => {
-
-  const submitHandler = () => {
-
-
-  }
+const FormFields = ({ groupAlias, groupName, setGroupFilters, groupFilters }) => {
 
   return (
-    <form onSubmit={submitHandler}>
+    <form onSubmit={(e)=>setGroupFilters(e, groupName, groupAlias, groupFilters)}>
       <Row>
         <Col xs="6">
           <GroupAliasField />
@@ -40,8 +31,20 @@ const FormFields = ({ groupAlias, groupName }) => {
   );
 };
 
+FormFields.propTypes = {
+  groupAlias: Proptypes.string.isRequired,
+  groupName: Proptypes.string.isRequired,
+  setGroupFilters: PropTypes.func.isRequired,
+  groupFilters: PropTypes.object.isRequired
+};
+
+const mapStateToProps = state => ({
+  groupAlias: state.inputFieldReducers.groupAliasField,
+  groupName: state.inputFieldReducers.groupNameField,
+  groupFilters: state.groupFiltersReducer.group_filters
+});
 
 export default connect(
-  null,
-  null
+  mapStateToProps,
+  {setGroupFilters}
 )(FormFields);

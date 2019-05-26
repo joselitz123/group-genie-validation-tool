@@ -1,7 +1,8 @@
 // @flow
-import React, { useState } from "react";
+import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import routes from "../../constants/routes.json";
+import { connect } from "react-redux";
 import {
   Container,
   Row,
@@ -11,30 +12,38 @@ import {
   Input,
   Button
 } from "reactstrap";
-import storage from "electron-json-storage";
-import FormFields from './formFields';
+import FormFields from "./formFields";
+import { getStorageData } from "../../LocalStorage/ValidationSetupLocalStorage/ValidationSetupLocalStorage";
+import { loadLocalStorageGroupFilters } from "../../actions/groupFiltersActions/actions";
+import PropTypes from "prop-types";
+import GroupFilterLists from './groupFilterLists';
 
-const ValidationSetup = () => {
+class ValidationSetup extends Component {
+  async componentDidMount() {
 
-  return (
-    <Container style={{ margin: "70px 0px" }}>
-      <Link to={routes.HOME}>Homes</Link>
-      <FormFields />
-      <Row style={{ paddingTop: "15px" }}>
-        <Col>
-          <hr />
-          <h5>Group Filters:</h5>
-          <ol>
-            {/* {groupFilters.map((groupFilter, index) => {
-              return <li key={index}>{groupFilter}</li>;
-            })} */}
-          </ol>
-        </Col>
-      </Row>
-    </Container>
-  );
+    const data = await getStorageData();
+
+    const { loadLocalStorageGroupFilters } = this.props;
+
+    await loadLocalStorageGroupFilters(data);
+  }
+
+  render() {
+    return (
+      <Container style={{ margin: "70px 0px" }}>
+        <Link to={routes.HOME}>Homes</Link>
+        <FormFields />
+        <GroupFilterLists />
+      </Container>
+    );
+  }
+}
+
+ValidationSetup.propTypes = {
+  loadLocalStorageGroupFilters: PropTypes.func.isRequired
 };
 
-
-
-export default ValidationSetup;
+export default connect(
+  null,
+  { loadLocalStorageGroupFilters }
+)(ValidationSetup);

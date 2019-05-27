@@ -6,6 +6,7 @@ import GroupFiltersSelectionBox from "./GroupFiltersSelectionBox";
 import { loadLocalStorageGroupFilters } from "../../actions/groupFiltersActions/actions";
 import { getStorageData } from "../../LocalStorage/ValidationSetupLocalStorage/ValidationSetupLocalStorage";
 import PropTypes from "prop-types";
+import UsersFieldBox from './UsersFieldBox/UsersFieldBox';
 
 class Home extends Component {
   async componentDidMount() {
@@ -24,19 +25,12 @@ class Home extends Component {
           <Col>
             <Row>
               <Col xs="4">
-                <FormGroup>
-                  <Label>User/s to validate access:</Label>
-                  <Input
-                    type="textarea"
-                    name="users"
-                    style={{ height: 90 + "px" }}
-                  />
-                </FormGroup>
+                <UsersFieldBox/>
               </Col>
               <Col xs="4">
                 <GroupFiltersSelectionBox />
               </Col>
-              <Col xs="4" />
+              <Col xs="4"></Col>
             </Row>
             <Row>
               <Col>

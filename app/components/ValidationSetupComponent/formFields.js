@@ -6,12 +6,34 @@ import GroupAliasField from "./groupAliasField";
 import GroupNameField from "./groupNameField";
 import storage from "electron-json-storage";
 import Proptypes from "prop-types";
-import { setGroupFilters } from '../../actions/groupFiltersActions/actions';
+import { setGroupFilters } from "../../actions/groupFiltersActions/actions";
+import {
+  groupAliasInputHandler,
+  groupNameInputHandler
+} from "../../actions/validationSetupActions/actions";
 
-const FormFields = ({ groupAlias, groupName, setGroupFilters, groupFilters }) => {
+const FormFields = ({
+  groupAlias,
+  groupName,
+  setGroupFilters,
+  groupFilters,
+  groupAliasInputHandler,
+  groupNameInputHandler
+}) => {
+
+  const FormSubmitHandler = (e) => {
+
+    setGroupFilters(e, groupName, groupAlias, groupFilters);
+
+    groupAliasInputHandler('');
+    groupNameInputHandler('');
+
+  }
 
   return (
-    <form onSubmit={(e)=>setGroupFilters(e, groupName, groupAlias, groupFilters)}>
+    <form
+      onSubmit={FormSubmitHandler}
+    >
       <Row>
         <Col xs="6">
           <GroupAliasField />
@@ -35,7 +57,9 @@ FormFields.propTypes = {
   groupAlias: Proptypes.string.isRequired,
   groupName: Proptypes.string.isRequired,
   setGroupFilters: PropTypes.func.isRequired,
-  groupFilters: PropTypes.object.isRequired
+  groupFilters: PropTypes.object.isRequired,
+  groupAliasInputHandler: PropTypes.func.isRequired,
+  groupNameInputHandler: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => ({
@@ -46,5 +70,5 @@ const mapStateToProps = state => ({
 
 export default connect(
   mapStateToProps,
-  {setGroupFilters}
+  { setGroupFilters, groupAliasInputHandler, groupNameInputHandler }
 )(FormFields);

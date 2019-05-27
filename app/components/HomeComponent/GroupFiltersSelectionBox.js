@@ -4,8 +4,9 @@ import { Link } from "react-router-dom";
 import {connect} from 'react-redux';
 import routes from "../../constants/routes";
 import PropTypes from 'prop-types';
+import { setSelectedGroupInFieldBox } from '../../actions/HomeComponentActions/GroupFiltersSelectionBoxActions/action';
 
-const GroupFiltersSelectionBox = ({groupFilters}) => {
+const GroupFiltersSelectionBox = ({groupFilters, groupsSelected, setSelectedGroupInFieldBox}) => {
 
   const groupFiltersArr = Object.values(groupFilters);
 
@@ -20,7 +21,7 @@ const GroupFiltersSelectionBox = ({groupFilters}) => {
           Setup Groups
         </Link>
       </Label>
-      <Input type="select" multiple={true}>
+      <Input type="select" multiple={true} value={groupsSelected} onChange={setSelectedGroupInFieldBox}>
         {groupFiltersArr.length != 0 ? groupFiltersArr.map(groupFilter => {
           const {id, group_alias} = groupFilter;
 
@@ -32,11 +33,14 @@ const GroupFiltersSelectionBox = ({groupFilters}) => {
 };
 
 GroupFiltersSelectionBox.propTypes = {
-  groupFilters: PropTypes.object.isRequired
+  groupFilters: PropTypes.object.isRequired,
+  groupsSelected: PropTypes.array.isRequired,
+  setSelectedGroupInFieldBox: PropTypes.func.isRequired
 }
 
 const mapStateToProps = state => ({
-  groupFilters: state.groupFiltersReducer.group_filters
+  groupFilters: state.groupFiltersReducer.group_filters,
+  groupsSelected: state.groupFiltersSelectionBoxReducer.groupsSelected
 })
 
-export default connect(mapStateToProps, null)(GroupFiltersSelectionBox);
+export default connect(mapStateToProps, {setSelectedGroupInFieldBox})(GroupFiltersSelectionBox);

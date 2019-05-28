@@ -256,13 +256,14 @@
   },
   "dependencies": {
     "@fortawesome/fontawesome-free": "^5.5.0",
+    "axios": "^0.18.0",
     "core-js": "^2.6.8",
     "devtron": "^1.4.0",
     "electron-chromedriver": "^3.0.0",
     "electron-debug": "^2.0.0",
     "electron-json-storage": "^4.1.6",
     "electron-log": "^2.2.17",
-    "electron-updater": "^3.2.3",
+    "electron-updater": "^4.0.6",
     "history": "^4.7.2",
     "normalizr": "^3.3.0",
     "react": "^16.8.6",
@@ -275,6 +276,7 @@
     "reactstrap": "^8.0.0",
     "redux": "^4.0.1",
     "redux-thunk": "^2.3.0",
+    "reselect": "^4.0.0",
     "source-map-support": "^0.5.9",
     "uuid": "^3.3.2"
   },

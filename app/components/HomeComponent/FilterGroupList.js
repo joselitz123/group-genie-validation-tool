@@ -7,7 +7,6 @@ const FilterGroupList = ({ filterGroupIds, filterGroupsObject }) => {
     <Fragment>
       <div>Filter Groups:</div>
       {filterGroupIds.length != 0 ? <GroupList filterGroupIds={filterGroupIds} filterGroupsObject={filterGroupsObject} /> : <div>No filter groups selected yet.</div>}
-      
     </Fragment>
   );
 };

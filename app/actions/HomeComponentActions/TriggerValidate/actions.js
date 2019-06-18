@@ -1,11 +1,31 @@
 import axios from 'axios';
-import { LOAD_VALIDATION_RESULT } from './actionTypes';
+import { LOAD_VALIDATION_RESULT, SHOW_MODAL_LOADER, LOAD_TOTAL_USERS_TO_EXTRACT, CURRENT_EXTRACT_COUNT } from './actionTypes';
+import fs from 'fs';
+import path from 'path';
+import { setTimeout } from 'timers';
+
+
+export const closeModal = () => dispatch => {
+    dispatch({
+        type: SHOW_MODAL_LOADER,
+        payload: false
+    })
+}
 
 export const triggerValidate = (inputUsers, selectedFilterGroups) => dispatch => {
 
-    // const result = validate(users, filterGroups);
-    
+    dispatch({
+        type: SHOW_MODAL_LOADER,
+        payload: true
+    })
+
     const arrUsers = inputUsers.split("\n");
+
+
+    dispatch({
+        type: LOAD_TOTAL_USERS_TO_EXTRACT,
+        payload: arrUsers.length
+    })
 
     validate(arrUsers, selectedFilterGroups, dispatch);
 
@@ -14,7 +34,7 @@ export const triggerValidate = (inputUsers, selectedFilterGroups) => dispatch =>
 
 const validate = async (users, selectedFilterGroups, dispatch) => {
 
-    const allUserAccessStat = await validateUsersAccess(users, selectedFilterGroups);
+    const allUserAccessStat = await validateUsersAccess(users, selectedFilterGroups, dispatch);
 
     dispatch({
         type: LOAD_VALIDATION_RESULT,
@@ -23,13 +43,13 @@ const validate = async (users, selectedFilterGroups, dispatch) => {
 
 }
 
-const validateUsersAccess = (users, selectedFilterGroups) => {
+const validateUsersAccess = (users, selectedFilterGroups, dispatch) => {
 
     return new Promise(async(resolve, reject) => {
 
         try {
 
-            const allUserAccessStat = await users.reduce(async(prevValue, user) => {
+            const allUserAccessStat = await users.reduce(async(prevValue, user, index) => {
 
                 const awaitPrevValue = await prevValue;
 
@@ -40,6 +60,11 @@ const validateUsersAccess = (users, selectedFilterGroups) => {
                 const search = re.exec(userTrimmed) ? `memberdn=uid=${userTrimmed},ou=people,ou=pg,o=world` : `accountshortname=${userTrimmed}`;
 
                 const data = await makeRequestToGroupService(search);
+
+                await dispatch({
+                    type: CURRENT_EXTRACT_COUNT,
+                    payload: index + 1
+                });
 
                 const parser = new DOMParser();
 

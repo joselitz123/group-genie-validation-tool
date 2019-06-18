@@ -5,6 +5,7 @@ import inputFieldReducers from './validationSetupReducers/inputFieldReducers';
 import groupFiltersReducer from './GroupFiltersReducer';
 import groupFiltersSelectionBoxReducer from './HomeComponentReducers/GroupFiltersSelectionBoxReducer';
 import usersFieldBoxReducer from './HomeComponentReducers/UsersFieldBoxReducer';
+import loadingIndicatorReducer from './HomeComponentReducers/LoadingIndicatorReducer';
 import validationReducer from './ValidationReducer/ValidationReducer';
 
 export default function createRootReducer(history: History) {
@@ -13,7 +14,8 @@ export default function createRootReducer(history: History) {
     inputFieldReducers: inputFieldReducers,
     groupFiltersReducer: groupFiltersReducer,
     groupFiltersSelectionBoxReducer: groupFiltersSelectionBoxReducer,
+    validationReducer: validationReducer,
     usersFieldBoxReducer: usersFieldBoxReducer,
-    validationReducer: validationReducer
+    loadingIndicatorReducer: loadingIndicatorReducer
   });
 }

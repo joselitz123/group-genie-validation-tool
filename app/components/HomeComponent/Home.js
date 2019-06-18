@@ -1,7 +1,6 @@
 // @flow
-import React, { Component } from "react";
+import React, { Component, useEffect } from "react";
 import {
-  Container,
   Row,
   Col,
   FormGroup,
@@ -19,21 +18,37 @@ import UsersFieldBox from "./UsersFieldBox/UsersFieldBox";
 import FilterGroupList from "./FilterGroupList";
 import { selectedFilters } from '../../reducers/ValidationReducer/ValidationReducer'
 import ValidationResultSection from "./ValidationResultSection/ValidationResultSection";
+import LoadingIndicatorModal from './loadingIndicatorModal/loadingIndicatorModal';
 
-class Home extends Component {
-  async componentDidMount() {
-    const data = await getStorageData();
+const Home = ({ triggerValidate, users, selectedGroupFilters, loadLocalStorageGroupFilters }) => {
 
-    const { loadLocalStorageGroupFilters } = this.props;
+    useEffect(() => {
 
-    await loadLocalStorageGroupFilters(data);
-  }
+      const FetchLocalStorageFilters = async () => {
 
-  render() {
-    const { triggerValidate, users, selectedGroupFilters } = this.props;
+        const data = await getStorageData();
+
+        await loadLocalStorageGroupFilters(data);
+
+      }
+
+      FetchLocalStorageFilters();
+
+    }, []);
+
+    const containerStyle = {
+      paddingLeft: '25px',
+      paddingRight: '25px',
+      paddingTop: '10px',
+    }
+
+    const buttonStyle = {
+      border: "1px solid #1785c5"
+    }
 
     return (
-      <Container style={{ margin: "50px 0px" }}>
+      <div className="container-flex" style={containerStyle}>
+        <LoadingIndicatorModal />
         <Row>
           <Col>
             <Row>
@@ -49,7 +64,7 @@ class Home extends Component {
             </Row>
             <Row>
               <Col>
-                <Button color="info" onClick={()=>triggerValidate(users, selectedGroupFilters)}>Validate</Button>
+                <Button color="info" tyle={buttonStyle} onClick={()=>triggerValidate(users, selectedGroupFilters)}>Validate</Button>
               </Col>
             </Row>
             <Row>
@@ -59,10 +74,9 @@ class Home extends Component {
             </Row>
           </Col>
         </Row>
-      </Container>
+      </div>
     );
   }
-}
 
 Home.propTypes = {
   loadLocalStorageGroupFilters: PropTypes.func.isRequired,

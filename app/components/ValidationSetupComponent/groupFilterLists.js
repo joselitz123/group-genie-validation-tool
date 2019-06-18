@@ -17,7 +17,7 @@ const GroupFilterLists = ({ groupFilters, changeGroupFilterArrangement }) => {
         <DragDropContext
           onDragEnd={e => changeGroupFilterArrangement(e, groupFilters)}
         >
-          <ListGroup>
+          <ListGroup style={{overflow: "auto", height: "370px"}}>
             <Droppable droppableId="droppable-1">
               {(provided, snapshot) => (
                 <div ref={provided.innerRef} {...provided.droppableProps}>

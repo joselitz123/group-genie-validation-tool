@@ -1,6 +1,7 @@
 import React, { Fragment } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+import ResultDataTable from './ResultDataTable';
 
 const ValidationResultSection = ({valResult}) => {
 
@@ -11,20 +12,7 @@ const ValidationResultSection = ({valResult}) => {
             <h4>Users Validated:</h4>
             <div>
                 {arrValResult.length != 0 ? 
-                    <ol>
-                        {arrValResult.map((result, index) => {
-                            return (
-                                <li key={index}>
-                                    {result.user}
-                                    <ul>
-                                        {Object.values(result.access).map(((access, key) => {
-                                            return <li key={key}>{access.val_result ? <span dangerouslySetInnerHTML={{ __html: '&#9989;'}}></span> : <span dangerouslySetInnerHTML={{ __html: '&#x274C;'}}></span>} {access.group_alias}</li>
-                                        }))}
-                                    </ul>
-                                </li>
-                                )
-                        })}
-                    </ol> : 
+                    <ResultDataTable /> :
                 ""}                
             </div>
         </Fragment>

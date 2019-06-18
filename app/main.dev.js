@@ -14,6 +14,8 @@ import { app, BrowserWindow } from 'electron';
 import { autoUpdater } from 'electron-updater';
 import log from 'electron-log';
 import MenuBuilder from './menu';
+import { pathExists } from 'fs-extra-p';
+import path from 'path';
 
 export default class AppUpdater {
   constructor() {
@@ -70,7 +72,8 @@ app.on('ready', async () => {
   mainWindow = new BrowserWindow({
     show: false,
     width: 1400,
-    height: 728
+    height: 728,
+    icon: path.join(__dirname, '../resources/icon.ico')
   });
 
   mainWindow.loadURL(`file://${__dirname}/app.html`);

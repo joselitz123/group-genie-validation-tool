@@ -1,10 +1,9 @@
 // @flow
-import React, { Component } from "react";
+import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
 import routes from "../../constants/routes.json";
 import { connect } from "react-redux";
 import {
-  Container,
   Row,
   Col,
   FormGroup,
@@ -17,26 +16,37 @@ import { getStorageData } from "../../LocalStorage/ValidationSetupLocalStorage/V
 import { loadLocalStorageGroupFilters } from "../../actions/groupFiltersActions/actions";
 import PropTypes from "prop-types";
 import GroupFilterLists from './groupFilterLists';
+import back_icon from '../../../resources/back_icon.png';
 
-class ValidationSetup extends Component {
-  async componentDidMount() {
+const ValidationSetup = ({ loadLocalStorageGroupFilters }) =>  {
+  
+  useEffect(() => {
 
-    const data = await getStorageData();
+    const FetchLocalStorageGroupFilters = async () => {
 
-    const { loadLocalStorageGroupFilters } = this.props;
+      const data = await getStorageData();
 
-    await loadLocalStorageGroupFilters(data);
+      await loadLocalStorageGroupFilters(data);
+
+    }
+
+    FetchLocalStorageGroupFilters();
+
+  }, []);
+
+  const containerStyle = {
+    paddingLeft: '25px',
+    paddingRight: '25px',
+    paddingTop: '10px',
   }
 
-  render() {
-    return (
-      <Container style={{ margin: "70px 0px" }}>
-        <Link to={routes.HOME}>Homes</Link>
-        <FormFields />
-        <GroupFilterLists />
-      </Container>
-    );
-  }
+  return (
+    <div className="container-flex" style={containerStyle}>
+      <Link to={routes.HOME}><img style={{blockSize: "44px"}} src={back_icon}/>Back</Link>
+      <FormFields />
+      <GroupFilterLists />
+    </div>
+  );
 }
 
 ValidationSetup.propTypes = {

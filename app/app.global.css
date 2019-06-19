@@ -45,3 +45,7 @@ a:hover {
 .loading_indicator .modal-content {
   background-color: #0bab7d; 
 }
+
+.user_column.text-center {
+  background-color: #1b1e2117 !important;
+}

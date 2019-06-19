@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { LOAD_VALIDATION_RESULT, SHOW_MODAL_LOADER, LOAD_TOTAL_USERS_TO_EXTRACT, CURRENT_EXTRACT_COUNT } from './actionTypes';
+import { LOAD_VALIDATION_RESULT, SHOW_MODAL_LOADER, LOAD_TOTAL_USERS_TO_EXTRACT, CURRENT_EXTRACT_COUNT, RESET_LOADER_UI_STATE } from './actionTypes';
 import fs from 'fs';
 import path from 'path';
 import { setTimeout } from 'timers';
@@ -9,7 +9,11 @@ export const closeModal = () => dispatch => {
     dispatch({
         type: SHOW_MODAL_LOADER,
         payload: false
-    })
+    });
+
+    dispatch({
+        type: RESET_LOADER_UI_STATE
+    });
 }
 
 export const triggerValidate = (inputUsers, selectedFilterGroups) => dispatch => {

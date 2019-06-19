@@ -15,9 +15,12 @@ const FilterGroupList = ({selectedFilters}) => {
 const GroupList = ({ selectedFilters }) => {
   return (
     <ul>
-      {selectedFilters.map((group, index) => (
-        <li key={index}>● {group.group_alias}</li>
-      ))}
+      {selectedFilters.map((group, index) => {
+          return typeof(group) != "undefined" ? (
+            <li key={index}>● {group.group_alias}</li>
+          ) : "";
+        }
+      )}
     </ul>
   );
 };

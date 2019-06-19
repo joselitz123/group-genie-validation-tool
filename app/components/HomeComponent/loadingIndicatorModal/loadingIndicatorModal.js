@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useState, useEffect} from "react";
 import { Modal, ModalHeader, ModalBody, } from "reactstrap";
 import { connect } from 'react-redux';
 import { useSpring, animated, config } from 'react-spring';
@@ -25,7 +25,7 @@ const LoadingIndicatorModal = ({showModal, totalUsers, currentExtractCount, clos
                 <h5>Fetching { currentExtractCount } of { totalUsers }</h5>
                 <div className="progress">
                     <animated.div className="progress-bar bg-success progress-bar-striped progress-bar-animated" role="progressbar" style={props} aria-valuenow={currentExtractCount} aria-valuemin="0" aria-valuemax="100">
-                        <Spring config={config.molasses }
+                        <Spring config={config.default }
                             from={{ number: 0 }}
                             to={{ number: currentPercent }}
                             onRest={() => closeModal()}>

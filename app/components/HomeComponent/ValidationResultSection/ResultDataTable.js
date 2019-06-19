@@ -31,7 +31,11 @@ const ResultDataTable = ({dataSetObject}) => {
             "paging": false,
             "orderData": 0,
             "retrieve": true,
-            "columnDefs": [{
+            "columnDefs": [
+                {
+                "className": "user_column text-center",
+                "targets": 0
+            },{
                 "targets": "_all",
                 "className": "text-center",
                 "render": function (data, type, row, meta) {
@@ -43,7 +47,8 @@ const ResultDataTable = ({dataSetObject}) => {
                         return data;
                     }
                 }
-            }],
+            }
+        ],
         });
 
         setTable(table);

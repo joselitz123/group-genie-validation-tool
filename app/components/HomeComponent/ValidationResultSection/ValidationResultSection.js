@@ -13,7 +13,7 @@ const ValidationResultSection = ({valResult}) => {
             <div>
                 {arrValResult.length != 0 ? 
                     <ResultDataTable /> :
-                ""}                
+                <div>No Data can be shown yet.</div>}                
             </div>
         </Fragment>
     )

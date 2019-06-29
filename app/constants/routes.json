@@ -1,4 +1,5 @@
 {
   "HOME": "/",
-  "VALIDATION_SETUP": "/validation_setup"
+  "VALIDATION_SETUP": "/validation_setup",
+  "FULL_VIEW_ACCESS": "/full_view_access"
 }

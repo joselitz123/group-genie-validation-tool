@@ -1,11 +1,14 @@
 import React, {useEffect, useRef, useState} from 'react';
+import ReactDOM from 'react-dom';
 import {connect} from 'react-redux';
 import $ from 'jquery';
 $.DataTable = require('datatables.net-bs4')();
 $.DataTableScroll = require('datatables.net-scroller-bs4')();
 import PropTypes from 'prop-types';
+import routes from '../../../constants/routes.json';
+import { Link, withRouter } from 'react-router-dom';
 
-const ResultDataTable = ({dataSetObject}) => {
+const ResultDataTable = ({dataSetObject, history, router}) => {
 
     const dataSet = Object.values(dataSetObject); //reshapes the object data to array that was extracted
 
@@ -34,7 +37,12 @@ const ResultDataTable = ({dataSetObject}) => {
             "columnDefs": [
                 {
                 "className": "user_column text-center",
-                "targets": 0
+                "targets": 0,
+                "createdCell": (td, cellData, rowData, row, col) => (
+                    ReactDOM.render(<a onClick={() => history.push(`${routes.FULL_VIEW_ACCESS}/${cellData}`)} style={{cursor: 'pointer'}}>{
+                        cellData
+                    }</a>, td)
+                )
             },{
                 "targets": "_all",
                 "className": "text-center",
@@ -76,17 +84,19 @@ const ResultDataTable = ({dataSetObject}) => {
     },[dataSetObject]);
 
     return (
-        <table ref={result_table} className="table table-striped" style={{"width": "100%"}}></table>
+        <table ref={result_table}  className="table tables-striped" style={{"width": "100%"}}></table>
     )
 
 }
 
 ResultDataTable.propTypes = {
-    dataSetObject: PropTypes.object.isRequired
+    dataSetObject: PropTypes.object.isRequired,
+    history: PropTypes.object.isRequired
 }
 
 const mapStateToProps = state => ({
-    dataSetObject: state.validationReducer.validationResult
+    dataSetObject: state.validationReducer.validationResult,
+    router: state.router
 })
 
-export default connect(mapStateToProps, {})(ResultDataTable);
+export default connect(mapStateToProps, {})(withRouter(ResultDataTable));

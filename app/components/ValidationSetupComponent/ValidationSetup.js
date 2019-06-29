@@ -17,6 +17,7 @@ import { loadLocalStorageGroupFilters } from "../../actions/groupFiltersActions/
 import PropTypes from "prop-types";
 import GroupFilterLists from './groupFilterLists';
 import back_icon from '../../../resources/back_icon.png';
+import { containerStyle } from '../../constants/constantStyles';
 
 const ValidationSetup = ({ loadLocalStorageGroupFilters }) =>  {
   
@@ -33,12 +34,6 @@ const ValidationSetup = ({ loadLocalStorageGroupFilters }) =>  {
     FetchLocalStorageGroupFilters();
 
   }, []);
-
-  const containerStyle = {
-    paddingLeft: '25px',
-    paddingRight: '25px',
-    paddingTop: '10px',
-  }
 
   return (
     <div className="container-flex" style={containerStyle}>

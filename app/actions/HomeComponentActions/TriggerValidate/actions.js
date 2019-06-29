@@ -1,3 +1,4 @@
+import React from 'react';
 import axios from 'axios';
 import { LOAD_VALIDATION_RESULT, SHOW_MODAL_LOADER, LOAD_TOTAL_USERS_TO_EXTRACT, CURRENT_EXTRACT_COUNT, RESET_LOADER_UI_STATE } from './actionTypes';
 import fs from 'fs';
@@ -10,10 +11,14 @@ export const closeModal = () => dispatch => {
         type: SHOW_MODAL_LOADER,
         payload: false
     });
+}
+
+export const resetLoaderUIState = () => dispatch => {
 
     dispatch({
         type: RESET_LOADER_UI_STATE
     });
+
 }
 
 export const triggerValidate = (inputUsers, selectedFilterGroups) => dispatch => {
@@ -38,22 +43,25 @@ export const triggerValidate = (inputUsers, selectedFilterGroups) => dispatch =>
 
 const validate = async (users, selectedFilterGroups, dispatch) => {
 
-    const allUserAccessStat = await validateUsersAccess(users, selectedFilterGroups, dispatch);
+    const allUserAccessStat = await pullUsersAccess(users, dispatch);
+
+
+    const userAccessStats = await checkAccessAvailability(users, allUserAccessStat, selectedFilterGroups);
 
     dispatch({
         type: LOAD_VALIDATION_RESULT,
-        payload: allUserAccessStat
+        payload: userAccessStats
     });
 
 }
 
-const validateUsersAccess = (users, selectedFilterGroups, dispatch) => {
+const pullUsersAccess = (users, dispatch) => {
 
     return new Promise(async(resolve, reject) => {
 
         try {
 
-            const allUserAccessStat = await users.reduce(async(prevValue, user, index) => {
+            const allUserAccess = await users.reduce(async(prevValue, user, index, arr) => {
 
                 const awaitPrevValue = await prevValue;
 
@@ -74,31 +82,25 @@ const validateUsersAccess = (users, selectedFilterGroups, dispatch) => {
 
                 const xmlDoc = parser.parseFromString(data, "text/xml");
 
-                const dataDn = xmlDoc.getElementsByTagName('group')[0].getAttribute('dn');
-
                 const groupElements = xmlDoc.getElementsByTagName('group');
-                
+
                 let groupList = {};
 
                 for (let index = 0; index < groupElements.length; index++) {
-                    
-                    const groupName = groupElements[index].getAttribute('dn').split(',')[0].split("=")[1];
 
-                    groupList = {...groupList, [groupName]: groupName}
+                    const groupName = groupElements[index].getElementsByTagName('name')[0].childNodes[0].nodeValue;
+
+                    const groupDesc = groupElements[index].getElementsByTagName('description')[0].childNodes[0].nodeValue;
+
+                    groupList = {...groupList, [groupName]: {name: groupName, description: groupDesc}}
                     
                 }
 
-                const accessStats = await selectedFilterGroups.reduce((prevVal,curVal) => {
-
-                    return groupList[curVal.group_name] != undefined ? {...prevVal, [curVal.group_alias]: {val_result: true, group_alias: curVal.group_alias}} : {...prevVal, [curVal.group_alias]:{val_result: false, group_alias: curVal.group_alias}}
-
-                }, {});
-
-                return {...awaitPrevValue, [user]: {user: user, access: accessStats }}
+                return {...awaitPrevValue, [user]: {user: user, access: groupList }}
 
             }, Promise.resolve({}));
 
-            resolve(await allUserAccessStat);
+            resolve(await allUserAccess);
             
         } catch (error) {
 
@@ -110,16 +112,38 @@ const validateUsersAccess = (users, selectedFilterGroups, dispatch) => {
 
 }
 
+const checkAccessAvailability = (users, allUserAccessStat, selectedFilterGroups) => {
+
+    const result = users.reduce((prevVal, curUser) => {
+
+        const access = selectedFilterGroups.reduce((pVal, cVal)=> {
+
+            return typeof allUserAccessStat[curUser].access[cVal.group_name] != "undefined" ? {...pVal, [cVal.group_alias]: {val_result: true, group_alias: cVal.group_alias}} : {...pVal, [cVal.group_alias]: {val_result: false, group_alias: cVal.group_alias}};
+
+        }, {});
+
+        return {...prevVal, [curUser]: {user: curUser, access: access }}
+
+    }, {});
+
+    return result;
+
+}
+
 const makeRequestToGroupService = (search) => {
 
     return new Promise((resolve, reject) => {
 
         try {
 
-            axios.get(`http://groupservice.internal.pg.com/GDSGroupService.jrun?op=getmembergroups&${search}`)
+            axios.get(`http://groupservice.internal.pg.com/GDSGroupService.jrun?op=getmembergroups&${search}&attributes=name,description`)
             .then((data) => {
 
                 resolve(data.data);
+
+            }).catch(err => {
+
+                reject(error);
 
             });
             

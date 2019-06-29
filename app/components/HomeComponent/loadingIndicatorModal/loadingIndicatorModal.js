@@ -1,40 +1,50 @@
 import React, {useState, useEffect} from "react";
-import { Modal, ModalHeader, ModalBody, } from "reactstrap";
+import { Modal, ModalHeader, ModalBody, Progress} from "reactstrap";
 import { connect } from 'react-redux';
 import { useSpring, animated, config } from 'react-spring';
 import { Spring } from 'react-spring/renderprops'
-import { closeModal } from '../../../actions/HomeComponentActions/TriggerValidate/actions';
+import { closeModal, resetLoaderUIState } from '../../../actions/HomeComponentActions/TriggerValidate/actions';
 import PropTypes from 'prop-types';
 
-const LoadingIndicatorModal = ({showModal, totalUsers, currentExtractCount, closeModal}) => {
+const LoadingIndicatorModal = ({showModal, totalUsers, currentExtractCount, closeModal, resetLoaderUIState, validationResult}) => {    
 
+    const [loadPercent, setLoadPercent] = useState(0);
 
-    const currentPercent = Math.round((currentExtractCount/totalUsers) * 100 || 0);
+    useEffect(() => {
 
-    const [props, set, stop] = useSpring(() => ({
-        config: config.default,
-        width: '0%'
-    }));
+        const currentPercent = (currentExtractCount/totalUsers) * 100 || 0;
 
-    set({width: `${currentPercent}%`});
+        setLoadPercent(currentPercent);
 
+    }, [totalUsers, currentExtractCount]);
+
+    useEffect(()=>{
+
+        setTimeout(() => {
+            
+            closeModal();
+
+            setTimeout(() => {
+
+                resetLoaderUIState();
+
+            }, 500);
+
+        }, 1000);
+
+    }, [validationResult]);
 
     return (
         <Modal className="loading_indicator" centered={true} isOpen={showModal}>
             <ModalBody>
                 <h5>Fetching { currentExtractCount } of { totalUsers }</h5>
-                <div className="progress">
-                    <animated.div className="progress-bar bg-success progress-bar-striped progress-bar-animated" role="progressbar" style={props} aria-valuenow={currentExtractCount} aria-valuemin="0" aria-valuemax="100">
-                        <Spring config={config.default }
-                            from={{ number: 0 }}
-                            to={{ number: currentPercent }}
-                            onRest={() => closeModal()}>
-                            {props => { 
-                                return <animated.div>{Math.round(props.number)}%</animated.div>
-                                }}
-                        </Spring>
-                    </animated.div>
-                </div>
+                <Progress animated color="success" value={loadPercent}>
+                    <Spring config={config.default}
+                        from={{number: 0}} 
+                        to={{number: loadPercent}}>
+                        {props => Math.round(props.number)}
+                    </Spring>%
+                </Progress>
             </ModalBody>
         </Modal>
     );
@@ -45,13 +55,16 @@ LoadingIndicatorModal.propTypes = {
     showModal: PropTypes.bool.isRequired,
     totalUsers: PropTypes.number.isRequired,
     currentExtractCount: PropTypes.number.isRequired,
-    closeModal: PropTypes.func.isRequired
+    closeModal: PropTypes.func.isRequired,
+    resetLoaderUIState: PropTypes.func.isRequired,
+    validationResult: PropTypes.object.isRequired
 }
 
 const mapStateToProps = state => ({
     showModal: state.loadingIndicatorReducer.showModal,
     totalUsers: state.loadingIndicatorReducer.totalUsers,
-    currentExtractCount: state.loadingIndicatorReducer.currentExtractCount
+    currentExtractCount: state.loadingIndicatorReducer.currentExtractCount,
+    validationResult: state.validationReducer.validationResult
 })
 
-export default connect(mapStateToProps, {closeModal})(LoadingIndicatorModal);
+export default connect(mapStateToProps, {closeModal, resetLoaderUIState})(LoadingIndicatorModal);

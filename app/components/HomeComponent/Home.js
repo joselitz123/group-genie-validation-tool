@@ -19,6 +19,7 @@ import FilterGroupList from "./FilterGroupList";
 import { selectedFilters } from '../../reducers/ValidationReducer/ValidationReducer'
 import ValidationResultSection from "./ValidationResultSection/ValidationResultSection";
 import LoadingIndicatorModal from './loadingIndicatorModal/loadingIndicatorModal';
+import { containerStyle } from '../../constants/constantStyles';
 
 const Home = ({ triggerValidate, users, selectedGroupFilters, loadLocalStorageGroupFilters }) => {
 
@@ -36,11 +37,6 @@ const Home = ({ triggerValidate, users, selectedGroupFilters, loadLocalStorageGr
 
     }, []);
 
-    const containerStyle = {
-      paddingLeft: '25px',
-      paddingRight: '25px',
-      paddingTop: '10px',
-    }
 
     const buttonStyle = {
       border: "1px solid #1785c5"
@@ -58,7 +54,7 @@ const Home = ({ triggerValidate, users, selectedGroupFilters, loadLocalStorageGr
               <Col xs="4">
                 <GroupFiltersSelectionBox />
               </Col>
-              <Col xs="4">
+              <Col xs="4" >
                 <FilterGroupList />
               </Col>
             </Row>

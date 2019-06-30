@@ -1,6 +1,6 @@
 import React from 'react';
 import axios from 'axios';
-import { LOAD_VALIDATION_RESULT, SHOW_MODAL_LOADER, LOAD_TOTAL_USERS_TO_EXTRACT, CURRENT_EXTRACT_COUNT, RESET_LOADER_UI_STATE } from './actionTypes';
+import { LOAD_VALIDATION_RESULT, SHOW_MODAL_LOADER, LOAD_TOTAL_USERS_TO_EXTRACT, CURRENT_EXTRACT_COUNT, RESET_LOADER_UI_STATE, LOAD_ALL_USERS_ACCESS } from './actionTypes';
 import fs from 'fs';
 import path from 'path';
 import { setTimeout } from 'timers';
@@ -44,6 +44,11 @@ export const triggerValidate = (inputUsers, selectedFilterGroups) => dispatch =>
 const validate = async (users, selectedFilterGroups, dispatch) => {
 
     const allUserAccessStat = await pullUsersAccess(users, dispatch);
+
+    dispatch({
+        type: LOAD_ALL_USERS_ACCESS,
+        payload: allUserAccessStat
+    })
 
 
     const userAccessStats = await checkAccessAvailability(users, allUserAccessStat, selectedFilterGroups);

@@ -84,7 +84,7 @@ const ResultDataTable = ({dataSetObject, history, router}) => {
     },[dataSetObject]);
 
     return (
-        <table ref={result_table}  className="table tables-striped" style={{"width": "100%"}}></table>
+        <table ref={result_table}  className="table table-striped table-hover" style={{"width": "100%"}}></table>
     )
 
 }

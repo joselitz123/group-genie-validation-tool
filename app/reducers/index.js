@@ -7,6 +7,7 @@ import groupFiltersSelectionBoxReducer from './HomeComponentReducers/GroupFilter
 import usersFieldBoxReducer from './HomeComponentReducers/UsersFieldBoxReducer';
 import loadingIndicatorReducer from './HomeComponentReducers/LoadingIndicatorReducer';
 import validationReducer from './ValidationReducer/ValidationReducer';
+import totalAccessView from './TotalAccesViewReducer/TotalAccessView';
 
 export default function createRootReducer(history: History) {
   return combineReducers({
@@ -16,6 +17,7 @@ export default function createRootReducer(history: History) {
     groupFiltersSelectionBoxReducer: groupFiltersSelectionBoxReducer,
     validationReducer: validationReducer,
     usersFieldBoxReducer: usersFieldBoxReducer,
-    loadingIndicatorReducer: loadingIndicatorReducer
+    loadingIndicatorReducer: loadingIndicatorReducer,
+    totalAccessView: totalAccessView
   });
 }

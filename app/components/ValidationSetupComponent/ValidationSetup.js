@@ -16,8 +16,8 @@ import { getStorageData } from "../../LocalStorage/ValidationSetupLocalStorage/V
 import { loadLocalStorageGroupFilters } from "../../actions/groupFiltersActions/actions";
 import PropTypes from "prop-types";
 import GroupFilterLists from './groupFilterLists';
-import back_icon from '../../../resources/back_icon.png';
 import { containerStyle } from '../../constants/constantStyles';
+import BackButton from '../ReusableComponent/BackButtonComponent/BackButton';
 
 const ValidationSetup = ({ loadLocalStorageGroupFilters }) =>  {
   
@@ -37,9 +37,15 @@ const ValidationSetup = ({ loadLocalStorageGroupFilters }) =>  {
 
   return (
     <div className="container-flex" style={containerStyle}>
-      <Link to={routes.HOME}><img style={{blockSize: "44px"}} src={back_icon}/>Back</Link>
-      <FormFields />
-      <GroupFilterLists />
+      <div className="row">
+        <div className="d-inline-flex">
+          <BackButton route={routes.HOME} />
+        </div>
+        <div className="col-sm-12">
+          <FormFields />
+          <GroupFilterLists />
+        </div>
+      </div>
     </div>
   );
 }

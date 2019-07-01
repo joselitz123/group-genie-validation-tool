@@ -1,19 +1,16 @@
 // @flow
-import React, { Component, useEffect } from "react";
+import React, { useEffect } from "react";
 import {
   Row,
   Col,
-  FormGroup,
-  Label,
-  Input,
   Button
 } from "reactstrap";
 import { connect } from "react-redux";
+import PropTypes from "prop-types";
 import GroupFiltersSelectionBox from "./GroupFiltersSelectionBox";
 import { loadLocalStorageGroupFilters } from "../../actions/groupFiltersActions/actions";
 import { getStorageData } from "../../LocalStorage/ValidationSetupLocalStorage/ValidationSetupLocalStorage";
 import { triggerValidate } from "../../actions/HomeComponentActions/TriggerValidate/actions";
-import PropTypes from "prop-types";
 import UsersFieldBox from "./UsersFieldBox/UsersFieldBox";
 import FilterGroupList from "./FilterGroupList";
 import { selectedFilters } from '../../reducers/ValidationReducer/ValidationReducer'

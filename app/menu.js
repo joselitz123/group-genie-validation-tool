@@ -148,27 +148,21 @@ export default class MenuBuilder {
         {
           label: 'Learn More',
           click() {
-            shell.openExternal('http://electron.atom.io');
+            shell.openExternal('https://github.com/joselitz123/group-genie-validation-tool');
           }
         },
         {
           label: 'Documentation',
           click() {
             shell.openExternal(
-              'https://github.com/atom/electron/tree/master/docs#readme'
+              'https://github.com/joselitz123/group-genie-validation-tool#readme'
             );
-          }
-        },
-        {
-          label: 'Community Discussions',
-          click() {
-            shell.openExternal('https://discuss.atom.io/c/electron');
           }
         },
         {
           label: 'Search Issues',
           click() {
-            shell.openExternal('https://github.com/atom/electron/issues');
+            shell.openExternal('https://github.com/joselitz123/group-genie-validation-tool/issues')
           }
         }
       ]
@@ -245,27 +239,21 @@ export default class MenuBuilder {
           {
             label: 'Learn More',
             click() {
-              shell.openExternal('http://electron.atom.io');
+              shell.openExternal('https://github.com/joselitz123/group-genie-validation-tool');
             }
           },
           {
             label: 'Documentation',
             click() {
               shell.openExternal(
-                'https://github.com/atom/electron/tree/master/docs#readme'
+                'https://github.com/joselitz123/group-genie-validation-tool#readme'
               );
-            }
-          },
-          {
-            label: 'Community Discussions',
-            click() {
-              shell.openExternal('https://discuss.atom.io/c/electron');
             }
           },
           {
             label: 'Search Issues',
             click() {
-              shell.openExternal('https://github.com/atom/electron/issues');
+              shell.openExternal('https://github.com/joselitz123/group-genie-validation-tool/issues');
             }
           }
         ]

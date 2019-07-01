@@ -1,7 +1,7 @@
 {
   "name": "group-genie-validation-tool",
   "productName": "GroupGenieValidationTool",
-  "version": "0.0.2",
+  "version": "1.0.0",
   "description": "A tool for validating the access or membership of an account to a group in Group Genie",
   "scripts": {
     "build": "concurrently \"yarn build-main\" \"yarn build-renderer\"",
@@ -57,8 +57,8 @@
   },
   "main": "./app/main.prod.js",
   "build": {
-    "productName": "ElectronReact",
-    "appId": "org.develar.ElectronReact",
+    "productName": "GroupGenieValidationTool",
+    "appId": "com.electron.groupgenievalidationtool",
     "files": [
       "app/dist/",
       "app/app.html",
@@ -101,35 +101,24 @@
     },
     "publish": {
       "provider": "github",
-      "owner": "electron-react-boilerplate",
-      "repo": "electron-react-boilerplate",
+      "owner": "Jose Lito Phala",
+      "repo": "group-genie-validation-tool",
       "private": false
     }
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/electron-react-boilerplate/electron-react-boilerplate.git"
+    "url": "https://github.com/joselitz123/group-genie-validation-tool.git"
   },
   "author": {
-    "name": "Electron React Boilerplte Maintainers",
-    "email": "electronreactboilerplate@gmail.com",
-    "url": "https://electron-react-boilerplate.js.org"
+    "name": "Jose Lito Phala",
+    "email": "joselitophala@gmail.com",
+    "url": "https://github.com/joselitz123"
   },
-  "contributors": [
-    {
-      "name": "Vikram Rangaraj",
-      "email": "vikr01@icloud.com",
-      "url": "https://github.com/vikr01"
-    },
-    {
-      "name": "Amila Welihinda",
-      "email": "amilajack@gmail.com",
-      "url": "https://github.com/amilajack"
-    }
-  ],
+  "contributors": [],
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/electron-react-boilerplate/electron-react-boilerplate/issues"
+    "url": "https://github.com/joselitz123/group-genie-validation-tool/issues"
   },
   "keywords": [
     "electron",
@@ -140,7 +129,7 @@
     "hot",
     "reload"
   ],
-  "homepage": "https://github.com/electron-react-boilerplate/electron-react-boilerplate#readme",
+  "homepage": "https://github.com/joselitz123/group-genie-validation-tool/blob/master/README.md",
   "jest": {
     "testURL": "http://localhost/",
     "moduleNameMapper": {

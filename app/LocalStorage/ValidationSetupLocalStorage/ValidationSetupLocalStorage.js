@@ -3,6 +3,7 @@
 import storage from "electron-json-storage";
 import defaultData from "./defaultFilterData.json";
 import axios from "axios";
+import { object } from "prop-types";
 
 export const getStorageData = (): Promise<{}> => {
   return new Promise((resolve, reject) => {
@@ -41,7 +42,12 @@ export const fetchDefaultFilters = (): Promise<{}> => {
           }
         }
       );
-      resolve(data.data);
+      const reversedData = Object.values(data.data).reverse(); // a workaround on the issue in https://jsonbin.io wherein it reverses the correct order of the filter.
+      const resultData = reversedData.reduce((allData, curData: any) => {
+        return { ...allData, [curData.id]: curData };
+      }, {});
+
+      resolve(resultData);
     } catch (error) {
       reject(error);
     }

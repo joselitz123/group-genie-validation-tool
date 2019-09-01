@@ -29,8 +29,8 @@ export const useStyles = makeStyles(theme => ({
   },
   chip: {
     margin: 2,
-    color: '#fff',
-    border: '1px solid rgba(255, 255, 255, 1)'
+    color: "#fff",
+    border: "1px solid rgba(255, 255, 255, 1)"
   },
   noLabel: {
     marginTop: theme.spacing(3)

@@ -32,20 +32,6 @@ A tool for validating/viewing access from P&G Group Genie Access Groups.
 
 <hr>
 
-## -----For Users Section------
-
-## How to use the tool
-
-Please download the step by step guide on how to use the tool.
-
-Job Aid: https://drive.google.com/open?id=1mpNU6HBvZrcP2VMuj_a3L45zB9toDAxF
-<br>
-Installer Package(v1.0.0): https://drive.google.com/open?id=1Rv1HxtMRiRWndor03oR6G9H8wgqI2tYt
-
-<hr>
-
-## -----For developers Section------
-
 
 ## Install
 

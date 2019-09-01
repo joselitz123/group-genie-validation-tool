@@ -6,7 +6,6 @@ import axios from "axios";
 
 export const getStorageData = (): Promise<{}> => {
   return new Promise((resolve, reject) => {
-    console.log(storage.getDefaultDataPath());
     storage.get("group_filters", async (error: Error, data: any) => {
       if (error) {
         reject(error);

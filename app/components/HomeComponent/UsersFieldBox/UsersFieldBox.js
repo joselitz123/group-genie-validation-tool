@@ -1,21 +1,30 @@
+// @flow
 import React from "react";
-import { FormGroup, Label, Input } from "reactstrap";
+import { FormGroup, Label} from "reactstrap";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import { setInputUsersField } from "../../../actions/HomeComponentActions/UsersFieldBoxActions/actions";
+import TextFieldComponent from "../../ReusableComponent/TextFieldComponent/textField";
+import type { TextFieldStyleInterface } from '../../../constants/flowInterfaces';
 
 const UsersFieldBox = ({ usersField, setInputUsersField }) => {
+
+  const props: TextFieldStyleInterface = {
+    placeholder: 'Enter here the users you want to validate their access',
+    type:"textarea",
+    value: usersField, 
+    multiline: true,
+    fullWidth: true,
+    label: 'User/s to validate access',
+    onChange: setInputUsersField,
+    rows: 3
+  }
+
   return (
-    <FormGroup>
-      <Label>User/s to validate access:</Label>
-      <Input
-        type="textarea"
-        name="users"
-        value={usersField}
-        onChange={setInputUsersField}
-        style={{ height: 90 + "px" }}
-      />
-    </FormGroup>
+    // <FormGroup>
+      // <Label>User/s to validate access:</Label>
+      <TextFieldComponent {...props}  />
+    // </FormGroup>
   );
 };
 

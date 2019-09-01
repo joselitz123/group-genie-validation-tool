@@ -2,14 +2,19 @@
  * @NOTE: Prepend a `~` to css file paths that are in your node_modules
  *        See https://github.com/webpack-contrib/sass-loader#imports
  */
-@import "~@fortawesome/fontawesome-free/css/all.css";
+@import '~@fortawesome/fontawesome-free/css/all.css';
 
 body {
   position: relative;
   color: white;
   height: 100vh;
+
   /* background-color: #0bab7d; */
-  background-image: linear-gradient(45deg, rgba(11, 171, 125, 1) 10%, rgba(11, 171, 125, 1));
+  background-image: linear-gradient(
+    45deg,
+    rgba(11, 171, 125, 1) 10%,
+    rgba(11, 171, 125, 1)
+  );
   font-family: Arial, Helvetica, Helvetica Neue, serif;
   overflow-y: hidden;
 }
@@ -43,9 +48,12 @@ a:hover {
 }
 
 .loading_indicator .modal-content {
-  background-color: #0bab7d; 
+  background-color: #0bab7d;
 }
 
 .user_column.text-center {
-  background-color: #1b1e2117 !important;
+  background-color: #1d9669 !important;
+  z-index: 1;
+  position: sticky !important;
+  left: 0;
 }

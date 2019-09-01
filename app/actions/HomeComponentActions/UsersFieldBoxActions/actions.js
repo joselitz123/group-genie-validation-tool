@@ -4,7 +4,7 @@ export const setInputUsersField = input => dispatch => {
 
   dispatch({
     type: SET_INPUT_USERS_FIELD,
-    payload: input.target.value
+    payload: input
   })
 
 };

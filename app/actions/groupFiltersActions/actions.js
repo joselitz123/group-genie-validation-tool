@@ -8,21 +8,21 @@ import { setStorageData } from "../../LocalStorage/ValidationSetupLocalStorage/V
 import uuid from "uuid/v4";
 
 export const setGroupFilters = (
-  e,
+  hubRegion,
   groupName,
   groupAlias,
-  groupFilters
+  filters
 ) => dispatch => {
-  e.preventDefault();
 
   const id = uuid();
   const groupFilterData = {
     [id]: {
       id: id,
+      hub_region: hubRegion,
       group_name: groupName,
       group_alias: groupAlias
     },
-    ...groupFilters
+    ...filters
   };
 
   dispatch({
@@ -45,8 +45,8 @@ export const loadLocalStorageGroupFilters = data => dispatch => {
  * @param {Object} e - Contains props of the Drag Drop Context
  * @param {Object} data - Group filters list
  */
-export const changeGroupFilterArrangement = (e, data) => dispatch => {
-  const restructuredData = DataRestructurer(e, data);
+export const changeGroupFilterArrangement = (e, hubRegionFilter, unSelectedFilters) => dispatch => {
+  const restructuredData = DataRestructurer(e, hubRegionFilter, unSelectedFilters);
 
   dispatch({
     type: REARRANGE_GROUP_FILTERS,
@@ -56,16 +56,16 @@ export const changeGroupFilterArrangement = (e, data) => dispatch => {
   setStorageData(restructuredData);
 };
 
-const DataRestructurer = (e, data) => {
+const DataRestructurer = (e, hubRegionFilter, unSelectedFilters) => {
   const { draggableId, destination, source } = e;
+  
+  const removedData = hubRegionFilter.splice(source.index, 1);
 
-  const dataArray = Object.values(data);
+  hubRegionFilter.splice(destination.index, 0, removedData[0]);
 
-  const removedData = dataArray.splice(source.index, 1);
+  const wholeData = [...hubRegionFilter, ...unSelectedFilters];
 
-  dataArray.splice(destination.index, 0, removedData[0]);
-
-  const restructuredData = dataArray.reduce((prevData, curData) => {
+  const restructuredData = wholeData.reduce((prevData, curData) => {
     return { ...prevData, [curData.id]: curData };
   }, {});
 

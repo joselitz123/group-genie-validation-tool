@@ -1,0 +1,188 @@
+{
+  "b2251be5-da76-4281-8a1d-926b79d1c740": {
+    "id": "b2251be5-da76-4281-8a1d-926b79d1c740",
+    "hub_region": "ama",
+    "group_name": "CDHG-CoreDataHub-AP-PowerBI-Users",
+    "group_alias": "Power BI"
+  },
+  "0a36e9c1-c338-4f12-9907-2e7a1aeb69de": {
+    "id": "0a36e9c1-c338-4f12-9907-2e7a1aeb69de",
+    "hub_region": "ama",
+    "group_name": "SSBG-PowerBIFree-NonEmp",
+    "group_alias": "Excel"
+  },
+  "e196c507-d41e-4065-85b4-a984608ce3c7": {
+    "id": "e196c507-d41e-4065-85b4-a984608ce3c7",
+    "hub_region": "ama",
+    "group_name": "OBI-SHPMT-APAC-Auths-P",
+    "group_alias": "Direct Shipments APAC"
+  },
+  "e71c31c8-6ce0-4f14-b30f-b3923f67b358": {
+    "id": "e71c31c8-6ce0-4f14-b30f-b3923f67b358",
+    "hub_region": "ama",
+    "group_name": "OBI-SHPMT-EMEA-Auths-P",
+    "group_alias": "Direct Shipments EMEA"
+  },
+  "ed66e28d-bff7-4115-976b-2744552e785c": {
+    "id": "ed66e28d-bff7-4115-976b-2744552e785c",
+    "hub_region": "ama",
+    "group_name": "USRG-RTDCASIA",
+    "group_alias": "RTDC Entire ASIA"
+  },
+  "d06c5843-1df5-41f2-8ae9-38bf505ad5a0": {
+    "id": "d06c5843-1df5-41f2-8ae9-38bf505ad5a0",
+    "hub_region": "ama",
+    "group_name": "USRG-RTDCIMEA",
+    "group_alias": "RTDC Entire IMEA"
+  },
+  "c8bbd1e9-82f6-405f-9bd4-8fa5abf9283c": {
+    "id": "c8bbd1e9-82f6-405f-9bd4-8fa5abf9283c",
+    "hub_region": "jp",
+    "group_name": "CDHG-CoreDataHub-AP-PowerBI-Users",
+    "group_alias": "Power BI"
+  },
+  "5583ad3f-3d5e-4797-8088-23abf32c6101": {
+    "id": "5583ad3f-3d5e-4797-8088-23abf32c6101",
+    "hub_region": "jp",
+    "group_name": "SSBG-PowerBIFree-NonEmp",
+    "group_alias": "Excel"
+  },
+  "36b8007a-28cb-407b-be06-8ff1f61381c3": {
+    "id": "36b8007a-28cb-407b-be06-8ff1f61381c3",
+    "hub_region": "jp",
+    "group_name": "DHSG-RE-AUDIT-JP",
+    "group_alias": "RE Salesforce"
+  },
+  "9ded5d47-3233-4ecc-8470-b829dc0ee745": {
+    "id": "9ded5d47-3233-4ecc-8470-b829dc0ee745",
+    "hub_region": "jp",
+    "group_name": "DHSG-RE-IMAGERECO-JP",
+    "group_alias": "RE Trax"
+  },
+  "8452c6eb-dc0b-45dd-8a40-4dbc6695c02f": {
+    "id": "8452c6eb-dc0b-45dd-8a40-4dbc6695c02f",
+    "hub_region": "jp",
+    "group_name": "OBI-SHPMT-APAC-Auths-P",
+    "group_alias": "Direct Shipments"
+  },
+  "720a5c6d-c8b9-4adc-9592-8b998046c3cc": {
+    "id": "720a5c6d-c8b9-4adc-9592-8b998046c3cc",
+    "hub_region": "jp",
+    "group_name": "EIM-RTDC-JP",
+    "group_alias": "RTDC Japan"
+  },
+  "0cde677c-705a-4996-8174-9e38624bc6fb": {
+    "id": "0cde677c-705a-4996-8174-9e38624bc6fb",
+    "hub_region": "jp",
+    "group_name": "USRG-RTDCASIA",
+    "group_alias": "RTDC Entire ASIA"
+  },
+  "2f940243-4189-40b0-aa7e-11205cacdce4": {
+    "id": "2f940243-4189-40b0-aa7e-11205cacdce4",
+    "hub_region": "eu",
+    "group_name": "CDHG-CoreDataHub-EU-PowerBI-Users",
+    "group_alias": "Power BI"
+  },
+  "dce2e266-c20c-4311-a71d-841098f47a93": {
+    "id": "dce2e266-c20c-4311-a71d-841098f47a93",
+    "hub_region": "eu",
+    "group_name": "SSBG-PowerBIFree-NonEmp",
+    "group_alias": "Excel"
+  },
+  "4bded821-0967-4fad-8e52-383fd75629ca": {
+    "id": "4bded821-0967-4fad-8e52-383fd75629ca",
+    "hub_region": "eu",
+    "group_name": "OBI-SHPMT-EMEA-Auths-P",
+    "group_alias": "Direct Shipments"
+  },
+  "cbbb8199-6d98-4929-829b-98d11d1c3a62": {
+    "id": "cbbb8199-6d98-4929-829b-98d11d1c3a62",
+    "hub_region": "eu",
+    "group_name": "USRG-RTDCEU",
+    "group_alias": "RTDC Entire Europe"
+  },
+  "cffa6318-8ff0-4999-9f06-0fd29e935285": {
+    "id": "cffa6318-8ff0-4999-9f06-0fd29e935285",
+    "hub_region": "la",
+    "group_name": "CDHG-CoreDataHub-LA-PowerBI-Users",
+    "group_alias": "Power BI"
+  },
+  "b1278378-170b-4619-8844-cdde6a169ae2": {
+    "id": "b1278378-170b-4619-8844-cdde6a169ae2",
+    "hub_region": "la",
+    "group_name": "SSBG-PowerBIFree-NonEmp",
+    "group_alias": "Excel"
+  },
+  "39d4c2c4-ca83-4344-9786-85e6d84e0093": {
+    "id": "39d4c2c4-ca83-4344-9786-85e6d84e0093",
+    "hub_region": "la",
+    "group_name": "DHSG-RE-AUDIT-LA",
+    "group_alias": "RE Salesforce"
+  },
+  "e2a21ec0-2ca5-4e4e-a5e4-11be61740ba7": {
+    "id": "e2a21ec0-2ca5-4e4e-a5e4-11be61740ba7",
+    "hub_region": "la",
+    "group_name": "OBI-SHPMT-NALA-Auths-P",
+    "group_alias": "Direct Shipments"
+  },
+  "7a511136-de87-4731-bcbd-1daf75fd11ce": {
+    "id": "7a511136-de87-4731-bcbd-1daf75fd11ce",
+    "hub_region": "la",
+    "group_name": "EIM-RTDC2-CAR",
+    "group_alias": "RTDC Argentina"
+  },
+  "b167a1e4-bdd0-4101-894d-7a5d2a259571": {
+    "id": "b167a1e4-bdd0-4101-894d-7a5d2a259571",
+    "hub_region": "la",
+    "group_name": "EIM-RTDC2-CCO",
+    "group_alias": "RTDC Colombia"
+  },
+  "9de41326-3785-440a-baec-b6ac7e5b73e9": {
+    "id": "9de41326-3785-440a-baec-b6ac7e5b73e9",
+    "hub_region": "la",
+    "group_name": "EIM-RTDC2-CBR",
+    "group_alias": "RTDC Brazil"
+  },
+  "9166929b-5e27-424b-830d-22bb8f455865": {
+    "id": "9166929b-5e27-424b-830d-22bb8f455865",
+    "hub_region": "la",
+    "group_name": "EIM-RTDC2-CMX",
+    "group_alias": "RTDC Mexico"
+  },
+  "1de0ebe5-df9b-44c4-bf6d-eb28ceed57e6": {
+    "id": "1de0ebe5-df9b-44c4-bf6d-eb28ceed57e6",
+    "hub_region": "la",
+    "group_name": "USRG-RTDCLADMAR",
+    "group_alias": "RTDC LADMAR"
+  },
+  "067bbf5f-9ca7-4f38-8a54-30a2afe9e2a5": {
+    "id": "067bbf5f-9ca7-4f38-8a54-30a2afe9e2a5",
+    "hub_region": "la",
+    "group_name": "EIM-RTDC2-CPE",
+    "group_alias": "RTDC Peru"
+  },
+  "f1c296c1-cd73-4c3d-9da9-5c0ef4638665": {
+    "id": "f1c296c1-cd73-4c3d-9da9-5c0ef4638665",
+    "hub_region": "la",
+    "group_name": "USRG-RTDCLA",
+    "group_alias": "RTDC Entire LA Region"
+  },
+  "9d659754-724e-4847-a6cf-755bf1308e1e": {
+    "id": "9d659754-724e-4847-a6cf-755bf1308e1e",
+    "hub_region": "na",
+    "group_name": "CDHG-CoreDataHub-NA-PowerBI-Users",
+    "group_alias": "Power BI"
+  },
+  "45229b74-caf3-4e75-ba8e-6b75231fcad3": {
+    "id": "45229b74-caf3-4e75-ba8e-6b75231fcad3",
+    "hub_region": "na",
+    "group_name": "SSBG-PowerBIFree-NonEmp",
+    "group_alias": "Excel"
+  },
+  "f5455c8a-c844-42ee-9dba-e1abfaea4923": {
+    "id": "f5455c8a-c844-42ee-9dba-e1abfaea4923",
+    "hub_region": "na",
+    "group_name": "OBI-SHPMT-NALA-Auths-P",
+    "group_alias": "Direct Shipments"
+  }
+}

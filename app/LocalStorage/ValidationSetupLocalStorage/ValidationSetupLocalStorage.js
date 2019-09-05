@@ -34,7 +34,7 @@ export const fetchDefaultFilters = (): Promise<{}> => {
   return new Promise(async (resolve, reject) => {
     try {
       const data = await axios.get(
-        "https://api.jsonbin.io/b/5d5f82ffa8432f425342dbb8",
+        "https://api.jsonbin.io/b/5d5f82ffa8432f425342dbb8/6",
         {
           headers: {
             "secret-key":
@@ -42,12 +42,12 @@ export const fetchDefaultFilters = (): Promise<{}> => {
           }
         }
       );
-      const reversedData = Object.values(data.data).reverse(); // a workaround on the issue in https://jsonbin.io wherein it reverses the correct order of the filter.
-      const resultData = reversedData.reduce((allData, curData: any) => {
-        return { ...allData, [curData.id]: curData };
-      }, {});
+      // const reversedData = Object.values(data.data).reverse(); // a workaround on the issue in https://jsonbin.io wherein it reverses the correct order of the filter.
+      // const resultData = reversedData.reduce((allData, curData: any) => {
+      //   return { ...allData, [curData.id]: curData };
+      // }, {});
 
-      resolve(resultData);
+      resolve(data.data);
     } catch (error) {
       reject(error);
     }

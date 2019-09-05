@@ -4,7 +4,7 @@
   "version": "1.1.0",
   "description": "This is a tool to help easier validate the access of the P&G users that is tailored for Data Hub.",
   "scripts": {
-    "build": "concurrently \"yarn build-main\" \"yarn build-renderer\"",
+    "build": "node_modules/.bin/concurrently \"yarn build-main\" \"yarn build-renderer\"",
     "build-dll": "cross-env NODE_ENV=development webpack --config ./configs/webpack.config.renderer.dev.dll.babel.js --colors",
     "build-e2e": "cross-env E2E_BUILD=true yarn build",
     "build-main": "cross-env NODE_ENV=production webpack --config ./configs/webpack.config.main.prod.babel.js --colors",

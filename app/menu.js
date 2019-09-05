@@ -249,26 +249,18 @@ export default class MenuBuilder {
         label: "Help",
         submenu: [
           {
-            label: "Learn More",
+            label: "How to use the tool",
             click() {
               shell.openExternal(
-                "https://github.com/joselitz123/group-genie-validation-tool"
+                "https://dxcportal.sharepoint.com/:p:/r/sites/ConsumerAndCustomer/Shared%20Documents/CDL%26DH/Service/SIP/Group_Genie_Validation_Tool/v1.1.0/GGVT%20Tool%20Guide.pptx?d=w26ed722ae0644a0997fa99aee9ffdd00&csf=1&e=0Y3wwD"
               );
             }
           },
           {
-            label: "Documentation",
+            label: "Raise access with Data Hubs",
             click() {
               shell.openExternal(
-                "https://github.com/joselitz123/group-genie-validation-tool#readme"
-              );
-            }
-          },
-          {
-            label: "Search Issues",
-            click() {
-              shell.openExternal(
-                "https://github.com/joselitz123/group-genie-validation-tool/issues"
+                "https://pgglobalenterprise.service-now.com/kb_view.do?sysparm_article=KB0542677"
               );
             }
           }

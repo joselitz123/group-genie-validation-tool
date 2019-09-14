@@ -35,7 +35,7 @@ const getSelectedHubRegion = state => state.inputFieldReducers.hubRegionField;
 const getSelectedHubRegionForFilter = state =>
   state.hubSelectionFieldReducer.hubSelected;
 
-// This is for home page setup selector
+// This is for the validation setup page selector
 export const selectedHubFilters = createSelector(
   [getGroupFilters, getSelectedHubRegion],
   (groupFilters, selectedHubRegion) => {
@@ -55,7 +55,7 @@ export const unSelectedHubFilters = createSelector(
     groupFilters.filter(filter => filter.hub_region != selectedHubRegion)
 );
 
-// This is for the validation setup page selector
+// This is for home page setup selector
 export const selectedHubRegionFilters = createSelector(
   [getGroupFilters, getSelectedHubRegionForFilter],
   (groupFilters, selectedHubRegion) => {

@@ -9,12 +9,8 @@ export default function groupFiltersSelectionBoxReducer(
   action
 ) {
   if (action.type == SET_GROUPS_SELECTED_IN_FIELDBOX) {
-
-    return {...state, groupsSelected: action.payload};
-
+    return { ...state, groupsSelected: action.payload };
   } else {
-
     return state;
-
   }
 }

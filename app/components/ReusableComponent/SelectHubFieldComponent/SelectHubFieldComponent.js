@@ -8,6 +8,8 @@ import Select from "@material-ui/core/Select";
 import FormHelperText from "@material-ui/core/FormHelperText";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
+import { selectedHubRegionFilters } from "../../../reducers/GroupFiltersReducer";
+import { setSelectedGroupInFieldBox } from "../../../actions/HomeComponentActions/GroupFiltersSelectionBoxActions/action";
 
 const useStyles = makeStyles({
   inputLabel: {
@@ -32,10 +34,26 @@ const useStyles = makeStyles({
   }
 });
 
-const HubRegionField = (props) => {
-  const { hubRegionInputHandler, regionsAvailable, hubRegionInput } = props;
+const HubRegionField = props => {
+  const {
+    hubRegionInputHandler,
+    regionsAvailable,
+    hubRegionInput,
+    hubFilters,
+    setSelectedGroupInFieldBox,
+    hubRegionSelected
+  } = props;
 
   const classes = useStyles();
+
+  React.useEffect(() => {
+    const HubGroupFilterID = hubFilters.reduce(
+      (allData, curData) => [...allData, curData.id],
+      []
+    );
+
+    setSelectedGroupInFieldBox(HubGroupFilterID);
+  }, [hubRegionSelected]);
 
   return (
     <FormControl
@@ -70,13 +88,18 @@ const HubRegionField = (props) => {
 
 HubRegionField.propTypes = {
   regionsAvailable: PropTypes.object.isRequired,
+  hubFilters: PropTypes.array.isRequired,
+  setSelectedGroupInFieldBox: PropTypes.func.isRequired,
+  hubRegionSelected: PropTypes.string.isRequired
 };
 
 const mapStateToProps = state => ({
   regionsAvailable: state.inputFieldReducers.hubRegions,
+  hubFilters: selectedHubRegionFilters(state),
+  hubRegionSelected: state.hubSelectionFieldReducer.hubSelected
 });
 
 export default connect(
   mapStateToProps,
-  null
+  { setSelectedGroupInFieldBox }
 )(HubRegionField);

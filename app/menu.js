@@ -252,12 +252,12 @@ export default class MenuBuilder {
             label: "How to use the tool",
             click() {
               shell.openExternal(
-                "https://dxcportal.sharepoint.com/:p:/r/sites/ConsumerAndCustomer/Shared%20Documents/CDL%26DH/Service/SIP/Group_Genie_Validation_Tool/v1.1.0/GGVT%20Tool%20Guide.pptx?d=w26ed722ae0644a0997fa99aee9ffdd00&csf=1&e=0Y3wwD"
+                "https://dxcportal.sharepoint.com/:p:/r/sites/ConsumerAndCustomer/Shared%20Documents/CDL%26DH/Service/SIP/Group_Genie_Validation_Tool/v1.1.0/GGVT%20Tool%20Guide.pptx?d=w8e5058ee99f444a2b6f40dcd90acc3b1&csf=1&e=1e8pEm"
               );
             }
           },
           {
-            label: "Raise access with Data Hubs",
+            label: "Raise access request with Data Hubs",
             click() {
               shell.openExternal(
                 "https://pgglobalenterprise.service-now.com/kb_view.do?sysparm_article=KB0542677"

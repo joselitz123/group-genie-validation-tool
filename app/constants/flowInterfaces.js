@@ -1,6 +1,7 @@
-//@flow
+// @flow
 
-export type TextFieldStyleInterface = {|
+export type TextFieldStyleInterface = {
+  name: string,
   type: string,
   value: string,
   placeholder: string,
@@ -11,7 +12,7 @@ export type TextFieldStyleInterface = {|
   style?: {},
   rows?: number,
   errorMsg?: string
-|};
+};
 
 export type accountAccess = {
   user: string,

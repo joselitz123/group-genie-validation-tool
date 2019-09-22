@@ -5,7 +5,6 @@ import FilledInput from "@material-ui/core/FilledInput";
 import { makeStyles } from "@material-ui/core/styles";
 import InputLabel from "@material-ui/core/InputLabel";
 import Select from "@material-ui/core/Select";
-import FormHelperText from "@material-ui/core/FormHelperText";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import { selectedHubRegionFilters } from "../../../reducers/GroupFiltersReducer";
@@ -90,7 +89,9 @@ HubRegionField.propTypes = {
   regionsAvailable: PropTypes.object.isRequired,
   hubFilters: PropTypes.array.isRequired,
   setSelectedGroupInFieldBox: PropTypes.func.isRequired,
-  hubRegionSelected: PropTypes.string.isRequired
+  hubRegionSelected: PropTypes.string.isRequired,
+  hubRegionInputHandler: PropTypes.func.isRequired,
+  hubRegionInput: PropTypes.string.isRequired
 };
 
 const mapStateToProps = state => ({

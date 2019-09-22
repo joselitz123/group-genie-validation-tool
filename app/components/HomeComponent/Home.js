@@ -1,3 +1,4 @@
+/* eslint-disable flowtype/generic-spacing */
 // @flow
 import * as React from "react";
 import { Row, Col } from "reactstrap";
@@ -5,7 +6,12 @@ import Button from "@material-ui/core/Button";
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
 import PropTypes from "prop-types";
+import { ipcRenderer } from "electron";
+import axios from "axios";
+import CircularProgress from "@material-ui/core/CircularProgress";
+import { makeStyles } from "@material-ui/core/styles";
 import GroupFiltersSelectionBox from "./GroupFiltersSelectionBox";
+
 import { loadLocalStorageGroupFilters } from "../../actions/groupFiltersActions/actions";
 import {
   getStorageData,
@@ -32,12 +38,7 @@ import pullUsersAccesses from "./logicComponent/pullUserAccess";
 import composeAccessObject from "./logicComponent/composeAccessObject";
 import checkAccessAvailability from "./logicComponent/checkAccessAvailability";
 import HubSelectionBox from "./hubSelectionField/hubSelectionField";
-import { ipcRenderer } from "electron";
-import axios from "axios";
 import Notifier from "../ReusableFunctions/NotificationFunction";
-import defaultFilters from "../../LocalStorage/ValidationSetupLocalStorage/defaultFilterData.json";
-import CircularProgress from "@material-ui/core/CircularProgress";
-import { makeStyles } from "@material-ui/core/styles";
 import type { accountAccess } from "../../constants/flowInterfaces";
 import { setSelectedGroupInFieldBox } from "../../actions/HomeComponentActions/GroupFiltersSelectionBoxActions/action";
 
@@ -57,7 +58,7 @@ type Props = {
   promptError: typeof promptError,
   history: Object,
   setCancelToken: typeof setCancelToken,
-  loadingState: Boolean,
+  loadingState: boolean,
   setSelectedGroupInFieldBox: function
 };
 

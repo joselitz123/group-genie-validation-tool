@@ -2,19 +2,21 @@
 import React, { useState, useEffect, Fragment } from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
-import { ModalBody, Progress, ModalFooter } from "reactstrap";
-import { useSpring, config } from "react-spring";
+import { Progress } from "reactstrap";
+import { config } from "react-spring";
 import { Spring } from "react-spring/renderprops";
 import Button from "@material-ui/core/Button";
 import {
   closeModal,
   resetLoaderUIState
 } from "../../../actions/HomeComponentActions/TriggerValidate/actions";
+import ModalBodyComponent from "../../ReusableComponent/ModalComponent/ModalBodyComponent";
+import ModalFooterComponent from "../../ReusableComponent/ModalComponent/ModalFooterComponent";
 
 type Props = {
   totalUsers: number,
   currentExtractCount: number,
-  axiosCancelToken: function,
+  axiosCancelToken: Object,
   closeModal: typeof closeModal,
   resetLoaderUIState: typeof resetLoaderUIState
 };
@@ -44,7 +46,7 @@ const LoadingIndicator = (props: Props) => {
 
   return (
     <Fragment>
-      <ModalBody>
+      <ModalBodyComponent>
         <h5>
           Fetching {currentExtractCount} of {totalUsers}
         </h5>
@@ -58,8 +60,8 @@ const LoadingIndicator = (props: Props) => {
           </Spring>
           %
         </Progress>
-      </ModalBody>
-      <ModalFooter style={{ borderTop: "1px solid rgba(0, 0, 0, 0.1)" }}>
+      </ModalBodyComponent>
+      <ModalFooterComponent>
         <Button
           onClick={cancelbuttonHandler}
           size="small"
@@ -68,7 +70,7 @@ const LoadingIndicator = (props: Props) => {
         >
           Cancel
         </Button>
-      </ModalFooter>
+      </ModalFooterComponent>
     </Fragment>
   );
 };

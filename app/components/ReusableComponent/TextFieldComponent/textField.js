@@ -1,7 +1,6 @@
 // @flow
 import React from "react";
 import TextField from "@material-ui/core/TextField";
-import FormHelperText from "@material-ui/core/FormHelperText";
 import { withStyles } from "@material-ui/core/styles";
 import type { TextFieldStyleInterface } from "../../../constants/flowInterfaces";
 
@@ -22,7 +21,9 @@ const style = {
   }
 };
 
-const TextFieldComponent = (props: TextFieldStyleInterface) => {
+type Props = TextFieldStyleInterface;
+
+const TextFieldComponent = (props: Props) => {
   const { onChange, errorMsg, ...otherProps } = props;
 
   return (
@@ -35,8 +36,8 @@ const TextFieldComponent = (props: TextFieldStyleInterface) => {
         shrink: true
       }}
       helperText={errorMsg}
-      error={!(errorMsg == "" || typeof errorMsg == "undefined")}
-      onChange={e => onChange(e.target.value)}
+      error={!(errorMsg === "" || typeof errorMsg === "undefined")}
+      onChange={onChange}
     />
   );
 };

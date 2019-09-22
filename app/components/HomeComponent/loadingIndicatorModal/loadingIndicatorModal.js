@@ -1,7 +1,6 @@
 // @flow
 
 import React, { useState, useEffect } from "react";
-import { Modal, ModalHeader, ModalBody, Progress } from "reactstrap";
 import { connect } from "react-redux";
 import { useSpring, config } from "react-spring";
 import { Spring } from "react-spring/renderprops";
@@ -12,6 +11,7 @@ import {
 import PropTypes from "prop-types";
 import LoadingIndicator from "./loadingIndicator";
 import ErrorIndicator from "./errorIndicator";
+import ModalComponent from "../../ReusableComponent/ModalComponent/ModalComponent";
 
 type Props = {
   showModal: boolean,
@@ -41,9 +41,9 @@ const LoadingIndicatorModal = (props: Props) => {
   }, [validationResult]);
 
   return (
-    <Modal className="loading_indicator" centered={true} isOpen={showModal}>
+    <ModalComponent isOpen={showModal} size="md">
       {isErrorOccured == false ? <LoadingIndicator /> : <ErrorIndicator />}
-    </Modal>
+    </ModalComponent>
   );
 };
 

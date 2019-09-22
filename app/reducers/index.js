@@ -9,6 +9,7 @@ import loadingIndicatorReducer from "./HomeComponentReducers/LoadingIndicatorRed
 import validationReducer from "./ValidationReducer/ValidationReducer";
 import totalAccessView from "./TotalAccesViewReducer/TotalAccessView";
 import hubSelectionFieldReducer from "./HomeComponentReducers/HubSelectionFieldReducer";
+import validationSetupReducer from "./validationSetupReducers/validationSetupReducer";
 
 export default function createRootReducer(history: History) {
   return combineReducers({
@@ -20,6 +21,7 @@ export default function createRootReducer(history: History) {
     usersFieldBoxReducer,
     loadingIndicatorReducer,
     totalAccessView,
-    hubSelectionFieldReducer
+    hubSelectionFieldReducer,
+    validationSetupReducer
   });
 }

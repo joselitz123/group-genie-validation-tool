@@ -5,16 +5,10 @@ const initialState = {
 };
 
 export default function usersFieldBoxReducer(state = initialState, action) {
-
-  if (action.type == SET_INPUT_USERS_FIELD) {
-
-    return {...state, input: action.payload}
-
+  if (action.type === SET_INPUT_USERS_FIELD) {
+    return { ...state, input: action.payload.value };
+    // eslint-disable-next-line no-else-return
   } else {
-
     return state;
-    
   }
-
-  
 }

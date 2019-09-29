@@ -58,7 +58,8 @@ const ValidationSetup = ({ loadLocalStorageGroupFilters, toggleFormModal }) => {
           <BackButton route={routes.HOME} />
         </div>
         <div className="col-sm-12">
-          <form onSubmit={submitHandler}>
+          <GroupFilterLists />
+          {/* <form onSubmit={submitHandler}>
             <Row>
               <Col xs="2">
                 <HubRegionField />
@@ -69,8 +70,7 @@ const ValidationSetup = ({ loadLocalStorageGroupFilters, toggleFormModal }) => {
                 </ButtonComponent>
               </Col>
             </Row>
-          </form>
-          <GroupFilterLists />
+          </form> */}
         </div>
       </div>
     </div>

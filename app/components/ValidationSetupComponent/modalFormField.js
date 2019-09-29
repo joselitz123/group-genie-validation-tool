@@ -4,6 +4,9 @@ import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import { makeStyles } from "@material-ui/styles";
+import { FancyGridReact } from "fancygrid-react";
+import uuid from "uuid/v4";
+import uniqBy from "lodash/uniqBy";
 import ModalComponent from "../ReusableComponent/ModalComponent/ModalComponent";
 import ModalHeaderComponent from "../ReusableComponent/ModalComponent/ModalHeaderComponent";
 import ModalBodyComponent from "../ReusableComponent/ModalComponent/ModalBodyComponent";
@@ -13,14 +16,20 @@ import FormFields from "./formFields";
 import {
   toggleFormModal,
   resetFormModal,
-  valSetupInputHandler
+  resetFormModalFields,
+  triggerErrorOnGroupName,
+  setIsValidatingStatus
 } from "../../actions/validationSetupActions/actions";
+import useCheckGroupNameAvailability from "./functionHooks/useCheckGroupNameAvailability";
+import useValidateDuplicateData from "./functionHooks/useValidateDuplicateData";
+import { selectedHubFilters } from "../../reducers/GroupFiltersReducer";
+import { setGroupFilters } from "../../actions/groupFiltersActions/actions";
 
 const useStyles = makeStyles({
   loaderUI: {
-    position: "absolute",
-    left: "57px",
-    top: "17px",
+    position: "relative",
+    left: "155px",
+    top: "5px",
     marginTop: -12,
     marginLeft: -12
   }
@@ -31,7 +40,22 @@ type Props = {
   toggleFormModal: function,
   resetFormModal: function,
   groupType: number,
-  valSetupInputHandler: function
+  resetFormModalFields: function,
+  isLoading: boolean,
+  filterType: number,
+  groupName: string,
+  existHubRegionFilters: Array<{
+    id: string,
+    hub_region: string,
+    group_name: string
+  }>,
+  triggerErrorOnGroupName: function,
+  setIsValidatingStatus: function,
+  setGroupFilters: function,
+  groupAlias: string,
+  hubRegion: string,
+  allFilters: {},
+  groupnames: string
 };
 
 const ModalFormField = (props: Props) => {
@@ -40,11 +64,23 @@ const ModalFormField = (props: Props) => {
     toggleFormModal,
     resetFormModal,
     groupType,
-    valSetupInputHandler
+    resetFormModalFields,
+    isLoading,
+    filterType,
+    groupName,
+    existHubRegionFilters,
+    triggerErrorOnGroupName,
+    setIsValidatingStatus,
+    setGroupFilters,
+    groupAlias,
+    hubRegion,
+    allFilters,
+    groupnames
   } = props;
 
-  // eslint-disable-next-line no-unused-vars
-  const [loading, setLoading] = React.useState(false);
+  const [errorList, setErrorList] = React.useState([]);
+
+  const [gridState, setGridState] = React.useState({});
 
   const classes = useStyles();
 
@@ -61,6 +97,13 @@ const ModalFormField = (props: Props) => {
     variant: "contained"
   };
 
+  const backButtonComponentProps = {
+    color: "primary",
+    size: "small",
+    type: "button",
+    variant: "contained"
+  };
+
   const cancelButtonComponentProps = {
     color: "secondary",
     size: "small",
@@ -69,14 +112,132 @@ const ModalFormField = (props: Props) => {
   };
 
   React.useEffect(() => {
-    valSetupInputHandler({ target: { value: "", name: "groupNameField" } });
-    valSetupInputHandler({ target: { value: "", name: "groupAliasField" } });
+    resetFormModalFields();
   }, [groupType]);
 
-  const submitHandler = e => {
+  const submitHandler = async e => {
     e.preventDefault();
+    setIsValidatingStatus(true);
+    if (filterType === 1) {
+      const isDuplicate = useValidateDuplicateData(
+        groupName.trim(),
+        existHubRegionFilters
+      );
 
-    console.log("submitted");
+      if (!isDuplicate.isDuplicateFound) {
+        const checkGroup = await useCheckGroupNameAvailability(groupName);
+        if (checkGroup.isSuccess && checkGroup.isGroupAvailable) {
+          const id = uuid();
+
+          setGroupFilters(
+            {
+              [id]: {
+                id,
+                hub_region: hubRegion,
+                group_name: groupName,
+                group_alias: groupAlias,
+                description: checkGroup.description
+              }
+            },
+            allFilters
+          );
+          setIsValidatingStatus(false);
+          resetFormModal();
+          toggleFormModal(false);
+        } else {
+          setIsValidatingStatus(false);
+          triggerErrorOnGroupName(checkGroup.errorMsg);
+        }
+      } else {
+        setIsValidatingStatus(false);
+        triggerErrorOnGroupName(isDuplicate.errorMsg);
+      }
+    } else {
+      const splittedGroupNames = groupnames.split("\n");
+
+      const generatedDuplicateCheck = splittedGroupNames.reduce(
+        (allData, curVal) => {
+          return [
+            ...allData,
+            useValidateDuplicateData(curVal.trim(), existHubRegionFilters)
+          ];
+        },
+        []
+      );
+
+      const duplicateCheckResult = Promise.all(generatedDuplicateCheck);
+
+      let duplicateFoundOrError = 0;
+
+      (await duplicateCheckResult).map(curData => {
+        curData.isDuplicateFound === true && curData.errorMsg !== ""
+          ? duplicateFoundOrError++
+          : "";
+      });
+
+      if (duplicateFoundOrError === 0) {
+        const generatedForCheckGroups = splittedGroupNames.reduce(
+          (allData, curVal) => {
+            return [...allData, useCheckGroupNameAvailability(curVal.trim())];
+          },
+          []
+        );
+
+        const checkedResults = await Promise.all(generatedForCheckGroups);
+
+        let notExistingOrErrorFound = 0;
+
+        checkedResults.map(curData => {
+          curData.isSuccess === false ? notExistingOrErrorFound++ : "";
+        });
+
+        if (notExistingOrErrorFound !== 0) {
+          setErrorList(checkedResults);
+          setIsValidatingStatus(false);
+        } else {
+          const uniqData = uniqBy(checkedResults, "groupName");
+          console.log(uniqData);
+          const data = uniqData.reduce((allData, curData) => {
+            const id = uuid();
+            return {
+              [id]: {
+                id,
+                hub_region: hubRegion,
+                group_name: curData.groupName,
+                group_alias: groupAlias,
+                description: curData.description
+              },
+              ...allData
+            };
+          }, {});
+          setGroupFilters(data, allFilters);
+          setIsValidatingStatus(false);
+        }
+      } else {
+        setErrorList(await duplicateCheckResult);
+        setIsValidatingStatus(false);
+      }
+    }
+  };
+
+  const gridConfig = {
+    title: "Problems has been encountered",
+    height: 250,
+    width: 465,
+    modal: true,
+    columns: [
+      {
+        index: "groupName",
+        title: "Genie Name",
+        flex: 1
+      },
+      {
+        index: "errorMsg",
+        title: "Error Message",
+        flex: 1
+      }
+    ],
+    data: errorList
   };
 
   const resetFormHandler = () => {
@@ -84,25 +245,54 @@ const ModalFormField = (props: Props) => {
     toggleFormModal(false);
   };
 
+  const backButtonHandler = () => {
+    gridState.clearData();
+    setErrorList([]);
+  };
+
+  const fancyGridEventsHandler = () => [
+    {
+      init: setGridState
+    }
+  ];
+
   return (
     <ModalComponent {...modalComponentProps}>
-      <ModalHeaderComponent>Add Filter</ModalHeaderComponent>
+      <ModalHeaderComponent>
+        {errorList.length === 0 ? "Add Filter" : "An error has been found"}
+      </ModalHeaderComponent>
       <form onSubmit={submitHandler}>
         <ModalBodyComponent>
-          <FormFields />
+          {errorList.length === 0 ? (
+            <FormFields />
+          ) : (
+            <FancyGridReact
+              events={fancyGridEventsHandler()}
+              config={gridConfig}
+            />
+          )}
         </ModalBodyComponent>
         <ModalFooterComponent>
+          {isLoading && (
+            <CircularProgress size={24} className={classes.loaderUI} />
+          )}
           <ButtonComponent
             onClick={resetFormHandler}
             {...cancelButtonComponentProps}
           >
             <i className="material-icons">clear</i>Cancel
           </ButtonComponent>
-          <ButtonComponent {...addButtonComponentProps}>
-            <i className="material-icons">check</i>Add
-          </ButtonComponent>
-          {loading && (
-            <CircularProgress size={24} className={classes.loaderUI} />
+          {errorList.length === 0 ? (
+            <ButtonComponent disabled={isLoading} {...addButtonComponentProps}>
+              <i className="material-icons">check</i>Add
+            </ButtonComponent>
+          ) : (
+            <ButtonComponent
+              onClick={backButtonHandler}
+              {...backButtonComponentProps}
+            >
+              <i className="material-icons">keyboard_backspace</i>Back
+            </ButtonComponent>
           )}
         </ModalFooterComponent>
       </form>
@@ -115,12 +305,31 @@ ModalFormField.propTypes = {
   toggleFormModal: PropTypes.func.isRequired,
   resetFormModal: PropTypes.func.isRequired,
   groupType: PropTypes.number.isRequired,
-  valSetupInputHandler: PropTypes.func.isRequired
+  resetFormModalFields: PropTypes.func.isRequired,
+  isLoading: PropTypes.bool.isRequired,
+  filterType: PropTypes.number.isRequired,
+  groupName: PropTypes.string.isRequired,
+  existHubRegionFilters: PropTypes.array.isRequired,
+  triggerErrorOnGroupName: PropTypes.func.isRequired,
+  setIsValidatingStatus: PropTypes.func.isRequired,
+  setGroupFilters: PropTypes.func.isRequired,
+  groupAlias: PropTypes.string.isRequired,
+  hubRegion: PropTypes.string.isRequired,
+  allFilters: PropTypes.object.isRequired,
+  groupnames: PropTypes.string.isRequired
 };
 
 const mapStateToProps = state => ({
   showModal: state.validationSetupReducer.showModal,
-  groupType: state.inputFieldReducers.groupTypeField
+  groupType: state.inputFieldReducers.groupTypeField,
+  isLoading: state.inputFieldReducers.isValidating,
+  filterType: state.inputFieldReducers.groupTypeField,
+  groupName: state.inputFieldReducers.groupNameField,
+  groupAlias: state.inputFieldReducers.groupAliasField,
+  existHubRegionFilters: selectedHubFilters(state),
+  hubRegion: state.inputFieldReducers.hubRegionField,
+  allFilters: state.groupFiltersReducer.group_filters,
+  groupnames: state.inputFieldReducers.groupNameTextArea
 });
 
 export default connect(
@@ -128,6 +337,9 @@ export default connect(
   {
     toggleFormModal,
     resetFormModal,
-    valSetupInputHandler
+    resetFormModalFields,
+    triggerErrorOnGroupName,
+    setIsValidatingStatus,
+    setGroupFilters
   }
 )(ModalFormField);

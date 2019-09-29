@@ -5,6 +5,7 @@ import FormControl from "@material-ui/core/FormControl";
 import Select from "@material-ui/core/Select";
 import MenuItem from "@material-ui/core/MenuItem";
 import { makeStyles } from "@material-ui/styles";
+import PropTypes from "prop-types";
 
 const useStyles = makeStyles({
   root: {
@@ -57,10 +58,9 @@ const SelectFieldComponent = (props: Props) => {
         </InputLabel>
         <Select
           value={input}
-          onChange={e => inputHandler(e.target.value)}
+          onChange={inputHandler}
           inputProps={{ id: selectFor }}
           name={name}
-          isRequired={isRequired}
         >
           {menuItems.map((data, id) => (
             <MenuItem key={id} value={data.value}>
@@ -71,6 +71,16 @@ const SelectFieldComponent = (props: Props) => {
       </FormControl>
     </div>
   );
+};
+
+SelectFieldComponent.propTypes = {
+  inputLabel: PropTypes.string.isRequired,
+  menuItems: PropTypes.array.isRequired,
+  selectFor: PropTypes.string.isRequired,
+  isRequired: PropTypes.bool.isRequired,
+  input: PropTypes.number.isRequired,
+  inputHandler: PropTypes.func.isRequired,
+  name: PropTypes.string.isRequired
 };
 
 export default SelectFieldComponent;

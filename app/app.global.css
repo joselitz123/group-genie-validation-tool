@@ -2,7 +2,7 @@
  * @NOTE: Prepend a `~` to css file paths that are in your node_modules
  *        See https://github.com/webpack-contrib/sass-loader#imports
  */
-@import '~@fortawesome/fontawesome-free/css/all.css';
+@import "~@fortawesome/fontawesome-free/css/all.css";
 
 body {
   position: relative;
@@ -56,4 +56,21 @@ a:hover {
   z-index: 1;
   position: sticky !important;
   left: 0;
+}
+
+.fancy-grid-body > div:nth-child(3) {
+  display: none;
+}
+
+.action-column .fancy-grid-cell-inner {
+  margin: 0;
+}
+
+.action-column .material-icons {
+  font-size: 22px;
+}
+
+.action-column .fancy-grid-cell {
+  display: flex;
+  justify-content: center;
 }

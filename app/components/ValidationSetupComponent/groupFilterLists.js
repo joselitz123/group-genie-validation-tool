@@ -1,65 +1,193 @@
-import { Row, Col, ListGroup } from "reactstrap";
-import React from "react";
-import { connect } from "react-redux";
+// @flow
+import { Row, Col } from "reactstrap";
+import React, { useState, useEffect } from "react";
+import { connect, useSelector } from "react-redux";
 import PropTypes from "prop-types";
-import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
-import { changeGroupFilterArrangement } from "../../actions/groupFiltersActions/actions";
-import GroupFilterItem from "./groupFilterItem";
+import { FancyGridReact } from "fancygrid-react";
+import toArray from "lodash/toArray";
 import {
-  selectedHubFilters,
-  unSelectedHubFilters
-} from "../../reducers/GroupFiltersReducer";
+  changeGroupFilterArrangement,
+  deleteGroupFilter,
+  updateFilter
+} from "../../actions/groupFiltersActions/actions";
+import { selectedHubFilters } from "../../reducers/GroupFiltersReducer";
+import {
+  hubRegionInputHandler,
+  toggleFormModal
+} from "../../actions/validationSetupActions/actions";
+import { setStorageData } from "../../LocalStorage/ValidationSetupLocalStorage/ValidationSetupLocalStorage";
 
 const GroupFilterLists = ({
   changeGroupFilterArrangement,
   hubRegionFilter,
-  unSelectedFilters,
-  groupFilters
+  selectedHubRegion,
+  hubRegionInputHandler,
+  deleteGroupFilter,
+  allHubFilters,
+  toggleFormModal,
+  updateFilter
 }) => {
+  const [gridState, setGridState] = useState({});
+
+  const hubRegions = useSelector(state => state.inputFieldReducers.hubRegions);
+  const addFilterValStatus = useSelector(
+    state => state.inputFieldReducers.isValidating
+  );
+
+  useEffect(() => {
+    if (toArray(gridState).length !== 0) {
+      gridState.removeAll();
+      gridState.setData(hubRegionFilter);
+      setStorageData(allHubFilters);
+      gridState.update();
+    }
+  }, [selectedHubRegion, addFilterValStatus]);
+
+  const dragRowsHandler = grid => {
+    const gridData = grid
+      .get()
+      .reduce((allData, acc) => ({ ...allData, [acc.data.id]: acc.data }), {});
+
+    console.table(gridData);
+    changeGroupFilterArrangement(gridData);
+    setStorageData(allHubFilters);
+  };
+
+  const removeHandler = (grid, id) => {
+    const { [id]: value, ...restData } = allHubFilters;
+    deleteGroupFilter(restData, id);
+    setStorageData(allHubFilters);
+  };
+
+  const updateHandler = (grid, data) => {
+    updateFilter(data);
+    setStorageData(allHubFilters);
+    grid.clearDirty();
+  };
+
+  const config = {
+    title: "Group Genie Access Groups",
+    rowEdit: true,
+    clicksToEdit: 2,
+    height: 610,
+    width: 1350,
+    defaults: {
+      editable: true
+    },
+    tbar: [
+      {
+        type: "combo",
+        data: toArray(hubRegions),
+        displayKey: "name",
+        valueKey: "value",
+        value: selectedHubRegion,
+        events: [
+          {
+            change: (field, value) => {
+              hubRegionInputHandler(value);
+            }
+          }
+        ]
+      },
+      {
+        type: "search",
+        width: 400,
+        emptyText: "Search",
+        paramsMenu: true,
+        paramsText: "Parameters"
+      },
+      {
+        type: "button",
+        text: "Add",
+        width: 50,
+        handler: () => {
+          toggleFormModal(true);
+        }
+      },
+      {
+        type: "button",
+        text: "Remove",
+        width: 50,
+        action: "remove"
+      }
+    ],
+    selModel: "rows",
+    columns: [
+      {
+        type: "rowdrag"
+      },
+      {
+        type: "select"
+      },
+      {
+        index: "group_alias",
+        title: "Display Name",
+        type: "string",
+        flex: 1,
+        draggable: true,
+        align: "center"
+      },
+      {
+        index: "group_name",
+        title: "Genie Group",
+        type: "string",
+        flex: 1,
+        draggable: true,
+        align: "center",
+        editable: false
+      },
+      {
+        index: "description",
+        title: "Description",
+        type: "string",
+        flex: 2,
+        draggable: true,
+        align: "center"
+      },
+      {
+        title: "Action",
+        type: "action",
+        align: "center",
+        cellAlign: "center",
+        items: [
+          {
+            text: "Delete",
+            action: "remove",
+            render: o => {
+              o.value = `<div class="fancy-grid-column-action-item" ><button class=" btn btn-danger btn-sm"><i class="material-icons">delete</i></button></div>`;
+              return o;
+            }
+          }
+        ],
+        cls: "action-column",
+        flex: 1
+        // autoHeight: true
+      }
+    ],
+    data: hubRegionFilter
+  };
+
+  const getEvents = () => [
+    {
+      init: grid => {
+        setGridState(grid);
+      }
+    },
+    {
+      dragrows: grid => {
+        dragRowsHandler(grid);
+      }
+    },
+    {
+      remove: removeHandler
+    },
+    { set: updateHandler }
+  ];
+
   return (
     <Row style={{ paddingTop: "15px" }}>
       <Col>
-        <hr />
-        <h6>Group Filters:</h6>
-        {hubRegionFilter.length == 0 ? (
-          <h5>No group filters can be viewed yet.</h5>
-        ) : (
-          <DragDropContext
-            onDragEnd={e =>
-              changeGroupFilterArrangement(
-                e,
-                hubRegionFilter,
-                unSelectedFilters
-              )
-            }
-          >
-            <ListGroup style={{ overflow: "auto", height: "370px" }}>
-              <Droppable droppableId="droppable-1">
-                {(provided, snapshot) => (
-                  <div ref={provided.innerRef} {...provided.droppableProps}>
-                    {hubRegionFilter.map((groupFilter, index) => {
-                      const { id, group_name, group_alias } = groupFilter;
-                      return (
-                        <Draggable draggableId={id} key={id} index={index}>
-                          {(provided, snapshot) => (
-                            <div
-                              ref={provided.innerRef}
-                              {...provided.draggableProps}
-                              {...provided.dragHandleProps}
-                            >
-                              <GroupFilterItem groupFilter={groupFilter} />
-                            </div>
-                          )}
-                        </Draggable>
-                      );
-                    })}
-                    {provided.placeholder}
-                  </div>
-                )}
-              </Droppable>
-            </ListGroup>
-          </DragDropContext>
-        )}
+        <FancyGridReact events={getEvents()} config={{ ...config }} />
       </Col>
     </Row>
   );
@@ -68,17 +196,27 @@ const GroupFilterLists = ({
 GroupFilterLists.propTypes = {
   changeGroupFilterArrangement: PropTypes.func.isRequired,
   hubRegionFilter: PropTypes.array.isRequired,
-  groupFilters: PropTypes.object.isRequired,
-  unSelectedFilters: PropTypes.array.isRequired
+  selectedHubRegion: PropTypes.string.isRequired,
+  hubRegionInputHandler: PropTypes.func.isRequired,
+  deleteGroupFilter: PropTypes.func.isRequired,
+  allHubFilters: PropTypes.object.isRequired,
+  toggleFormModal: PropTypes.func.isRequired,
+  updateFilter: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => ({
   hubRegionFilter: selectedHubFilters(state),
-  unSelectedFilters: unSelectedHubFilters(state),
-  groupFilters: state.groupFiltersReducer.group_filters
+  selectedHubRegion: state.inputFieldReducers.hubRegionField,
+  allHubFilters: state.groupFiltersReducer.group_filters
 });
 
 export default connect(
   mapStateToProps,
-  { changeGroupFilterArrangement }
+  {
+    changeGroupFilterArrangement,
+    hubRegionInputHandler,
+    deleteGroupFilter,
+    toggleFormModal,
+    updateFilter
+  }
 )(GroupFilterLists);

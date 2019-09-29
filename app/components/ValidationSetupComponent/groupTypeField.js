@@ -1,22 +1,18 @@
 // @flow
 import * as React from "react";
-import SelectFieldComponent from "../ReusableComponent/SelectFieldComponent/SelectFieldComponent";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
-import groupAliasField from "./groupAliasField";
-import {
-  groupTypeInputHandler,
-  groupAliasInputHandler
-} from "../../actions/validationSetupActions/actions";
+import { valSetupInputHandler } from "../../actions/validationSetupActions/actions";
+import SelectFieldComponent from "../ReusableComponent/SelectFieldComponent/SelectFieldComponent";
 
 type Props = {
   filterTypes: { [string]: { name: string, value: number } },
   value: number,
-  groupTypeInputHandler: function
+  valSetupInputHandler: function
 };
 
 const GroupTypeField = (props: Props) => {
-  const { filterTypes, value, groupTypeInputHandler } = props;
+  const { filterTypes, value, valSetupInputHandler } = props;
 
   return (
     <SelectFieldComponent
@@ -25,16 +21,16 @@ const GroupTypeField = (props: Props) => {
       selectFor="group-type"
       isRequired={true}
       input={value}
-      inputHandler={groupTypeInputHandler}
+      inputHandler={valSetupInputHandler}
       name="groupTypeField"
-    ></SelectFieldComponent>
+    />
   );
 };
 
 GroupTypeField.propTypes = {
   filterTypes: PropTypes.object.isRequired,
   value: PropTypes.number.isRequired,
-  groupTypeInputHandler: PropTypes.func.isRequired
+  valSetupInputHandler: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => ({
@@ -44,5 +40,5 @@ const mapStateToProps = state => ({
 
 export default connect(
   mapStateToProps,
-  { groupTypeInputHandler }
+  { valSetupInputHandler }
 )(GroupTypeField);

@@ -24,6 +24,7 @@ import useCheckGroupNameAvailability from "./functionHooks/useCheckGroupNameAvai
 import useValidateDuplicateData from "./functionHooks/useValidateDuplicateData";
 import { selectedHubFilters } from "../../reducers/GroupFiltersReducer";
 import { setGroupFilters } from "../../actions/groupFiltersActions/actions";
+import { setStorageData } from "../../LocalStorage/ValidationSetupLocalStorage/ValidationSetupLocalStorage";
 
 const useStyles = makeStyles({
   loaderUI: {
@@ -136,7 +137,8 @@ const ModalFormField = (props: Props) => {
                 hub_region: hubRegion,
                 group_name: groupName,
                 group_alias: groupAlias,
-                description: checkGroup.description
+                description: checkGroup.description,
+                leaf: true
               }
             },
             allFilters
@@ -196,21 +198,36 @@ const ModalFormField = (props: Props) => {
           setIsValidatingStatus(false);
         } else {
           const uniqData = uniqBy(checkedResults, "groupName");
-          console.log(uniqData);
-          const data = uniqData.reduce((allData, curData) => {
+          const dataGrid = uniqData.reduce((allData, curData) => {
             const id = uuid();
-            return {
-              [id]: {
+            return [
+              {
                 id,
                 hub_region: hubRegion,
                 group_name: curData.groupName,
                 group_alias: groupAlias,
-                description: curData.description
+                description: curData.description,
+                leaf: true
               },
               ...allData
-            };
-          }, {});
-          setGroupFilters(data, allFilters);
+            ];
+          }, []);
+
+          console.table(dataGrid);
+
+          const groupID = uuid();
+
+          const groupData = {
+            [groupID]: {
+              id: groupID,
+              hub_region: hubRegion,
+              group_alias: groupAlias,
+              hub_region: hubRegion,
+              description: "",
+              child: dataGrid
+            }
+          };
+          setGroupFilters(groupData);
           setIsValidatingStatus(false);
         }
       } else {

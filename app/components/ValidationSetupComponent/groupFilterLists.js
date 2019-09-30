@@ -15,7 +15,6 @@ import {
   hubRegionInputHandler,
   toggleFormModal
 } from "../../actions/validationSetupActions/actions";
-import { setStorageData } from "../../LocalStorage/ValidationSetupLocalStorage/ValidationSetupLocalStorage";
 
 const GroupFilterLists = ({
   changeGroupFilterArrangement,
@@ -38,7 +37,7 @@ const GroupFilterLists = ({
     if (toArray(gridState).length !== 0) {
       gridState.removeAll();
       gridState.setData(hubRegionFilter);
-      setStorageData(allHubFilters);
+
       gridState.update();
     }
   }, [selectedHubRegion, addFilterValStatus]);
@@ -50,24 +49,24 @@ const GroupFilterLists = ({
 
     console.table(gridData);
     changeGroupFilterArrangement(gridData);
-    setStorageData(allHubFilters);
   };
 
   const removeHandler = (grid, id) => {
     const { [id]: value, ...restData } = allHubFilters;
     deleteGroupFilter(restData, id);
-    setStorageData(allHubFilters);
   };
 
   const updateHandler = (grid, data) => {
     updateFilter(data);
-    setStorageData(allHubFilters);
     grid.clearDirty();
   };
 
   const config = {
     title: "Group Genie Access Groups",
-    rowEdit: true,
+    data: {
+      items: hubRegionFilter,
+      fields: ["group_alias", "group_name", "description", "action"]
+    },
     clicksToEdit: 2,
     height: 610,
     width: 1350,
@@ -117,15 +116,12 @@ const GroupFilterLists = ({
         type: "rowdrag"
       },
       {
-        type: "select"
-      },
-      {
         index: "group_alias",
         title: "Display Name",
-        type: "string",
         flex: 1,
         draggable: true,
-        align: "center"
+        align: "center",
+        type: "tree"
       },
       {
         index: "group_name",
@@ -154,6 +150,7 @@ const GroupFilterLists = ({
             text: "Delete",
             action: "remove",
             render: o => {
+              // eslint-disable-next-line no-param-reassign
               o.value = `<div class="fancy-grid-column-action-item" ><button class=" btn btn-danger btn-sm"><i class="material-icons">delete</i></button></div>`;
               return o;
             }
@@ -163,8 +160,7 @@ const GroupFilterLists = ({
         flex: 1
         // autoHeight: true
       }
-    ],
-    data: hubRegionFilter
+    ]
   };
 
   const getEvents = () => [

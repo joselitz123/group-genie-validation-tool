@@ -5,8 +5,7 @@ import {
   VAL_SETUP_INPUT_HANDLER,
   HUB_REGION_INPUT_HANDLER,
   RESET_FORM_MODAL_FIELD,
-  SET_IS_VALIDATING_STATUS,
-  UPDATE_FILTER
+  SET_IS_VALIDATING_STATUS
 } from "./actionTypes";
 
 export const valSetupInputHandler = input => dispatch => {

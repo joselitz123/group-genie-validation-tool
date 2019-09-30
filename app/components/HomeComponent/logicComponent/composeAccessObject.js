@@ -4,8 +4,8 @@ import type { accountAccess } from "../../../constants/flowInterfaces";
 
 const composeAccessObject = (
   accesses: Array<Array<{ user: string, access: string }>>
-): Promise<{ [key: string]: accountAccess }> => {
-  return new Promise(async (resolve, reject) => {
+): Promise<{ [key: string]: accountAccess }> =>
+  new Promise(async (resolve, reject) => {
     try {
       const composedAccessses: Array<{
         user: string,
@@ -17,9 +17,7 @@ const composeAccessObject = (
           (
             totalUserObject: Array<function>,
             curAccess: { user: string, access: string }
-          ) => {
-            return [...totalUserObject, convertAccessObject(curAccess)];
-          },
+          ) => [...totalUserObject, convertAccessObject(curAccess)],
           []
         );
 
@@ -39,9 +37,7 @@ const composeAccessObject = (
             [key: string]: accountAccess
           },
           curObj: { user: string, access: {} }
-        ) => {
-          return { ...allAccess, [curObj.user]: curObj };
-        },
+        ) => ({ ...allAccess, [curObj.user]: curObj }),
         {}
       );
 
@@ -50,6 +46,5 @@ const composeAccessObject = (
       reject(error);
     }
   });
-};
 
 export default composeAccessObject;

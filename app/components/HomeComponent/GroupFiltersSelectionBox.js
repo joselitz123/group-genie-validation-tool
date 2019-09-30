@@ -6,6 +6,7 @@ import MenuItem from "@material-ui/core/MenuItem";
 import Chip from "@material-ui/core/Chip";
 import FormControl from "@material-ui/core/FormControl";
 import InputLabel from "@material-ui/core/InputLabel";
+import uniqBy from "lodash/uniqBy";
 import { makeStyles } from "@material-ui/core/styles";
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
@@ -80,6 +81,8 @@ const GroupFiltersSelectionBox = ({
 
   const classes = useStyles();
 
+  const uniqFilters = uniqBy(groupFilters, "group_alias");
+
   /* reference https://material-ui.com/components/selects/#multiple-select */
   return (
     <FormControl
@@ -100,7 +103,7 @@ const GroupFiltersSelectionBox = ({
         onChange={e => setSelectedGroupInFieldBox(e.target.value)}
         renderValue={selected => (
           <div className={classes.chips}>
-            {selectedFilters.map(value => (
+            {uniqBy(selectedFilters, "group_alias").map(value => (
               <Chip
                 variant="outlined"
                 key={value.id}
@@ -114,8 +117,8 @@ const GroupFiltersSelectionBox = ({
         MenuProps={MenuProps}
         className={classes.select}
       >
-        {groupFilters.length != 0
-          ? groupFilters.map(groupFilter => {
+        {uniqFilters.length !== 0
+          ? uniqFilters.map(groupFilter => {
               const { id, group_alias } = groupFilter;
               return (
                 <MenuItem key={id} value={id}>

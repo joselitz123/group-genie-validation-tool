@@ -11,29 +11,60 @@ import {
 const initialState = {
   group_filters: {}
 };
+import { setStorageData } from "../LocalStorage/ValidationSetupLocalStorage/ValidationSetupLocalStorage";
 
 export default function groupFiltersReducer(state = initialState, action) {
   switch (action.type) {
     case DELETE_GROUP_FILTER:
       const { [action.payload]: value, ...restData } = state.group_filters;
+      console.log("executed");
+      setStorageData({ ...state, group_filters: restData });
 
       return { ...state, group_filters: restData };
 
     case REARRANGE_GROUP_FILTERS:
+      setStorageData({
+        ...state,
+        group_filters: { ...action.payload, ...state.group_filters }
+      });
+
       return {
         ...state,
         group_filters: { ...action.payload, ...state.group_filters }
       };
 
     case LOAD_LOCAL_STORAGE_FILTERS:
+      setStorageData({ ...state, group_filters: action.payload });
+
       return { ...state, group_filters: action.payload };
 
     case SET_GROUP_FILTERS:
+      setStorageData({
+        ...state,
+        group_filters: { ...action.payload, ...state.group_filters }
+      });
+      console.table({
+        ...state,
+        group_filters: { ...action.payload, ...state.group_filters }
+      });
+
       return {
         ...state,
         group_filters: { ...action.payload, ...state.group_filters }
       };
     case UPDATE_FILTER:
+      setStorageData({
+        ...state,
+        group_filters: {
+          ...state.group_filters,
+          [action.payload.id]: {
+            ...state.group_filters[action.payload.id],
+            group_alias: action.payload.data.group_alias,
+            description: action.payload.data.description
+          }
+        }
+      });
+
       return {
         ...state,
         group_filters: {

@@ -7,15 +7,12 @@ import {
   DELETE_GROUP_FILTER,
   UPDATE_FILTER
 } from "./actionTypes";
-import { setStorageData } from "../../LocalStorage/ValidationSetupLocalStorage/ValidationSetupLocalStorage";
 
 export const setGroupFilters = (data, allFilters) => dispatch => {
   dispatch({
     type: SET_GROUP_FILTERS,
     payload: data
   });
-
-  setStorageData(allFilters);
 };
 
 export const loadLocalStorageGroupFilters = data => dispatch => {
@@ -42,8 +39,6 @@ export const deleteGroupFilter = (restGroups, id) => dispatch => {
     type: DELETE_GROUP_FILTER,
     payload: id
   });
-
-  setStorageData(restGroups);
 };
 
 export const updateFilter = data => dispatch => {

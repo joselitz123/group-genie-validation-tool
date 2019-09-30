@@ -3,7 +3,12 @@ import type { accountAccess } from "../../../constants/flowInterfaces";
 
 const checkAccessAvailability = (
   accessObjects: { [keys: string]: accountAccess },
-  filterGroups: Array<{ id: string, group_name: string, group_alias: string }>
+  filterGroups: Array<{
+    id: string,
+    group_name: string,
+    group_alias: string,
+    child?: Array<{}>
+  }>
 ) => {
   const arrAccessObjects: any = Object.values(accessObjects);
 
@@ -29,10 +34,9 @@ const checkAccessAvailability = (
             }
           },
           cVal: { id: string, group_name: string, group_alias: string }
-        ) => {
-          return typeof accessObjects[curAccessObject.user].access[
-            cVal.group_name
-          ] != "undefined"
+        ) =>
+          typeof accessObjects[curAccessObject.user].access[cVal.group_name] !==
+          "undefined"
             ? {
                 ...pVal,
                 [cVal.group_alias]: {
@@ -46,14 +50,13 @@ const checkAccessAvailability = (
                   val_result: false,
                   group_alias: cVal.group_alias
                 }
-              };
-        },
+              },
         {}
       );
 
       return {
         ...totalVal,
-        [curAccessObject.user]: { user: curAccessObject.user, access: access }
+        [curAccessObject.user]: { user: curAccessObject.user, access }
       };
     },
     {}

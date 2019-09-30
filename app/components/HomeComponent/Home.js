@@ -15,7 +15,6 @@ import GroupFiltersSelectionBox from "./GroupFiltersSelectionBox";
 import { loadLocalStorageGroupFilters } from "../../actions/groupFiltersActions/actions";
 import {
   getStorageData,
-  setStorageData,
   fetchDefaultFilters
 } from "../../LocalStorage/ValidationSetupLocalStorage/ValidationSetupLocalStorage";
 import {
@@ -47,7 +46,8 @@ type Props = {
   selectedGroupFilters: Array<{
     id: string,
     group_name: string,
-    group_alias: string
+    group_alias: string,
+    child?: Array<{}>
   }>,
   loadLocalStorageGroupFilters: function,
   loadAllUserAccess: typeof loadAllUserAccess,
@@ -107,7 +107,7 @@ const Home = (props: Props) => {
     // Listens to Main process to restore to default the filters
     ipcRenderer.on("restore_default_filters", async () => {
       const defaultFilterData = await fetchDefaultFilters();
-      setStorageData(defaultFilterData);
+      loadLocalStorageGroupFilters(defaultFilterData);
       FetchLocalStorageFilters();
     });
   }, []);

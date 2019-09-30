@@ -4,8 +4,9 @@ import ResultDataTable from "./ResultDataTable";
 
 const ValidationResultSection = () => (
   <Fragment>
-    <h4>Users Validated:</h4>
-    <div>{/* <ResultDataTable /> */}</div>
+    <div>
+      <ResultDataTable />
+    </div>
   </Fragment>
 );
 

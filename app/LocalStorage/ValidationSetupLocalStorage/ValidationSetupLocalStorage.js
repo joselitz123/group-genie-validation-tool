@@ -1,28 +1,24 @@
 // @flow
 //  default data are stored at https://api.myjson.com/bins/cqn2f
 import storage from "electron-json-storage";
-import defaultData from "./defaultFilterData.json";
 import axios from "axios";
-import { object } from "prop-types";
 
-export const getStorageData = (): Promise<{}> => {
-  return new Promise((resolve, reject) => {
+export const getStorageData = (): Promise<{}> =>
+  new Promise((resolve, reject) => {
     storage.get("group_filters", async (error: Error, data: any) => {
       if (error) {
         reject(error);
-      } else if (data == "" || Object.values(data).length == 0) {
+      } else if (data === "" || Object.values(data).length === 0) {
         const defaultFilters = await fetchDefaultFilters();
-        setStorageData(defaultFilters);
         resolve(defaultFilters);
       } else {
         resolve(data);
       }
     });
   });
-};
 
-export const setStorageData = (data: {}) => {
-  storage.set("group_filters", data, error => {
+export const setStorageData = (data: function) => {
+  storage.set("group_filters", data.group_filters, error => {
     if (error) {
       console.error(error);
     }
@@ -30,8 +26,8 @@ export const setStorageData = (data: {}) => {
 };
 
 // Data is stored in https://jsonbin.io
-export const fetchDefaultFilters = (): Promise<{}> => {
-  return new Promise(async (resolve, reject) => {
+export const fetchDefaultFilters = (): Promise<{}> =>
+  new Promise(async (resolve, reject) => {
     try {
       const data = await axios.get(
         "https://api.jsonbin.io/b/5d5f82ffa8432f425342dbb8/6",
@@ -52,4 +48,3 @@ export const fetchDefaultFilters = (): Promise<{}> => {
       reject(error);
     }
   });
-};

@@ -1,6 +1,6 @@
 // @flow
-import makeRequestToGroupService from "./makeRequestToGroupSerivce";
 import { chunk } from "lodash";
+import makeRequestToGroupService from "./makeRequestToGroupSerivce";
 
 /**
  *  Compose URL paramters for each users

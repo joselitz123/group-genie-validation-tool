@@ -1,3 +1,4 @@
+/* eslint-disable no-plusplus */
 // @flow
 import * as React from "react";
 import { connect } from "react-redux";
@@ -24,7 +25,6 @@ import useCheckGroupNameAvailability from "./functionHooks/useCheckGroupNameAvai
 import useValidateDuplicateData from "./functionHooks/useValidateDuplicateData";
 import { selectedHubFilters } from "../../reducers/GroupFiltersReducer";
 import { setGroupFilters } from "../../actions/groupFiltersActions/actions";
-import { setStorageData } from "../../LocalStorage/ValidationSetupLocalStorage/ValidationSetupLocalStorage";
 
 const useStyles = makeStyles({
   loaderUI: {
@@ -158,12 +158,10 @@ const ModalFormField = (props: Props) => {
       const splittedGroupNames = groupnames.split("\n");
 
       const generatedDuplicateCheck = splittedGroupNames.reduce(
-        (allData, curVal) => {
-          return [
-            ...allData,
-            useValidateDuplicateData(curVal.trim(), existHubRegionFilters)
-          ];
-        },
+        (allData, curVal) => [
+          ...allData,
+          useValidateDuplicateData(curVal.trim(), existHubRegionFilters)
+        ],
         []
       );
 
@@ -171,17 +169,21 @@ const ModalFormField = (props: Props) => {
 
       let duplicateFoundOrError = 0;
 
+      // eslint-disable-next-line array-callback-return
       (await duplicateCheckResult).map(curData => {
+        // eslint-disable-next-line no-unused-expressions
         curData.isDuplicateFound === true && curData.errorMsg !== ""
-          ? duplicateFoundOrError++
+          ? // eslint-disable-next-line no-plusplus
+            duplicateFoundOrError++
           : "";
       });
 
       if (duplicateFoundOrError === 0) {
         const generatedForCheckGroups = splittedGroupNames.reduce(
-          (allData, curVal) => {
-            return [...allData, useCheckGroupNameAvailability(curVal.trim())];
-          },
+          (allData, curVal) => [
+            ...allData,
+            useCheckGroupNameAvailability(curVal.trim())
+          ],
           []
         );
 
@@ -189,7 +191,9 @@ const ModalFormField = (props: Props) => {
 
         let notExistingOrErrorFound = 0;
 
+        // eslint-disable-next-line array-callback-return
         checkedResults.map(curData => {
+          // eslint-disable-next-line no-unused-expressions
           curData.isSuccess === false ? notExistingOrErrorFound++ : "";
         });
 
@@ -222,7 +226,7 @@ const ModalFormField = (props: Props) => {
               id: groupID,
               hub_region: hubRegion,
               group_alias: groupAlias,
-              hub_region: hubRegion,
+              group_name: groupName,
               description: "",
               child: dataGrid
             }

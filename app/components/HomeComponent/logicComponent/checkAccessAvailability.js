@@ -7,7 +7,7 @@ const checkAccessAvailability = (
     id: string,
     group_name: string,
     group_alias: string,
-    child?: Array<{}>
+    child?: Array<{ data: { group_name: string } }>
   }>
 ) => {
   const arrAccessObjects: any = Object.values(accessObjects);
@@ -30,33 +30,55 @@ const checkAccessAvailability = (
             [key: string]: {
               id: string,
               group_name: string,
-              group_alias: string
+              group_alias: string,
+              child?: Array<{}>
             }
           },
-          cVal: { id: string, group_name: string, group_alias: string }
-        ) =>
-          typeof accessObjects[curAccessObject.user].access[cVal.group_name] !==
-          "undefined"
+          cVal
+        ) => {
+          if (typeof cVal.child !== "undefined") {
+            const childAccess = cVal.child.reduce((allData, curData) => {
+              if (
+                typeof accessObjects[curAccessObject.user].access[
+                  curData.data.group_name
+                ] !== "undefined"
+              ) {
+                return {
+                  ...allData,
+                  [curData.data.group_name]: {
+                    ...curData
+                  }
+                };
+              }
+              return allData;
+            }, {});
+
+            return { ...pVal, [cVal.id]: { val_result: childAccess } };
+          }
+          return typeof accessObjects[curAccessObject.user].access[
+            cVal.group_name
+          ] !== "undefined"
             ? {
                 ...pVal,
-                [cVal.group_alias]: {
+                [cVal.id]: {
                   val_result: true,
-                  group_alias: cVal.group_alias
+                  ...cVal
                 }
               }
             : {
                 ...pVal,
-                [cVal.group_alias]: {
+                [cVal.id]: {
                   val_result: false,
-                  group_alias: cVal.group_alias
+                  ...cVal
                 }
-              },
+              };
+        },
         {}
       );
 
       return {
         ...totalVal,
-        [curAccessObject.user]: { user: curAccessObject.user, access }
+        [curAccessObject.user]: { user_accnt: curAccessObject.user, ...access }
       };
     },
     {}

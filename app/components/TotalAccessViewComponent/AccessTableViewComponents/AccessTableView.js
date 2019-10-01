@@ -1,7 +1,9 @@
+/* eslint-disable camelcase */
 import React, { useEffect, useRef } from "react";
 import { connect } from "react-redux";
 import $ from "jquery";
 import PropTypes from "prop-types";
+
 $.DataTable = require("datatables.net-bs4")();
 $.DataTableScroll = require("datatables.net-scroller-bs4")();
 
@@ -12,10 +14,8 @@ const AccessTableView = ({ allUsersAccess, user_id }) => {
     const raw_data = Object.values(allUsersAccess[user_id].access);
 
     const emptyTableMsg =
-      typeof allUsersAccess[user_id].error_code != "undefined"
-        ? `${allUsersAccess[user_id].error_msg} / error code ${
-            allUsersAccess[user_id].error_code
-          }`
+      typeof allUsersAccess[user_id].error_code !== "undefined"
+        ? `${allUsersAccess[user_id].error_msg} / error code ${allUsersAccess[user_id].error_code}`
         : "No existing access was found or account might not have existed";
 
     const table = $(accessViewTable.current).DataTable({

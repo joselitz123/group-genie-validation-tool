@@ -1,3 +1,4 @@
+/* eslint-disable flowtype/generic-spacing */
 // @flow
 import { chunk } from "lodash";
 import makeRequestToGroupService from "./makeRequestToGroupSerivce";

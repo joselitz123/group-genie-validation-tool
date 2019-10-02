@@ -1,6 +1,4 @@
 // @flow
-import React from "react";
-import axios from "axios";
 import {
   LOAD_VALIDATION_RESULT,
   SHOW_MODAL_LOADER,
@@ -11,19 +9,18 @@ import {
   IS_ERROR_OCCURED,
   SET_CANCEL_TOKEN
 } from "./actionTypes";
-import fs from "fs";
-import path from "path";
 import type { Dispatch } from "../../../reducers/types";
 import type { accountAccess } from "../../../constants/flowInterfaces";
 
-export const promptError = (is_error_occured: Boolean, error_msg: string) => (
+// eslint-disable-next-line camelcase
+export const promptError = (is_error_occured: boolean, error_msg: string) => (
   dispatch: Dispatch
 ): void => {
   dispatch({
     type: IS_ERROR_OCCURED,
     payload: {
-      is_error_occured: is_error_occured,
-      error_msg: error_msg
+      is_error_occured,
+      error_msg
     }
   });
 };
@@ -72,6 +69,7 @@ export const loadTotalCountUsers = (count: number) => (
   });
 };
 
+// eslint-disable-next-line camelcase
 export const loadValidationResult = (val_result: {
   [keys: string]: {
     user: string,

@@ -7,15 +7,16 @@ import {
   DELETE_GROUP_FILTER,
   UPDATE_FILTER
 } from "../actions/groupFiltersActions/actionTypes";
+import { setStorageData } from "../LocalStorage/ValidationSetupLocalStorage/ValidationSetupLocalStorage";
 
 const initialState = {
   group_filters: {}
 };
-import { setStorageData } from "../LocalStorage/ValidationSetupLocalStorage/ValidationSetupLocalStorage";
 
 export default function groupFiltersReducer(state = initialState, action) {
   switch (action.type) {
     case DELETE_GROUP_FILTER:
+      // eslint-disable-next-line no-case-declarations
       const { [action.payload]: value, ...restData } = state.group_filters;
       console.log("executed");
       setStorageData({ ...state, group_filters: restData });

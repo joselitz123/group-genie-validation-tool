@@ -7,7 +7,7 @@ const checkAccessAvailability = (
     id: string,
     group_name: string,
     group_alias: string,
-    child?: Array<{ data: { group_name: string } }>
+    child?: Array<{ data: { group_name: string, id: string } }>
   }>
 ) => {
   const arrAccessObjects: any = Object.values(accessObjects);
@@ -45,32 +45,30 @@ const checkAccessAvailability = (
               ) {
                 return {
                   ...allData,
-                  [curData.data.group_name]: {
-                    ...curData
+                  [curData.data.id]: {
+                    ...curData.data
                   }
                 };
               }
               return allData;
             }, {});
 
-            return { ...pVal, [cVal.id]: { val_result: childAccess } };
+            return {
+              ...pVal,
+              [cVal.id]:
+                Object.values(childAccess).length !== 0 ? childAccess : false
+            };
           }
           return typeof accessObjects[curAccessObject.user].access[
             cVal.group_name
           ] !== "undefined"
             ? {
                 ...pVal,
-                [cVal.id]: {
-                  val_result: true,
-                  ...cVal
-                }
+                [cVal.id]: true
               }
             : {
                 ...pVal,
-                [cVal.id]: {
-                  val_result: false,
-                  ...cVal
-                }
+                [cVal.id]: false
               };
         },
         {}

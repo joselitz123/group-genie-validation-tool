@@ -47,7 +47,9 @@ type Props = {
     id: string,
     group_name: string,
     group_alias: string,
-    child?: Array<{ data: { group_name: string, id: string } }>
+    child?: Array<{
+      data: { group_name: string, id: string, parentId: string }
+    }>
   }>,
   loadLocalStorageGroupFilters: function,
   loadAllUserAccess: typeof loadAllUserAccess,

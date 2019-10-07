@@ -2,7 +2,7 @@
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 import * as React from "react";
 import { connect } from "react-redux";
-import { FancyGridReact } from "fancygrid-react";
+import Fancy from "fancygrid";
 import PropTypes from "prop-types";
 // import { withRouter } from "react-router-dom";
 // import routes from "../../../constants/routes.json";z
@@ -16,66 +16,101 @@ type Props = {
 const ResultDataTable = (props: Props) => {
   const { validationResult, filtersSelected, allFilters } = props;
 
-  const [gridState, setGridState] = React.useState({});
+  const tableWidth = 1350;
 
-  console.log(validationResult);
+  const [initGridState, setInitGridState] = React.useState({});
 
-  React.useEffect(() => {
-    // eslint-disable-next-line array-callback-return
-    filtersSelected.map(filterSelectedID => {
-      // eslint-disable-next-line no-unused-expressions
-      const column = {
-        title: allFilters[filterSelectedID].group_alias,
-        index: filterSelectedID,
-        type: "string",
-        flex: 1
-      };
+  const inputEl = React.useRef(null);
 
-      gridState.addColumn(column);
-    });
-
-    gridState.add();
-  }, [filtersSelected]);
-
-  const gridConfig = () => ({
-    title: "Validation Result Table",
-    height: 460,
-    width: 1350,
-    columns: [
-      {
-        index: "company",
-        title: "User",
-        type: "string",
-        width: 80
-      }
-      // {
-      //   index: "name",
-      //   title: "Name",
-      //   type: "string",
-      //   flex: 1
-      // },
-      // {
-      //   index: "surname",
-      //   title: "Sur Name",
-      //   type: "string",
-      //   flex: 1
-      // },
-      // {
-      //   index: "age",
-      //   title: "Age",
-      //   type: "number",
-      //   flex: 1
-      // }
-    ]
-  });
-
-  const eventsHandler = () => [
+  const initialEventsHandler = () => [
     {
-      init: setGridState
+      init: setInitGridState
     }
   ];
 
-  return <FancyGridReact events={eventsHandler()} config={gridConfig()} />;
+  const createColumns = () => {
+    const userColumn = {
+      index: "user_accnt",
+      title: "User",
+      sortable: true,
+      type: "string",
+      flex: 1,
+      align: "center",
+      // cellAlign: "center",
+      draggable: true,
+      filter: {
+        header: true,
+        emptyText: "Filter"
+      }
+    };
+    const createdColumns = filtersSelected.reduce(
+      (allColumns, currentColumn) => {
+        const functionColumn = {
+          index: allFilters[currentColumn].id.toString().replace(/-/g, "_"),
+          title: allFilters[currentColumn].group_alias,
+          type:
+            typeof allFilters[currentColumn].child === "undefined"
+              ? "combo"
+              : "tree",
+          data: ["", `✔`, "❌"],
+          flex: 1,
+          cellAlign:
+            typeof allFilters[currentColumn].child === "undefined"
+              ? "center"
+              : "left",
+          align: "center",
+          draggable: true,
+          filter: {
+            header: true,
+            emptyText: "Filter"
+            // tip: [
+            //   "Contains: 30",
+            //   "Less than: <30",
+            //   "More than: >30",
+            //   "Equal: =30",
+            //   "Not Equal: !=30",
+            //   "Composite: <30,>5"
+            // ].join("")
+          }
+
+          // render: data => {
+          //   if (typeof data.value === "object") {
+          //     // eslint-disable-next-line no-param-reassign
+          //     data.value = Object.values(data.value).length !== 0 ? `✔` : "❌";
+
+          //     return data;
+          //   }
+
+          //   return data;
+          // }
+        };
+
+        return [...allColumns, functionColumn];
+      },
+      [userColumn]
+    );
+
+    return createdColumns;
+  };
+
+  React.useEffect(() => {
+    if (typeof initGridState.destroy !== "undefined") {
+      initGridState.destroy();
+    }
+    // eslint-disable-next-line no-new
+    new Fancy.Grid({
+      renderTo: inputEl.current,
+      title: "Validation Result Table",
+      height: 460,
+      width: tableWidth,
+      events: initialEventsHandler(),
+      emptyText: "No data can be shown at the moment",
+      columns: createColumns(),
+      data: Object.values(validationResult)
+    });
+  }, [validationResult]);
+
+  return <div ref={inputEl} className="gridDiv" />;
 };
 
 ResultDataTable.propTypes = {

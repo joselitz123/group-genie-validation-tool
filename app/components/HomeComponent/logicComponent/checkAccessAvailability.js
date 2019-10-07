@@ -1,5 +1,7 @@
 // @flow
 import type { accountAccess } from "../../../constants/flowInterfaces";
+import dashToUnderscoreConverter from "../../ReusableFunctions/dashToUnderscoreConverter";
+import uniqBy from "lodash/uniqBy";
 
 const checkAccessAvailability = (
   accessObjects: { [keys: string]: accountAccess },
@@ -7,7 +9,9 @@ const checkAccessAvailability = (
     id: string,
     group_name: string,
     group_alias: string,
-    child?: Array<{ data: { group_name: string, id: string } }>
+    child?: Array<{
+      data: { group_name: string, id: string, parentId: string }
+    }>
   }>
 ) => {
   const arrAccessObjects: any = Object.values(accessObjects);
@@ -22,58 +26,75 @@ const checkAccessAvailability = (
       totalVal: { [key: string]: accountAccess },
       curAccessObject: accountAccess
     ) => {
-      const access: {
-        [keys: string]: { val_result: boolean, group_alias: string }
-      } = filterGroups.reduce(
-        (
-          pVal: {
-            [key: string]: {
-              id: string,
-              group_name: string,
-              group_alias: string,
-              child?: Array<{}>
+      const access = filterGroups.reduce((pVal, cVal): {
+        child: Array<{}>
+      } => {
+        if (typeof cVal.child !== "undefined") {
+          console.log(cVal.child);
+          const childAccess = cVal.child.reduce((allData, curData, index) => {
+            if (
+              typeof accessObjects[curAccessObject.user].access[
+                curData.data.group_name
+              ] !== "undefined"
+            ) {
+              if (typeof pVal.child !== "undefined") {
+                if (typeof pVal.child[index] !== "undefined") {
+                  // const [index, restData] = pVal.child;
+
+                  return [
+                    ...allData,
+                    {
+                      ...pVal.child[index],
+                      [dashToUnderscoreConverter(
+                        curData.data.parentId
+                      )]: curData.data.group_name,
+                      leaf: true,
+                      user_accnt: curAccessObject.user
+                    }
+                  ];
+                }
+              }
+
+              return [
+                ...allData,
+                // colData
+                {
+                  [dashToUnderscoreConverter(curData.data.parentId)]: curData
+                    .data.group_name,
+                  leaf: true,
+                  user_accnt: curAccessObject.user
+                }
+              ];
             }
-          },
-          cVal
-        ) => {
-          if (typeof cVal.child !== "undefined") {
-            const childAccess = cVal.child.reduce((allData, curData) => {
-              if (
-                typeof accessObjects[curAccessObject.user].access[
-                  curData.data.group_name
-                ] !== "undefined"
-              ) {
-                return {
-                  ...allData,
-                  [curData.data.id]: {
-                    ...curData.data
-                  }
-                };
-              }
-              return allData;
-            }, {});
+            return allData;
+          }, []);
 
-            return {
+          const childArray: function =
+            Object.values(childAccess).length !== 0
+              ? typeof pVal.child !== "undefined"
+                ? [...pVal.child, ...childAccess]
+                : childAccess
+              : pVal.child;
+
+          return {
+            ...pVal,
+            [dashToUnderscoreConverter(cVal.id)]:
+              Object.values(childAccess).length !== 0 ? "✔" : "❌",
+            child: childArray
+          };
+        }
+        return typeof accessObjects[curAccessObject.user].access[
+          cVal.group_name
+        ] !== "undefined"
+          ? {
               ...pVal,
-              [cVal.id]:
-                Object.values(childAccess).length !== 0 ? childAccess : false
+              [dashToUnderscoreConverter(cVal.id)]: `✔`
+            }
+          : {
+              ...pVal,
+              [dashToUnderscoreConverter(cVal.id)]: "❌"
             };
-          }
-          return typeof accessObjects[curAccessObject.user].access[
-            cVal.group_name
-          ] !== "undefined"
-            ? {
-                ...pVal,
-                [cVal.id]: true
-              }
-            : {
-                ...pVal,
-                [cVal.id]: false
-              };
-        },
-        {}
-      );
-
+      }, {});
       return {
         ...totalVal,
         [curAccessObject.user]: { user_accnt: curAccessObject.user, ...access }

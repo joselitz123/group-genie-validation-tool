@@ -1,13 +1,7 @@
-import React, { Fragment } from "react";
+import React from "react";
 
 import ResultDataTable from "./ResultDataTable";
 
-const ValidationResultSection = () => (
-  <Fragment>
-    <div>
-      <ResultDataTable />
-    </div>
-  </Fragment>
-);
+const ValidationResultSection = () => <ResultDataTable />;
 
 export default ValidationResultSection;

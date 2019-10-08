@@ -1,7 +1,12 @@
 // @flow
-import type { accountAccess } from "../../../constants/flowInterfaces";
 import dashToUnderscoreConverter from "../../ReusableFunctions/dashToUnderscoreConverter";
-import uniqBy from "lodash/uniqBy";
+
+type accountAccess = {
+  user: string,
+  access: {},
+  error_code?: string,
+  errorg_msg?: string
+};
 
 const checkAccessAvailability = (
   accessObjects: { [keys: string]: accountAccess },
@@ -14,7 +19,7 @@ const checkAccessAvailability = (
     }>
   }>
 ) => {
-  const arrAccessObjects: any = Object.values(accessObjects);
+  const arrAccessObjects: function = Object.values(accessObjects);
 
   const result: {
     [keys: string]: {
@@ -26,84 +31,95 @@ const checkAccessAvailability = (
       totalVal: { [key: string]: accountAccess },
       curAccessObject: accountAccess
     ) => {
+      const childData = [];
+
       const access = filterGroups.reduce((pVal, cVal): {
-        child: Array<{}>
+        child: Array<{ [key: string]: string | boolean }>,
+        [key: string]: string
       } => {
+        if (typeof curAccessObject.access[cVal.group_name] !== "undefined") {
+          return {
+            ...pVal,
+            [dashToUnderscoreConverter(cVal.id)]: `✔`
+          };
+        }
+
         if (typeof cVal.child !== "undefined") {
-          console.log(cVal.child);
-          const childAccess = cVal.child.reduce((allData, curData, index) => {
+          const childResult = cVal.child.reduce((allResults, childFilter) => {
             if (
-              typeof accessObjects[curAccessObject.user].access[
-                curData.data.group_name
-              ] !== "undefined"
+              typeof curAccessObject.access[childFilter.data.group_name] !==
+              "undefined"
             ) {
-              if (typeof pVal.child !== "undefined") {
-                if (typeof pVal.child[index] !== "undefined") {
-                  // const [index, restData] = pVal.child;
-
-                  return [
-                    ...allData,
-                    {
-                      ...pVal.child[index],
-                      [dashToUnderscoreConverter(
-                        curData.data.parentId
-                      )]: curData.data.group_name,
-                      leaf: true,
-                      user_accnt: curAccessObject.user
-                    }
-                  ];
-                }
-              }
-
               return [
-                ...allData,
-                // colData
+                ...allResults,
                 {
-                  [dashToUnderscoreConverter(curData.data.parentId)]: curData
-                    .data.group_name,
-                  leaf: true,
-                  user_accnt: curAccessObject.user
+                  [dashToUnderscoreConverter(cVal.id)]: childFilter.data
+                    .group_name,
+                  leaf: true
                 }
               ];
             }
-            return allData;
+
+            return allResults;
           }, []);
 
-          const childArray: function =
-            Object.values(childAccess).length !== 0
-              ? typeof pVal.child !== "undefined"
-                ? [...pVal.child, ...childAccess]
-                : childAccess
-              : pVal.child;
+          childData.push(childResult);
 
-          return {
-            ...pVal,
-            [dashToUnderscoreConverter(cVal.id)]:
-              Object.values(childAccess).length !== 0 ? "✔" : "❌",
-            child: childArray
-          };
-        }
-        return typeof accessObjects[curAccessObject.user].access[
-          cVal.group_name
-        ] !== "undefined"
-          ? {
+          if (childResult.length !== 0) {
+            return {
               ...pVal,
               [dashToUnderscoreConverter(cVal.id)]: `✔`
-            }
-          : {
-              ...pVal,
-              [dashToUnderscoreConverter(cVal.id)]: "❌"
             };
+          }
+
+          return { ...pVal, [dashToUnderscoreConverter(cVal.id)]: "❌" };
+        }
+
+        return {
+          ...pVal,
+          [dashToUnderscoreConverter(cVal.id)]: "❌"
+        };
       }, {});
+
+      console.log(mergeArrayObjects(childData));
+
       return {
         ...totalVal,
-        [curAccessObject.user]: { user_accnt: curAccessObject.user, ...access }
+        [curAccessObject.user]: {
+          user_accnt: curAccessObject.user,
+          ...access,
+          child: mergeArrayObjects(childData)
+        }
       };
     },
     {}
   );
 
   return result;
+};
+
+const mergeArrayObjects = (
+  arrObjects: Array<Array<{ [key: string]: string, leaf: boolean }>>
+) => {
+  const arrContainer = [];
+
+  arrObjects.map(groups => {
+    groups.map((group, iterations: number) => {
+      if (
+        groups.length > arrContainer.length &&
+        iterations + 1 >= arrContainer.length
+      ) {
+        arrContainer.push(group);
+      } else {
+        arrContainer[iterations] = { ...arrContainer[iterations], ...group };
+      }
+      return null;
+    });
+
+    return null;
+  });
+
+  return arrContainer;
 };
 
 export default checkAccessAvailability;

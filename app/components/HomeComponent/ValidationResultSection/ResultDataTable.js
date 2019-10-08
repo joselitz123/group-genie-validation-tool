@@ -62,15 +62,12 @@ const ResultDataTable = (props: Props) => {
           draggable: true,
           filter: {
             header: true,
-            emptyText: "Filter"
-            // tip: [
-            //   "Contains: 30",
-            //   "Less than: <30",
-            //   "More than: >30",
-            //   "Equal: =30",
-            //   "Not Equal: !=30",
-            //   "Composite: <30,>5"
-            // ].join("")
+            emptyText: "Filter",
+            tip: [
+              "Contains: Google",
+              "Equal: =Google Inc.",
+              "Not Equal: !=Google Inc."
+            ].join("")
           }
 
           // render: data => {

@@ -33,7 +33,16 @@ const useStyles = makeStyles({
   }
 });
 
-const HubRegionField = props => {
+type Props = {
+  hubRegionInputHandler: function,
+  regionsAvailable: function,
+  hubRegionInput: string,
+  hubFilters: function,
+  setSelectedGroupInFieldBox: function,
+  hubRegionSelected: function
+};
+
+const HubRegionField = (props: Props) => {
   const {
     hubRegionInputHandler,
     regionsAvailable,
@@ -45,14 +54,17 @@ const HubRegionField = props => {
 
   const classes = useStyles();
 
-  React.useEffect(() => {
-    const HubGroupFilterID = hubFilters.reduce(
-      (allData, curData) => [...allData, curData.id],
-      []
-    );
+  React.useEffect(
+    () => {
+      const HubGroupFilterID = hubFilters.reduce(
+        (allData, curData) => [...allData, curData.id],
+        []
+      );
 
-    setSelectedGroupInFieldBox(HubGroupFilterID);
-  }, [hubRegionSelected]);
+      setSelectedGroupInFieldBox(HubGroupFilterID);
+    },
+    [hubRegionSelected]
+  );
 
   return (
     <FormControl
@@ -100,7 +112,7 @@ const mapStateToProps = state => ({
   hubRegionSelected: state.hubSelectionFieldReducer.hubSelected
 });
 
-export default connect(
+export default connect<*, *, *, *, *, *>(
   mapStateToProps,
   { setSelectedGroupInFieldBox }
 )(HubRegionField);

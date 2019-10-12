@@ -6,7 +6,13 @@ import { setInputUsersField } from "../../../actions/HomeComponentActions/UsersF
 import TextFieldComponent from "../../ReusableComponent/TextFieldComponent/textField";
 import type { TextFieldStyleInterface } from "../../../constants/flowInterfaces";
 
-const UsersFieldBox = ({ usersField, setInputUsersField }) => {
+type Props = {
+  setInputUsersField: function,
+  usersField: string
+};
+
+const UsersFieldBox = (componentProps: Props) => {
+  const { usersField, setInputUsersField } = componentProps;
   const props: TextFieldStyleInterface = {
     placeholder: "Enter here the users you want to validate their access",
     type: "textarea",
@@ -36,7 +42,7 @@ const mapStatetoProps = state => ({
   usersField: state.usersFieldBoxReducer.input
 });
 
-export default connect(
+export default connect<*, *, *, *, *, *>(
   mapStatetoProps,
   { setInputUsersField }
 )(UsersFieldBox);

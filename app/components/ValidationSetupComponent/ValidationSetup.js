@@ -1,32 +1,22 @@
 // @flow
 import React, { useEffect } from "react";
-import { Link } from "react-router-dom";
-import routes from "../../constants/routes.json";
+// import { Link } from "react-router-dom";
 import { connect } from "react-redux";
-import { Row, Col, FormGroup, Label, Input } from "reactstrap";
-import FormFields from "./formFields";
+import PropTypes from "prop-types";
+import routes from "../../constants/routes.json";
 import { getStorageData } from "../../LocalStorage/ValidationSetupLocalStorage/ValidationSetupLocalStorage";
 import { loadLocalStorageGroupFilters } from "../../actions/groupFiltersActions/actions";
-import PropTypes from "prop-types";
 import GroupFilterLists from "./groupFilterLists";
 import { containerStyle } from "../../constants/constantStyles";
 import BackButton from "../ReusableComponent/BackButtonComponent/BackButton";
-import HubRegionField from "./hubRegionField";
-import ButtonComponent from "../ReusableComponent/ButtonComponent/ButtonComponent";
-import { makeStyles } from "@material-ui/styles";
+// import HubRegionField from "./hubRegionField";
+// import ButtonComponent from "../ReusableComponent/ButtonComponent/ButtonComponent";
 import ModalFormField from "./modalFormField";
-import { toggleFormModal } from "../../actions/validationSetupActions/actions";
 
-const useStyles = makeStyles({
-  buttonContainer: {
-    display: "flex",
-    alignItems: "center"
-  }
-});
+type Props = { loadLocalStorageGroupFilters: function };
 
-const ValidationSetup = ({ loadLocalStorageGroupFilters, toggleFormModal }) => {
-  const classes = useStyles();
-
+const ValidationSetup = (props: Props) => {
+  const { loadLocalStorageGroupFilters } = props;
   useEffect(() => {
     const FetchLocalStorageGroupFilters = async () => {
       const data = await getStorageData();
@@ -36,19 +26,6 @@ const ValidationSetup = ({ loadLocalStorageGroupFilters, toggleFormModal }) => {
 
     FetchLocalStorageGroupFilters();
   }, []);
-
-  const buttonProps = {
-    variant: "contained",
-    color: "primary",
-    size: "medium",
-    type: "submit"
-  };
-
-  const submitHandler = e => {
-    e.preventDefault();
-
-    toggleFormModal(true);
-  };
 
   return (
     <div className="container-flex" style={containerStyle}>
@@ -78,11 +55,10 @@ const ValidationSetup = ({ loadLocalStorageGroupFilters, toggleFormModal }) => {
 };
 
 ValidationSetup.propTypes = {
-  loadLocalStorageGroupFilters: PropTypes.func.isRequired,
-  toggleFormModal: PropTypes.func.isRequired
+  loadLocalStorageGroupFilters: PropTypes.func.isRequired
 };
 
-export default connect(
+export default connect<*, *, *, *, *, *>(
   null,
-  { loadLocalStorageGroupFilters, toggleFormModal }
+  { loadLocalStorageGroupFilters }
 )(ValidationSetup);

@@ -115,7 +115,7 @@ const Home = (props: Props) => {
   }, []);
 
   const pullUsersAccess = async () => {
-    const axiosToken: axios.cancelToken = axios.CancelToken;
+    const axiosToken = axios.CancelToken;
     const source = axiosToken.source();
     // create first a cancel token for the request
     setCancelToken(source);
@@ -232,7 +232,7 @@ const mapStateToProps = state => ({
   loadingState: state.loadingIndicatorReducer.showModal
 });
 
-export default connect(
+export default connect<*, *, *, *, *, *>(
   mapStateToProps,
   {
     loadLocalStorageGroupFilters,

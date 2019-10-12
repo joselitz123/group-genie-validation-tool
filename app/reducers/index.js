@@ -12,7 +12,7 @@ import hubSelectionFieldReducer from "./HomeComponentReducers/HubSelectionFieldR
 import validationSetupReducer from "./validationSetupReducers/validationSetupReducer";
 
 export default function createRootReducer(history: History) {
-  return combineReducers({
+  return combineReducers<Object, function>({
     router: connectRouter(history),
     inputFieldReducers,
     groupFiltersReducer,

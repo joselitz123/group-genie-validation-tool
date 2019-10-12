@@ -48,4 +48,4 @@ const mapStateToProps = state => ({
   groupType: state.inputFieldReducers.groupTypeField
 });
 
-export default connect(mapStateToProps)(FormFields);
+export default connect<*, *, *, *, *, *>(mapStateToProps)(FormFields);

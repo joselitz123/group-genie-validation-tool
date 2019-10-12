@@ -46,11 +46,13 @@ ErrorIndicator.propTypes = {
   resetLoaderUIState: PropTypes.func.isRequired
 };
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state: {
+  loadingIndicatorReducer: { error_msg: string }
+}) => ({
   errorMsg: state.loadingIndicatorReducer.error_msg
 });
 
-export default connect(
+export default connect<*, *, *, *, *, *>(
   mapStateToProps,
   { resetLoaderUIState }
 )(ErrorIndicator);

@@ -16,16 +16,29 @@ import {
   toggleFormModal
 } from "../../actions/validationSetupActions/actions";
 
-const GroupFilterLists = ({
-  changeGroupFilterArrangement,
-  hubRegionFilter,
-  selectedHubRegion,
-  hubRegionInputHandler,
-  deleteGroupFilter,
-  allHubFilters,
-  toggleFormModal,
-  updateFilter
-}) => {
+type Props = {
+  changeGroupFilterArrangement: function,
+  hubRegionFilter: function,
+  selectedHubRegion: function,
+  hubRegionInputHandler: function,
+  deleteGroupFilter: function,
+  allHubFilters: function,
+  toggleFormModal: function,
+  updateFilter: function
+};
+
+const GroupFilterLists = (props: Props) => {
+  const {
+    changeGroupFilterArrangement,
+    hubRegionFilter,
+    selectedHubRegion,
+    hubRegionInputHandler,
+    deleteGroupFilter,
+    allHubFilters,
+    toggleFormModal,
+    updateFilter
+  } = props;
+
   const [gridState, setGridState] = useState({});
 
   const hubRegions = useSelector(state => state.inputFieldReducers.hubRegions);
@@ -33,14 +46,17 @@ const GroupFilterLists = ({
     state => state.inputFieldReducers.isValidating
   );
 
-  useEffect(() => {
-    if (toArray(gridState).length !== 0) {
-      gridState.removeAll();
-      gridState.setData(hubRegionFilter);
+  useEffect(
+    () => {
+      if (toArray(gridState).length !== 0) {
+        gridState.removeAll();
+        gridState.setData(hubRegionFilter);
 
-      gridState.update();
-    }
-  }, [selectedHubRegion, addFilterValStatus]);
+        gridState.update();
+      }
+    },
+    [selectedHubRegion, addFilterValStatus]
+  );
 
   const dragRowsHandler = grid => {
     const gridData = grid
@@ -206,7 +222,7 @@ const mapStateToProps = state => ({
   allHubFilters: state.groupFiltersReducer.group_filters
 });
 
-export default connect(
+export default connect<*, *, *, *, *, *>(
   mapStateToProps,
   {
     changeGroupFilterArrangement,

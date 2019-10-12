@@ -7,7 +7,14 @@ import { valSetupInputHandler } from "../../actions/validationSetupActions/actio
 import TextFieldComponent from "../ReusableComponent/TextFieldComponent/textField";
 import type { TextFieldStyleInterface } from "../../constants/flowInterfaces";
 
-const GroupNameField = ({ groupName, valSetupInputHandler, errorMsg }) => {
+type Props = {
+  groupName: string,
+  valSetupInputHandler: function,
+  errorMsg: string
+};
+
+const GroupNameField = (componentProps: Props) => {
+  const { groupName, valSetupInputHandler, errorMsg } = componentProps;
   const props: TextFieldStyleInterface = {
     type: "text",
     value: groupName,
@@ -37,7 +44,7 @@ const mapStateToProps = state => ({
   errorMsg: state.inputFieldReducers.groupNameFieldErrorMsg
 });
 
-export default connect(
+export default connect<*, *, *, *, *, *>(
   mapStateToProps,
   { valSetupInputHandler }
 )(GroupNameField);

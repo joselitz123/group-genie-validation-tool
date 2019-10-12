@@ -5,12 +5,20 @@ import PropTypes from "prop-types";
 import { hubRegionInputHandler } from "../../actions/validationSetupActions/actions";
 import SelectHubFieldComponent from "../ReusableComponent/SelectHubFieldComponent/SelectHubFieldComponent";
 
-const HubRegionField = ({ hubRegionInputHandler, hubRegionInput }) => (
-  <SelectHubFieldComponent
-    hubRegionInputHandler={hubRegionInputHandler}
-    hubRegionInput={hubRegionInput}
-  />
-);
+type Props = {
+  hubRegionInputHandler: function,
+  hubRegionInput: string
+};
+
+const HubRegionField = (props: Props) => {
+  const { hubRegionInputHandler, hubRegionInput } = props;
+  return (
+    <SelectHubFieldComponent
+      hubRegionInputHandler={hubRegionInputHandler}
+      hubRegionInput={hubRegionInput}
+    />
+  );
+};
 
 HubRegionField.propTypes = {
   hubRegionInputHandler: PropTypes.func.isRequired,
@@ -21,7 +29,7 @@ const mapStateToProps = state => ({
   hubRegionInput: state.inputFieldReducers.hubRegionField
 });
 
-export default connect(
+export default connect<*, *, *, *, *, *>(
   mapStateToProps,
   { hubRegionInputHandler }
 )(HubRegionField);

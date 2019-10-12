@@ -38,7 +38,7 @@ const mapStateToProps = state => ({
   value: state.inputFieldReducers.groupTypeField
 });
 
-export default connect(
+export default connect<*, *, *, *, *, *>(
   mapStateToProps,
   { valSetupInputHandler }
 )(GroupTypeField);

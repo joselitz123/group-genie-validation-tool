@@ -90,22 +90,29 @@ const ResultDataTable = (props: Props) => {
     return createdColumns;
   };
 
-  React.useEffect(() => {
-    if (typeof initGridState.destroy !== "undefined") {
-      initGridState.destroy();
-    }
-    // eslint-disable-next-line no-new
-    new Fancy.Grid({
-      renderTo: inputEl.current,
-      title: "Validation Result Table",
-      height: 460,
-      width: tableWidth,
-      events: initialEventsHandler(),
-      emptyText: "No data can be shown at the moment",
-      columns: createColumns(),
-      data: Object.values(validationResult)
-    });
-  }, [validationResult]);
+  React.useEffect(
+    () => {
+      if (typeof initGridState.destroy !== "undefined") {
+        initGridState.destroy();
+      }
+      // eslint-disable-next-line no-new
+      new Fancy.Grid({
+        renderTo: inputEl.current,
+        title: "Validation Result Table",
+        height: 460,
+        width: tableWidth,
+        shadow: false,
+        defaults: {
+          resizable: true
+        },
+        events: initialEventsHandler(),
+        emptyText: "No data can be shown at the moment",
+        columns: createColumns(),
+        data: Object.values(validationResult)
+      });
+    },
+    [validationResult]
+  );
 
   return <div ref={inputEl} className="gridDiv" />;
 };
@@ -122,4 +129,4 @@ const mapStateToProps = state => ({
   allFilters: state.groupFiltersReducer.group_filters
 });
 
-export default connect(mapStateToProps)(ResultDataTable);
+export default connect<*, *, *, *, *, *>(mapStateToProps)(ResultDataTable);

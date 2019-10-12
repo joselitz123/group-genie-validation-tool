@@ -38,7 +38,7 @@ const mapStateToProps = state => ({
   textAreaValue: state.inputFieldReducers.groupNameTextArea
 });
 
-export default connect(
+export default connect<*, *, *, *, *, *>(
   mapStateToProps,
   { valSetupInputHandler }
 )(GroupNameTextArea);

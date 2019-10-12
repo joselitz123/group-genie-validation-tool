@@ -112,9 +112,12 @@ const ModalFormField = (props: Props) => {
     variant: "contained"
   };
 
-  React.useEffect(() => {
-    resetFormModalFields();
-  }, [groupType]);
+  React.useEffect(
+    () => {
+      resetFormModalFields();
+    },
+    [groupType]
+  );
 
   const submitHandler = async e => {
     e.preventDefault();
@@ -216,8 +219,6 @@ const ModalFormField = (props: Props) => {
               ...allData
             ];
           }, []);
-
-          console.table(dataGrid);
 
           const groupID = uuid();
 
@@ -353,7 +354,7 @@ const mapStateToProps = state => ({
   groupnames: state.inputFieldReducers.groupNameTextArea
 });
 
-export default connect(
+export default connect<*, *, *, *, *, *>(
   mapStateToProps,
   {
     toggleFormModal,

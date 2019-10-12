@@ -1,14 +1,12 @@
 // @flow
 
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import { connect } from "react-redux";
-import { useSpring, config } from "react-spring";
-import { Spring } from "react-spring/renderprops";
+import PropTypes from "prop-types";
 import {
   closeModal,
   resetLoaderUIState
 } from "../../../actions/HomeComponentActions/TriggerValidate/actions";
-import PropTypes from "prop-types";
 import LoadingIndicator from "./loadingIndicator";
 import ErrorIndicator from "./errorIndicator";
 import ModalComponent from "../../ReusableComponent/ModalComponent/ModalComponent";
@@ -30,19 +28,22 @@ const LoadingIndicatorModal = (props: Props) => {
     isErrorOccured
   } = props;
 
-  useEffect(() => {
-    setTimeout(() => {
-      closeModal();
-
+  useEffect(
+    () => {
       setTimeout(() => {
-        resetLoaderUIState();
-      }, 500);
-    }, 1000);
-  }, [validationResult]);
+        closeModal();
+
+        setTimeout(() => {
+          resetLoaderUIState();
+        }, 500);
+      }, 1000);
+    },
+    [validationResult]
+  );
 
   return (
     <ModalComponent isOpen={showModal} size="md">
-      {isErrorOccured == false ? <LoadingIndicator /> : <ErrorIndicator />}
+      {isErrorOccured === false ? <LoadingIndicator /> : <ErrorIndicator />}
     </ModalComponent>
   );
 };
@@ -61,7 +62,7 @@ const mapStateToProps = state => ({
   validationResult: state.validationReducer.validationResult
 });
 
-export default connect(
+export default connect<*, *, *, *, *, *>(
   mapStateToProps,
   { closeModal, resetLoaderUIState }
 )(LoadingIndicatorModal);

@@ -73,6 +73,7 @@ const GroupFilterLists = (props: Props) => {
   };
 
   const updateHandler = (grid, data) => {
+    console.log(["data updated", data.data.description]);
     updateFilter(data);
     grid.clearDirty();
   };
@@ -84,7 +85,7 @@ const GroupFilterLists = (props: Props) => {
       fields: ["group_alias", "group_name", "description", "action"]
     },
     clicksToEdit: 2,
-    height: 610,
+    height: 590,
     width: 1350,
     defaults: {
       editable: true

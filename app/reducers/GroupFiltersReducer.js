@@ -1,11 +1,13 @@
-/* eslint-disable no-fallthrough */
+/* eslint-disable no-case-declarations */
+/* eslint-disable camelcase */
 import { createSelector } from "reselect";
 import {
   SET_GROUP_FILTERS,
   LOAD_LOCAL_STORAGE_FILTERS,
   REARRANGE_GROUP_FILTERS,
   DELETE_GROUP_FILTER,
-  UPDATE_FILTER
+  UPDATE_FILTER,
+  UPDATE_FILTER_CHILD
 } from "../actions/groupFiltersActions/actionTypes";
 import { setStorageData } from "../LocalStorage/ValidationSetupLocalStorage/ValidationSetupLocalStorage";
 
@@ -44,24 +46,52 @@ export default function groupFiltersReducer(state = initialState, action) {
         ...state,
         group_filters: { ...action.payload, ...state.group_filters }
       });
-      console.table({
-        ...state,
-        group_filters: { ...action.payload, ...state.group_filters }
-      });
 
       return {
         ...state,
         group_filters: { ...action.payload, ...state.group_filters }
       };
     case UPDATE_FILTER:
+      // eslint-disable-next-line no-case-declarations
+      const group_filters = {
+        ...state.group_filters,
+        [action.payload.id]: {
+          ...state.group_filters[action.payload.id],
+          group_alias: action.payload.data.group_alias,
+          description: action.payload.data.description
+        }
+      };
+
+      setStorageData({ ...state, group_filters });
+
+      return {
+        ...state,
+        group_filters
+      };
+
+    case UPDATE_FILTER_CHILD:
+      const childData = state.group_filters[
+        action.payload.data.parentId
+      ].child.reduce(
+        (allData, curData) => ({ ...allData, [curData.id]: curData }),
+        {}
+      );
+
+      const dataInsertion = {
+        ...childData,
+        [[action.payload.id]]: {
+          ...childData[action.payload.id],
+          data: action.payload.data
+        }
+      };
+
       setStorageData({
         ...state,
         group_filters: {
           ...state.group_filters,
-          [action.payload.id]: {
-            ...state.group_filters[action.payload.id],
-            group_alias: action.payload.data.group_alias,
-            description: action.payload.data.description
+          [action.payload.data.parentId]: {
+            ...state.group_filters[action.payload.data.parentId],
+            child: Object.values(dataInsertion)
           }
         }
       });
@@ -70,13 +100,13 @@ export default function groupFiltersReducer(state = initialState, action) {
         ...state,
         group_filters: {
           ...state.group_filters,
-          [action.payload.id]: {
-            ...state.group_filters[action.payload.id],
-            group_alias: action.payload.data.group_alias,
-            description: action.payload.data.description
+          [action.payload.data.parentId]: {
+            ...state.group_filters[action.payload.data.parentId],
+            child: Object.values(dataInsertion)
           }
         }
       };
+
     default:
       return state;
   }

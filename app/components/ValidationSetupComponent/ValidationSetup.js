@@ -1,6 +1,6 @@
 // @flow
 import React, { useEffect } from "react";
-// import { Link } from "react-router-dom";
+
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import routes from "../../constants/routes.json";
@@ -9,8 +9,7 @@ import { loadLocalStorageGroupFilters } from "../../actions/groupFiltersActions/
 import GroupFilterLists from "./groupFilterLists";
 import { containerStyle } from "../../constants/constantStyles";
 import BackButton from "../ReusableComponent/BackButtonComponent/BackButton";
-// import HubRegionField from "./hubRegionField";
-// import ButtonComponent from "../ReusableComponent/ButtonComponent/ButtonComponent";
+
 import ModalFormField from "./modalFormField";
 
 type Props = { loadLocalStorageGroupFilters: function };

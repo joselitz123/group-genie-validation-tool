@@ -5,7 +5,8 @@ import {
   LOAD_LOCAL_STORAGE_FILTERS,
   REARRANGE_GROUP_FILTERS,
   DELETE_GROUP_FILTER,
-  UPDATE_FILTER
+  UPDATE_FILTER,
+  UPDATE_FILTER_CHILD
 } from "./actionTypes";
 
 export const setGroupFilters = (data, allFilters) => dispatch => {
@@ -42,8 +43,9 @@ export const deleteGroupFilter = (restGroups, id) => dispatch => {
 };
 
 export const updateFilter = data => dispatch => {
-  dispatch({
-    type: UPDATE_FILTER,
-    payload: data
-  });
+  if (data.data.$deep === 1) {
+    dispatch({ type: UPDATE_FILTER, payload: data });
+  } else {
+    dispatch({ type: UPDATE_FILTER_CHILD, payload: data });
+  }
 };

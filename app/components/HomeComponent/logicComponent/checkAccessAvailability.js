@@ -5,7 +5,7 @@ type accountAccess = {
   user: string,
   access: {},
   error_code?: string,
-  errorg_msg?: string
+  error_msg?: string
 };
 
 const checkAccessAvailability = (
@@ -15,7 +15,12 @@ const checkAccessAvailability = (
     group_name: string,
     group_alias: string,
     child?: Array<{
-      data: { group_name: string, id: string, parentId: string }
+      data: {
+        group_name: string,
+        id: string,
+        parentId: string,
+        group_alias: string
+      }
     }>
   }>
 ) => {
@@ -54,7 +59,7 @@ const checkAccessAvailability = (
                 ...allResults,
                 {
                   [dashToUnderscoreConverter(cVal.id)]: childFilter.data
-                    .group_name,
+                    .group_alias,
                   leaf: true
                 }
               ];
@@ -81,12 +86,18 @@ const checkAccessAvailability = (
         };
       }, {});
 
-      console.log(mergeArrayObjects(childData));
-
       return {
         ...totalVal,
         [curAccessObject.user]: {
           user_accnt: curAccessObject.user,
+          error_code:
+            typeof curAccessObject.error_code !== "undefined"
+              ? curAccessObject.error_code
+              : "",
+          error_msg:
+            typeof curAccessObject.error_msg !== "undefined"
+              ? curAccessObject.error_msg
+              : "",
           ...access,
           child: mergeArrayObjects(childData)
         }

@@ -6,7 +6,8 @@ import {
   REARRANGE_GROUP_FILTERS,
   DELETE_GROUP_FILTER,
   UPDATE_FILTER,
-  UPDATE_FILTER_CHILD
+  UPDATE_FILTER_CHILD,
+  DELETE_GROUP_FILTER_CHILD
 } from "./actionTypes";
 
 export const setGroupFilters = (data, allFilters) => dispatch => {
@@ -35,7 +36,14 @@ export const changeGroupFilterArrangement = changedData => dispatch => {
   });
 };
 
-export const deleteGroupFilter = (restGroups, id) => dispatch => {
+export const deleteGroupFilter = id => dispatch => {
+  dispatch({
+    type: DELETE_GROUP_FILTER,
+    payload: id
+  });
+};
+
+export const deleteGroupFilterChild = id => dispatch => {
   dispatch({
     type: DELETE_GROUP_FILTER,
     payload: id

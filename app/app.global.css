@@ -58,10 +58,6 @@ a:hover {
   left: 0;
 }
 
-.fancy-grid-body > div:nth-child(3) {
-  display: none;
-}
-
 .action-column .fancy-grid-cell-inner {
   margin: 0;
 }
@@ -73,4 +69,22 @@ a:hover {
 .action-column .fancy-grid-cell {
   display: flex;
   justify-content: center;
+}
+
+span.fancy-grid-tree-expander {
+  float: left;
+}
+
+div.fancy-modal:not(:last-of-type) {
+  display: none !important;
+}
+
+div.fancy-grid-body
+  > div[style="position: absolute; z-index: 2; width: 30px; height: 30px; top: 2px; left: 2px;"] {
+  display: none;
+}
+
+div.fancy-grid-body
+  > div[style="position: absolute; z-index: 2; width: 30px; height: 30px; right: 4px; bottom: 0px;"] {
+  display: none;
 }

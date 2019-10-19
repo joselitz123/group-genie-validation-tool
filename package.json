@@ -172,6 +172,7 @@
     "@babel/preset-flow": "^7.0.0",
     "@babel/preset-react": "^7.0.0",
     "@babel/register": "^7.0.0",
+    "@hot-loader/react-dom": "^16.10.2",
     "babel-core": "7.0.0-bridge.0",
     "babel-eslint": "^10.0.1",
     "babel-jest": "^23.6.0",
@@ -282,5 +283,8 @@
     "npm": ">=4.x",
     "yarn": ">=0.21.3"
   },
-  "browserslist": "electron 1.6"
+  "browserslist": "electron 1.6",
+  "alias": {
+    "react-dom": "@hot-loader/react-dom"
+  }
 }

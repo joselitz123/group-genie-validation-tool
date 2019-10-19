@@ -1,5 +1,5 @@
+/* eslint-disable camelcase */
 import React from "react";
-import { FormGroup, Label } from "reactstrap";
 import Input from "@material-ui/core/Input";
 import Select from "@material-ui/core/Select";
 import MenuItem from "@material-ui/core/MenuItem";
@@ -8,10 +8,10 @@ import FormControl from "@material-ui/core/FormControl";
 import InputLabel from "@material-ui/core/InputLabel";
 import uniqBy from "lodash/uniqBy";
 import { makeStyles } from "@material-ui/core/styles";
-import { Link } from "react-router-dom";
+// import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
-import routes from "../../constants/routes";
+// import routes from "../../constants/routes";
 import { setSelectedGroupInFieldBox } from "../../actions/HomeComponentActions/GroupFiltersSelectionBoxActions/action";
 import { selectedFilters } from "../../reducers/ValidationReducer/ValidationReducer";
 import { selectedHubRegionFilters } from "../../reducers/GroupFiltersReducer";
@@ -101,7 +101,7 @@ const GroupFiltersSelectionBox = ({
         multiple
         value={groupsSelected}
         onChange={e => setSelectedGroupInFieldBox(e.target.value)}
-        renderValue={selected => (
+        renderValue={() => (
           <div className={classes.chips}>
             {uniqBy(selectedFilters, "group_alias").map(value => (
               <Chip

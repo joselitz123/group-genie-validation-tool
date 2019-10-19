@@ -6,6 +6,7 @@ import {
   LOAD_LOCAL_STORAGE_FILTERS,
   REARRANGE_GROUP_FILTERS,
   DELETE_GROUP_FILTER,
+  DELETE_GROUP_FILTER_CHILD,
   UPDATE_FILTER,
   UPDATE_FILTER_CHILD
 } from "../actions/groupFiltersActions/actionTypes";
@@ -20,20 +21,22 @@ export default function groupFiltersReducer(state = initialState, action) {
     case DELETE_GROUP_FILTER:
       // eslint-disable-next-line no-case-declarations
       const { [action.payload]: value, ...restData } = state.group_filters;
-      console.log("executed");
       setStorageData({ ...state, group_filters: restData });
 
       return { ...state, group_filters: restData };
 
+    case DELETE_GROUP_FILTER_CHILD:
+      return {};
+
     case REARRANGE_GROUP_FILTERS:
       setStorageData({
         ...state,
-        group_filters: { ...action.payload, ...state.group_filters }
+        group_filters: { group_filters: action.payload, ...state.group_filters }
       });
 
       return {
         ...state,
-        group_filters: { ...action.payload, ...state.group_filters }
+        group_filters: { group_filters: action.payload, ...state.group_filters }
       };
 
     case LOAD_LOCAL_STORAGE_FILTERS:

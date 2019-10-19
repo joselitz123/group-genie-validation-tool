@@ -48,7 +48,12 @@ type Props = {
     group_name: string,
     group_alias: string,
     child?: Array<{
-      data: { group_name: string, id: string, parentId: string }
+      data: {
+        group_name: string,
+        id: string,
+        parentId: string,
+        group_alias: string
+      }
     }>
   }>,
   loadLocalStorageGroupFilters: function,

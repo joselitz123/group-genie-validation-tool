@@ -8,7 +8,8 @@ import toArray from "lodash/toArray";
 import {
   changeGroupFilterArrangement,
   deleteGroupFilter,
-  updateFilter
+  updateFilter,
+  deleteGroupFilterChild
 } from "../../actions/groupFiltersActions/actions";
 import { selectedHubFilters } from "../../reducers/GroupFiltersReducer";
 import {
@@ -22,9 +23,9 @@ type Props = {
   selectedHubRegion: function,
   hubRegionInputHandler: function,
   deleteGroupFilter: function,
-  allHubFilters: function,
   toggleFormModal: function,
-  updateFilter: function
+  updateFilter: function,
+  deleteGroupFilterChild: function
 };
 
 const GroupFilterLists = (props: Props) => {
@@ -34,9 +35,9 @@ const GroupFilterLists = (props: Props) => {
     selectedHubRegion,
     hubRegionInputHandler,
     deleteGroupFilter,
-    allHubFilters,
     toggleFormModal,
-    updateFilter
+    updateFilter,
+    deleteGroupFilterChild
   } = props;
 
   const [gridState, setGridState] = useState({});
@@ -63,13 +64,19 @@ const GroupFilterLists = (props: Props) => {
       .get()
       .reduce((allData, acc) => ({ ...allData, [acc.data.id]: acc.data }), {});
 
-    console.table(gridData);
+    console.table(grid.get());
     changeGroupFilterArrangement(gridData);
   };
 
   const removeHandler = (grid, id) => {
-    const { [id]: value, ...restData } = allHubFilters;
-    deleteGroupFilter(restData, id);
+    const removedData = grid.getChanges().removed;
+    if (removedData[0].$deep === 1) {
+      deleteGroupFilter(id);
+    } else {
+      deleteGroupFilterChild(removedData[0]);
+    }
+
+    grid.clearDirty();
   };
 
   const updateHandler = (grid, data) => {
@@ -212,9 +219,9 @@ GroupFilterLists.propTypes = {
   selectedHubRegion: PropTypes.string.isRequired,
   hubRegionInputHandler: PropTypes.func.isRequired,
   deleteGroupFilter: PropTypes.func.isRequired,
-  allHubFilters: PropTypes.object.isRequired,
   toggleFormModal: PropTypes.func.isRequired,
-  updateFilter: PropTypes.func.isRequired
+  updateFilter: PropTypes.func.isRequired,
+  deleteGroupFilterChild: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => ({
@@ -230,6 +237,7 @@ export default connect<*, *, *, *, *, *>(
     hubRegionInputHandler,
     deleteGroupFilter,
     toggleFormModal,
-    updateFilter
+    updateFilter,
+    deleteGroupFilterChild
   }
 )(GroupFilterLists);

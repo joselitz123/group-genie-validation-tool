@@ -17,14 +17,20 @@ const composeConcurrentRequest = (
     (allRequests: Array<Function>, curUser: string): Array<Function> => {
       const re = new RegExp(/((^([A-Z]{2})([0-9]{4})$))/, "gi");
 
-      const URLParameter: string = re.exec(curUser)
-        ? `memberdn=uid=${curUser},ou=people,ou=pg,o=world`
-        : `accountshortname=${curUser}`;
+      const trimmedUser = curUser.trim();
+
+      const URLParameter: string = re.exec(trimmedUser)
+        ? `memberdn=uid=${trimmedUser},ou=people,ou=pg,o=world`
+        : `accountshortname=${trimmedUser}`;
+
+      if (trimmedUser === "") {
+        return allRequests;
+      }
 
       return [
         ...allRequests,
         makeRequestToGroupService(
-          curUser,
+          trimmedUser,
           URLParameter,
           currentExtractCount,
           promptError,

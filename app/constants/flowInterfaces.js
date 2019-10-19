@@ -18,5 +18,5 @@ export type accountAccess = {
   user: string,
   access: {},
   error_code?: string,
-  errorg_msg?: string
+  error_msg?: string
 };

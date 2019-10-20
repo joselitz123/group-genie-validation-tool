@@ -5,14 +5,17 @@ const useFancyGridModal = (
   title: string,
   columns: Array<{}>,
   data: Array<{}>,
-  emptyText: string
+  emptyText: string,
+  selModelType: string,
+  contextmenu: Array<{} | string>,
+  fields: Array<string>
 ) => {
   const modalGrid = new Fancy.Grid({
     window: true,
     modal: true,
     nativeScroller: true,
-    selModel: { type: "rows" },
-    contextmenu: [{ type: "copy+", text: "Copy" }],
+    selModel: { type: selModelType },
+    contextmenu,
     title: {
       text: title,
       tools: [
@@ -31,17 +34,13 @@ const useFancyGridModal = (
     defaults: {
       resizable: true
     },
-    tbar: [
-      {
-        type: "search",
-        width: 400,
-        emptyText: "Search"
-      }
-    ],
     columnTrackOver: true,
     emptyText,
     columns,
-    data
+    data: {
+      items: data,
+      fields
+    }
   });
 
   return modalGrid;

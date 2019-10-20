@@ -1,11 +1,12 @@
+/* eslint-disable no-param-reassign */
 // @flow
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 import * as React from "react";
 import { connect } from "react-redux";
 import Fancy from "fancygrid";
 import PropTypes from "prop-types";
-import { render } from "react-dom";
 import useFancyGridModal from "../../ReusableFunctions/fancyGridModal";
+import * as _ from "lodash";
 // import { withRouter } from "react-router-dom";
 // import routes from "../../../constants/routes.json";z
 
@@ -30,10 +31,61 @@ const ResultDataTable = (props: Props) => {
 
   const inputEl = React.useRef(null);
 
-  const initialEventsHandler = () => [
-    {
-      init: setInitGridState
+  const celldblclickHandler = (gridState, o) => {
+    const index = o.column.index;
+
+    if (index !== "user_accnt") {
+      const filterIndex = index.toString().replace(/_/g, "-");
+
+      console.log([allFilters[filterIndex]]);
+
+      const filterData = allFilters[filterIndex];
+
+      const modalColumns = [
+        {
+          title: "Group Display Name",
+          index: "group_alias",
+          type:
+            typeof allFilters[filterIndex] !== "undefined" ? "tree" : "string",
+          flex: 1,
+          selectable: true,
+          filter: { header: true, emptyText: "Filter" }
+        },
+        {
+          title: "Group Name",
+          index: "group_name",
+          type: "string",
+          flex: 1,
+          selectable: true,
+          filter: { header: true, emptyText: "Filter" }
+        },
+        {
+          title: "Group Description",
+          index: "description",
+          type: "string",
+          flex: 1,
+          selectable: true,
+          filter: { header: true, emptyText: "Filter" }
+        }
+      ];
+
+      const grid = useFancyGridModal(
+        filterData.group_alias,
+        modalColumns,
+        [filterData],
+        "No Data can be shown at the moment",
+        "cells",
+        ["copy", "copy+"],
+        ["group_alias", "group_name", "description"]
+      );
+
+      grid.show();
     }
+  };
+
+  const initialEventsHandler = () => [
+    { init: setInitGridState },
+    { celldblclick: celldblclickHandler }
   ];
 
   const createColumns = () => {
@@ -51,8 +103,11 @@ const ResultDataTable = (props: Props) => {
         if (typeof validationResult[o.value] !== "undefined") {
           // using if statement as workaround to the issue with fancyGrid
           if (validationResult[o.value].error_msg !== "") {
-            o.cls = "non-existent";
+            o.cls = "non-existent acc_click";
+          } else {
+            o.cls = "acc_click";
           }
+
           const emptyMsg =
             validationResult[o.value].error_msg !== ""
               ? `${validationResult[o.value].error_msg} with error code ${
@@ -67,14 +122,16 @@ const ResultDataTable = (props: Props) => {
                 index: "name",
                 type: "string",
                 flex: 1,
-                selectable: true
+                selectable: true,
+                filter: { header: true, emptyText: "Filter" }
               },
               {
                 title: "Description",
                 index: "description",
                 type: "string",
                 flex: 1,
-                selectable: true
+                selectable: true,
+                filter: { header: true, emptyText: "Filter" }
               }
             ];
             const modalData: function = Object.values(
@@ -85,7 +142,10 @@ const ResultDataTable = (props: Props) => {
               `All applications that ${o.value} have access.`,
               modalColumns,
               modalData,
-              emptyMsg
+              emptyMsg,
+              "rows",
+              [{ type: "copy+", text: "Copy" }],
+              ["name", "description"]
             );
 
             grid.show();
@@ -105,10 +165,7 @@ const ResultDataTable = (props: Props) => {
               ? "combo"
               : "tree",
           data: ["", `✔`, "❌"],
-          subSearch:
-            typeof allFilters[currentColumn].child === "undefined"
-              ? false
-              : true,
+          subSearch: typeof allFilters[currentColumn].child === "undefined",
           flex: 1,
           cellAlign: "center",
           align: "center",

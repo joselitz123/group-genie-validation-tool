@@ -69,7 +69,8 @@ const GroupFilterLists = (props: Props) => {
   };
 
   const removeHandler = (grid, id) => {
-    const removedData = grid.getChanges().removed;
+    const removedData: any = Object.values(grid.getChanges().removed);
+    console.log(removedData);
     if (removedData[0].$deep === 1) {
       deleteGroupFilter(id);
     } else {

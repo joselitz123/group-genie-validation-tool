@@ -25,7 +25,6 @@ import useCheckGroupNameAvailability from "./functionHooks/useCheckGroupNameAvai
 import useValidateDuplicateData from "./functionHooks/useValidateDuplicateData";
 import { selectedHubFilters } from "../../reducers/GroupFiltersReducer";
 import { setGroupFilters } from "../../actions/groupFiltersActions/actions";
-import { useNormalizeData, useDenormalizeData } from "../../constants/schema";
 
 const useStyles = makeStyles({
   loaderUI: {
@@ -56,7 +55,6 @@ type Props = {
   setGroupFilters: function,
   groupAlias: string,
   hubRegion: string,
-  allFilters: {},
   groupnames: string,
   accessType: string,
   necessityType: string
@@ -78,7 +76,6 @@ const ModalFormField = (props: Props) => {
     setGroupFilters,
     groupAlias,
     hubRegion,
-    allFilters,
     groupnames,
     accessType,
     necessityType
@@ -138,21 +135,16 @@ const ModalFormField = (props: Props) => {
         if (checkGroup.isSuccess && checkGroup.isGroupAvailable) {
           const id = uuid();
 
-          setGroupFilters(
-            {
-              [id]: {
-                id,
-                hub_region: hubRegion,
-                group_name: groupName,
-                access_type: accessType,
-                necessity_type: necessityType,
-                group_alias: groupAlias,
-                description: checkGroup.description,
-                leaf: true
-              }
-            },
-            allFilters
-          );
+          setGroupFilters({
+            id,
+            hub_region: hubRegion,
+            group_name: groupName,
+            access_type: accessType,
+            necessity_type: necessityType,
+            group_alias: groupAlias,
+            description: checkGroup.description,
+            leaf: true
+          });
           setIsValidatingStatus(false);
           resetFormModal();
           toggleFormModal(false);
@@ -232,16 +224,13 @@ const ModalFormField = (props: Props) => {
           const groupID = uuid();
 
           const groupData = {
-            [groupID]: {
-              id: groupID,
-              hub_region: hubRegion,
-              group_alias: groupAlias,
-              group_name: groupName,
-              description: "",
-              child: dataGrid
-            }
+            id: groupID,
+            hub_region: hubRegion,
+            group_alias: groupAlias,
+            group_name: groupName,
+            description: "",
+            child: dataGrid
           };
-
           setGroupFilters(groupData);
           setIsValidatingStatus(false);
         }
@@ -347,7 +336,6 @@ ModalFormField.propTypes = {
   setGroupFilters: PropTypes.func.isRequired,
   groupAlias: PropTypes.string.isRequired,
   hubRegion: PropTypes.string.isRequired,
-  allFilters: PropTypes.object.isRequired,
   groupnames: PropTypes.string.isRequired,
   accessType: PropTypes.string.isRequired,
   necessityType: PropTypes.string.isRequired
@@ -362,7 +350,6 @@ const mapStateToProps = state => ({
   groupAlias: state.inputFieldReducers.groupAliasField,
   existHubRegionFilters: selectedHubFilters(state),
   hubRegion: state.inputFieldReducers.hubRegionField,
-  allFilters: state.groupFiltersReducer.group_filters,
   groupnames: state.inputFieldReducers.groupNameTextArea,
   accessType: state.inputFieldReducers.accessTypeField,
   necessityType: state.inputFieldReducers.necessityTypeField

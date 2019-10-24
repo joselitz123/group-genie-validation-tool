@@ -19,8 +19,8 @@ export const useNormalizeData = (data: Array<{}>) => {
   return result;
 };
 
-export const useDenormalizeData = (data: Array<{}>) => {
+export const useDenormalizeData = (input: Array<string>, data: Array<{}>) => {
   const schema = groupFilterSchema();
-  const result = denormalize(data, schema);
+  const result = denormalize(input, schema, data);
   return result;
 };

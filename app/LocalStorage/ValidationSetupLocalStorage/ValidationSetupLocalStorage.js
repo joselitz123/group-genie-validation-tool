@@ -19,7 +19,7 @@ export const getStorageData = (): Promise<{}> =>
   });
 
 export const setStorageData = (data: function) => {
-  storage.set("group_filters", data.group_filters, error => {
+  storage.set("group_filters", data, error => {
     if (error) {
       console.error(error);
     }

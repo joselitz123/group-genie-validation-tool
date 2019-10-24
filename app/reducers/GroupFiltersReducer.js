@@ -1,5 +1,6 @@
 /* eslint-disable no-case-declarations */
 /* eslint-disable camelcase */
+/* eslint-disable no-unused-vars */
 import { createSelector } from "reselect";
 import {
   SET_GROUP_FILTERS,
@@ -11,113 +12,50 @@ import {
   UPDATE_FILTER_CHILD
 } from "../actions/groupFiltersActions/actionTypes";
 import { setStorageData } from "../LocalStorage/ValidationSetupLocalStorage/ValidationSetupLocalStorage";
+import { useDenormalizeData, useNormalizeData } from "../constants/schema";
 
 const initialState = {
-  group_filters: {}
+  entities: {},
+  result: []
 };
 
 export default function groupFiltersReducer(state = initialState, action) {
   switch (action.type) {
-    case DELETE_GROUP_FILTER:
-      // eslint-disable-next-line no-case-declarations
-      const { [action.payload]: value, ...restData } = state.group_filters;
-      setStorageData({ ...state, group_filters: restData });
+    case SET_GROUP_FILTERS:
+      const data =
+        state.result.length === 0
+          ? [action.payload]
+          : [
+              action.payload,
+              ...useDenormalizeData(state.result, state.entities)
+            ];
 
-      return { ...state, group_filters: restData };
+      const normalizedData = useNormalizeData(data);
 
-    case DELETE_GROUP_FILTER_CHILD:
-      return {};
+      setStorageData(normalizedData);
 
-    case REARRANGE_GROUP_FILTERS:
-      const data = action.payload.reduce((allData, curData) => {
-        const group = state.group_filters[curData];
-
-        if (typeof group === "undefined") {
-          return allData;
-        }
-        return { ...allData, [group.id]: group };
-      }, {});
-
-      setStorageData({
-        ...state,
-        group_filters: { ...data, ...state.group_filters }
-      });
-
-      return {
-        ...state,
-        group_filters: { ...data, ...state.group_filters }
-      };
+      return normalizedData;
 
     case LOAD_LOCAL_STORAGE_FILTERS:
-      setStorageData({ ...state, group_filters: action.payload });
+      return action.payload;
 
-      return { ...state, group_filters: action.payload };
+    case REARRANGE_GROUP_FILTERS:
+      const arrResults = [...action.payload, ...state.result];
 
-    case SET_GROUP_FILTERS:
-      setStorageData({
-        ...state,
-        group_filters: { ...action.payload, ...state.group_filters }
-      });
-
-      return {
-        ...state,
-        group_filters: { ...action.payload, ...state.group_filters }
-      };
-    case UPDATE_FILTER:
-      // eslint-disable-next-line no-case-declarations
-      const group_filters = {
-        ...state.group_filters,
-        [action.payload.id]: {
-          ...state.group_filters[action.payload.id],
-          group_alias: action.payload.data.group_alias,
-          description: action.payload.data.description
-        }
-      };
-
-      setStorageData({ ...state, group_filters });
-
-      return {
-        ...state,
-        group_filters
-      };
-
-    case UPDATE_FILTER_CHILD:
-      const childData = state.group_filters[
-        action.payload.data.parentId
-      ].child.reduce(
-        (allData, curData) => ({ ...allData, [curData.id]: curData }),
+      const objectData = arrResults.reduce(
+        (allData, curData) => ({
+          ...allData,
+          [curData]: curData
+        }),
         {}
       );
 
-      const dataInsertion = {
-        ...childData,
-        [[action.payload.id]]: {
-          ...childData[action.payload.id],
-          data: action.payload.data
-        }
-      };
+      return { ...state, result: Object.values(objectData) };
 
-      setStorageData({
-        ...state,
-        group_filters: {
-          ...state.group_filters,
-          [action.payload.data.parentId]: {
-            ...state.group_filters[action.payload.data.parentId],
-            child: Object.values(dataInsertion)
-          }
-        }
-      });
+    case DELETE_GROUP_FILTER:
+      console.log(action.payload);
 
-      return {
-        ...state,
-        group_filters: {
-          ...state.group_filters,
-          [action.payload.data.parentId]: {
-            ...state.group_filters[action.payload.data.parentId],
-            child: Object.values(dataInsertion)
-          }
-        }
-      };
+      return state;
 
     default:
       return state;
@@ -125,7 +63,10 @@ export default function groupFiltersReducer(state = initialState, action) {
 }
 
 const getGroupFilters = state =>
-  Object.values(state.groupFiltersReducer.group_filters);
+  useDenormalizeData(
+    state.groupFiltersReducer.result,
+    state.groupFiltersReducer.entities
+  );
 const getSelectedHubRegion = state => state.inputFieldReducers.hubRegionField;
 const getSelectedHubRegionForFilter = state =>
   state.hubSelectionFieldReducer.hubSelected;

@@ -13,6 +13,8 @@ const initialState = {
   groupNameFieldErrorMsg: "",
   groupAliasField: "",
   groupTypeField: 1,
+  necessityTypeField: "",
+  accessTypeField: "",
   groupNameTextArea: "",
   isValidating: false,
   hubRegions: {
@@ -46,6 +48,30 @@ const initialState = {
       name: "Multiple Group Type",
       value: 2
     }
+  },
+  accessTypes: {
+    data_access_type: {
+      name: "Data Access",
+      value: "data_access_type"
+    },
+    application_access_type: {
+      name: "Application Access",
+      value: "application_access_type"
+    },
+    no_access_type: {
+      name: "No Access Type",
+      value: "no_access_type"
+    }
+  },
+  necessityTypes: {
+    mandatory: {
+      name: "Mandatory",
+      value: "mandatory"
+    },
+    optional: {
+      name: "Optional",
+      value: "optional"
+    }
   }
 };
 
@@ -61,7 +87,9 @@ export default function inputFieldReducers(state = initialState, action) {
         groupNameFieldErrorMsg: "",
         groupAliasField: "",
         groupTypeField: 1,
-        groupNameTextArea: ""
+        groupNameTextArea: "",
+        accessTypeField: "",
+        necessityTypeField: ""
       };
     case RESET_FORM_MODAL_FIELD:
       return {
@@ -69,7 +97,9 @@ export default function inputFieldReducers(state = initialState, action) {
         groupNameField: "",
         groupNameFieldErrorMsg: "",
         groupAliasField: "",
-        groupNameTextArea: ""
+        groupNameTextArea: "",
+        accessTypeField: "",
+        necessityTypeField: ""
       };
 
     case HUB_REGION_INPUT_HANDLER:

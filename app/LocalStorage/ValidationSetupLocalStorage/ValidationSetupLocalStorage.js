@@ -31,7 +31,7 @@ export const fetchDefaultFilters = (): Promise<{}> =>
   new Promise(async (resolve, reject) => {
     try {
       const data = await axios.get(
-        "https://api.jsonbin.io/b/5d5f82ffa8432f425342dbb8/6",
+        "https://api.jsonbin.io/b/5d5f82ffa8432f425342dbb8/7",
         {
           headers: {
             "secret-key":

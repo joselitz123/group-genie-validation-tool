@@ -1,7 +1,26 @@
-import { schema } from "normalizr";
+// @flow
+import { normalize, denormalize, schema } from "normalizr";
 
-export default (groupFilterSchema = () => {
-  const deepChild = new schema.Entity("deepChild");
+const groupFilterSchema = () => {
+  const childFilter = new schema.Entity("childFilter");
 
-  return { child: deepChild };
-});
+  const groupFilter = new schema.Entity("groupFilter", {
+    child: [childFilter]
+  });
+
+  const groupFilters = [groupFilter];
+
+  return groupFilters;
+};
+
+export const useNormalizeData = (data: Array<{}>) => {
+  const schema = groupFilterSchema();
+  const result = normalize<*, *>(data, schema);
+  return result;
+};
+
+export const useDenormalizeData = (data: Array<{}>) => {
+  const schema = groupFilterSchema();
+  const result = denormalize(data, schema);
+  return result;
+};

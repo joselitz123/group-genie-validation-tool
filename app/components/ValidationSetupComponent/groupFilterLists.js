@@ -61,11 +61,11 @@ const GroupFilterLists = (props: Props) => {
 
   const dragRowsHandler = grid => {
     const gridData = grid
-      .get()
-      .reduce((allData, acc) => ({ ...allData, [acc.data.id]: acc.data }), {});
+      .getData()
+      .reduce((allData, acc) => [...allData, acc.id], []);
 
-    console.table(grid.get());
     changeGroupFilterArrangement(gridData);
+    grid.clearDirty();
   };
 
   const removeHandler = (grid, id) => {
@@ -80,7 +80,6 @@ const GroupFilterLists = (props: Props) => {
   };
 
   const updateHandler = (grid, data) => {
-    console.log(["data updated", data.data.description]);
     updateFilter(data);
     grid.clearDirty();
   };

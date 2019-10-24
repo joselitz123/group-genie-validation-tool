@@ -25,6 +25,7 @@ import useCheckGroupNameAvailability from "./functionHooks/useCheckGroupNameAvai
 import useValidateDuplicateData from "./functionHooks/useValidateDuplicateData";
 import { selectedHubFilters } from "../../reducers/GroupFiltersReducer";
 import { setGroupFilters } from "../../actions/groupFiltersActions/actions";
+import { useNormalizeData, useDenormalizeData } from "../../constants/schema";
 
 const useStyles = makeStyles({
   loaderUI: {
@@ -56,7 +57,9 @@ type Props = {
   groupAlias: string,
   hubRegion: string,
   allFilters: {},
-  groupnames: string
+  groupnames: string,
+  accessType: string,
+  necessityType: string
 };
 
 const ModalFormField = (props: Props) => {
@@ -76,7 +79,9 @@ const ModalFormField = (props: Props) => {
     groupAlias,
     hubRegion,
     allFilters,
-    groupnames
+    groupnames,
+    accessType,
+    necessityType
   } = props;
 
   const [errorList, setErrorList] = React.useState([]);
@@ -139,6 +144,8 @@ const ModalFormField = (props: Props) => {
                 id,
                 hub_region: hubRegion,
                 group_name: groupName,
+                access_type: accessType,
+                necessity_type: necessityType,
                 group_alias: groupAlias,
                 description: checkGroup.description,
                 leaf: true
@@ -212,6 +219,8 @@ const ModalFormField = (props: Props) => {
                 id,
                 hub_region: hubRegion,
                 group_name: curData.groupName,
+                access_type: accessType,
+                necessity_type: necessityType,
                 group_alias: groupAlias,
                 description: curData.description,
                 leaf: true
@@ -232,6 +241,7 @@ const ModalFormField = (props: Props) => {
               child: dataGrid
             }
           };
+
           setGroupFilters(groupData);
           setIsValidatingStatus(false);
         }
@@ -338,7 +348,9 @@ ModalFormField.propTypes = {
   groupAlias: PropTypes.string.isRequired,
   hubRegion: PropTypes.string.isRequired,
   allFilters: PropTypes.object.isRequired,
-  groupnames: PropTypes.string.isRequired
+  groupnames: PropTypes.string.isRequired,
+  accessType: PropTypes.string.isRequired,
+  necessityType: PropTypes.string.isRequired
 };
 
 const mapStateToProps = state => ({
@@ -351,7 +363,9 @@ const mapStateToProps = state => ({
   existHubRegionFilters: selectedHubFilters(state),
   hubRegion: state.inputFieldReducers.hubRegionField,
   allFilters: state.groupFiltersReducer.group_filters,
-  groupnames: state.inputFieldReducers.groupNameTextArea
+  groupnames: state.inputFieldReducers.groupNameTextArea,
+  accessType: state.inputFieldReducers.accessTypeField,
+  necessityType: state.inputFieldReducers.necessityTypeField
 });
 
 export default connect<*, *, *, *, *, *>(

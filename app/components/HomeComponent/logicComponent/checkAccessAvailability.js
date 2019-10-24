@@ -15,12 +15,10 @@ const checkAccessAvailability = (
     group_name: string,
     group_alias: string,
     child?: Array<{
-      data: {
-        group_name: string,
-        id: string,
-        parentId: string,
-        group_alias: string
-      }
+      group_name: string,
+      id: string,
+      parentId: string,
+      group_alias: string
     }>
   }>
 ) => {
@@ -52,14 +50,13 @@ const checkAccessAvailability = (
         if (typeof cVal.child !== "undefined") {
           const childResult = cVal.child.reduce((allResults, childFilter) => {
             if (
-              typeof curAccessObject.access[childFilter.data.group_name] !==
+              typeof curAccessObject.access[childFilter.group_name] !==
               "undefined"
             ) {
               return [
                 ...allResults,
                 {
-                  [dashToUnderscoreConverter(cVal.id)]: childFilter.data
-                    .group_alias,
+                  [dashToUnderscoreConverter(cVal.id)]: childFilter.group_alias,
                   leaf: true
                 }
               ];

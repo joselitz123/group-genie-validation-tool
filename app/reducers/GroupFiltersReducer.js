@@ -29,14 +29,23 @@ export default function groupFiltersReducer(state = initialState, action) {
       return {};
 
     case REARRANGE_GROUP_FILTERS:
+      const data = action.payload.reduce((allData, curData) => {
+        const group = state.group_filters[curData];
+
+        if (typeof group === "undefined") {
+          return allData;
+        }
+        return { ...allData, [group.id]: group };
+      }, {});
+
       setStorageData({
         ...state,
-        group_filters: { group_filters: action.payload, ...state.group_filters }
+        group_filters: { ...data, ...state.group_filters }
       });
 
       return {
         ...state,
-        group_filters: { group_filters: action.payload, ...state.group_filters }
+        group_filters: { ...data, ...state.group_filters }
       };
 
     case LOAD_LOCAL_STORAGE_FILTERS:

@@ -32,7 +32,7 @@ type Props = {
   menuItems: Array<{ name: string, value: number | string }>,
   selectFor: string,
   isRequired?: boolean,
-  input: number,
+  input: number | string,
   inputHandler: function,
   name: string
 };
@@ -78,7 +78,7 @@ SelectFieldComponent.propTypes = {
   menuItems: PropTypes.array.isRequired,
   selectFor: PropTypes.string.isRequired,
   isRequired: PropTypes.bool.isRequired,
-  input: PropTypes.number.isRequired,
+  input: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
   inputHandler: PropTypes.func.isRequired,
   name: PropTypes.string.isRequired
 };

@@ -1,6 +1,6 @@
 {
-  "name": "group-genie-validation-tool",
-  "productName": "GroupGenieValidationTool",
+  "name": "data-hub-access-validation-tool",
+  "productName": "DataHubAccessValidationTool",
   "version": "1.1.0",
   "description": "This is a tool to help easier validate the access of the P&G users that is tailored for Data Hub.",
   "scripts": {
@@ -57,7 +57,7 @@
   },
   "main": "./app/main.prod.js",
   "build": {
-    "productName": "GroupGenieValidationTool",
+    "productName": "DataHubAccessValidationTool",
     "appId": "com.electron.groupgenievalidationtool",
     "files": [
       "app/dist/",
@@ -102,7 +102,7 @@
     "publish": {
       "provider": "github",
       "owner": "Jose Lito Phala",
-      "repo": "group-genie-validation-tool",
+      "repo": "data-hub-access-validation-tool",
       "private": false
     }
   },

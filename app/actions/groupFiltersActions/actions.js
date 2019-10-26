@@ -4,6 +4,7 @@ import {
   SET_GROUP_FILTERS,
   LOAD_LOCAL_STORAGE_FILTERS,
   REARRANGE_GROUP_FILTERS,
+  REARRANGE_GROUP_CHILD_FILTERS,
   DELETE_GROUP_FILTER,
   UPDATE_FILTER,
   UPDATE_FILTER_CHILD,
@@ -24,11 +25,6 @@ export const loadLocalStorageGroupFilters = data => dispatch => {
   });
 };
 
-/**
- *
- * @param {Object} e - Contains props of the Drag Drop Context
- * @param {Object} data - Group filters list
- */
 export const changeGroupFilterArrangement = changedData => dispatch => {
   dispatch({
     type: REARRANGE_GROUP_FILTERS,
@@ -36,17 +32,24 @@ export const changeGroupFilterArrangement = changedData => dispatch => {
   });
 };
 
-export const deleteGroupFilter = id => dispatch => {
+export const changeGroupChildFilterArrangement = changedData => dispatch => {
   dispatch({
-    type: DELETE_GROUP_FILTER,
-    payload: id
+    type: REARRANGE_GROUP_CHILD_FILTERS,
+    payload: changedData
   });
 };
 
-export const deleteGroupFilterChild = id => dispatch => {
+export const deleteGroupFilter = data => dispatch => {
   dispatch({
     type: DELETE_GROUP_FILTER,
-    payload: id
+    payload: data
+  });
+};
+
+export const deleteGroupFilterChild = data => dispatch => {
+  dispatch({
+    type: DELETE_GROUP_FILTER_CHILD,
+    payload: data
   });
 };
 

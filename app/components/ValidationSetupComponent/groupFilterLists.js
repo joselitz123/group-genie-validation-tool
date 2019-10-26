@@ -9,16 +9,19 @@ import {
   changeGroupFilterArrangement,
   deleteGroupFilter,
   updateFilter,
-  deleteGroupFilterChild
+  deleteGroupFilterChild,
+  changeGroupChildFilterArrangement
 } from "../../actions/groupFiltersActions/actions";
 import { selectedHubFilters } from "../../reducers/GroupFiltersReducer";
 import {
   hubRegionInputHandler,
   toggleFormModal
 } from "../../actions/validationSetupActions/actions";
+import { useDenormalizeData } from "../../constants/schema";
 
 type Props = {
   changeGroupFilterArrangement: function,
+  changeGroupChildFilterArrangement: function,
   hubRegionFilter: function,
   selectedHubRegion: function,
   hubRegionInputHandler: function,
@@ -31,6 +34,7 @@ type Props = {
 const GroupFilterLists = (props: Props) => {
   const {
     changeGroupFilterArrangement,
+    changeGroupChildFilterArrangement,
     hubRegionFilter,
     selectedHubRegion,
     hubRegionInputHandler,
@@ -41,40 +45,81 @@ const GroupFilterLists = (props: Props) => {
   } = props;
 
   const [gridState, setGridState] = useState({});
+  const [childDataDragState, setChildDataDragState] = useState({});
 
   const hubRegions = useSelector(state => state.inputFieldReducers.hubRegions);
   const addFilterValStatus = useSelector(
     state => state.inputFieldReducers.isValidating
   );
+  const entities = useSelector(state => state.groupFiltersReducer.entities);
+  const result = useSelector(state => state.groupFiltersReducer.result);
 
   useEffect(
     () => {
+      const groupFilters = useDenormalizeData(result, entities);
+
+      const data = groupFilters.reduce(
+        (allFilters, curFilter) =>
+          curFilter.hub_region === selectedHubRegion
+            ? [...allFilters, curFilter]
+            : allFilters,
+        []
+      );
+
       if (toArray(gridState).length !== 0) {
         gridState.removeAll();
-        gridState.setData(hubRegionFilter);
+        gridState.setData(
+          groupFilters.reduce(
+            (allFilters, curFilter) =>
+              curFilter.hub_region === selectedHubRegion
+                ? [...allFilters, curFilter]
+                : allFilters,
+            []
+          )
+        );
 
         gridState.update();
       }
     },
-    [selectedHubRegion, addFilterValStatus]
+    [selectedHubRegion, addFilterValStatus, childDataDragState]
   );
 
-  const dragRowsHandler = grid => {
-    const gridData = grid
-      .getData()
-      .reduce((allData, acc) => [...allData, acc.id], []);
+  const dragRowsHandler = (grid, index) => {
+    // checks if the data being rearranged is a child data
+    // let childDataCount = 0;
+    // grid.getData().map(
+    //   (curData): void => {
+    //     curData.$deep === 2 ? childDataCount++ : "";
+    //   }
+    // )
 
-    changeGroupFilterArrangement(gridData);
-    grid.clearDirty();
+    const childFilters = grid
+      .getData()
+      .reduce(
+        (allData, curData) =>
+          curData.$deep === 2 ? [...allData, curData] : allData,
+        []
+      );
+
+    if (childFilters.length > 0) {
+      console.log(childFilters);
+      changeGroupChildFilterArrangement(childFilters);
+      setChildDataDragState(grid.getData());
+    } else {
+      const gridData = grid
+        .getData()
+        .reduce((allData, acc) => [...allData, acc.id], []);
+      changeGroupFilterArrangement(gridData);
+    }
   };
 
   const removeHandler = (grid, id) => {
-    const removedData: any = Object.values(grid.getChanges().removed);
-    console.log(removedData);
-    if (removedData[0].$deep === 1) {
-      deleteGroupFilter(id);
+    const removedData: any = grid.getChanges().removed[id];
+
+    if (removedData.$deep === 1) {
+      deleteGroupFilter(removedData);
     } else {
-      deleteGroupFilterChild(removedData[0]);
+      deleteGroupFilterChild(removedData);
     }
 
     grid.clearDirty();
@@ -85,18 +130,19 @@ const GroupFilterLists = (props: Props) => {
     grid.clearDirty();
   };
 
+  const selectRowHandler = (grid, index) => {
+    if (grid.get(index).data.expanded) {
+      grid.deSelectRow(index);
+    }
+  };
+
   const config = {
     title: "Group Genie Access Groups",
-    data: {
-      items: hubRegionFilter,
-      fields: ["group_alias", "group_name", "description", "action"]
-    },
+    data: [],
     clicksToEdit: 2,
     height: 590,
     width: 1350,
-    defaults: {
-      editable: true
-    },
+    defaults: { editable: true },
     tbar: [
       {
         type: "combo",
@@ -127,18 +173,11 @@ const GroupFilterLists = (props: Props) => {
           toggleFormModal(true);
         }
       },
-      {
-        type: "button",
-        text: "Remove",
-        width: 50,
-        action: "remove"
-      }
+      { type: "button", text: "Remove", width: 50, action: "remove" }
     ],
     selModel: "rows",
     columns: [
-      {
-        type: "rowdrag"
-      },
+      { type: "rowdrag" },
       {
         index: "group_alias",
         title: "Display Name",
@@ -182,10 +221,10 @@ const GroupFilterLists = (props: Props) => {
         ],
         cls: "action-column",
         flex: 1
-        // autoHeight: true
       }
     ]
   };
+  // autoHeight: true
 
   const getEvents = () => [
     {
@@ -201,7 +240,8 @@ const GroupFilterLists = (props: Props) => {
     {
       remove: removeHandler
     },
-    { set: updateHandler }
+    { set: updateHandler },
+    { selectrow: selectRowHandler }
   ];
 
   return (
@@ -215,6 +255,7 @@ const GroupFilterLists = (props: Props) => {
 
 GroupFilterLists.propTypes = {
   changeGroupFilterArrangement: PropTypes.func.isRequired,
+  changeGroupChildFilterArrangement: PropTypes.func.isRequired,
   hubRegionFilter: PropTypes.array.isRequired,
   selectedHubRegion: PropTypes.string.isRequired,
   hubRegionInputHandler: PropTypes.func.isRequired,
@@ -225,7 +266,10 @@ GroupFilterLists.propTypes = {
 };
 
 const mapStateToProps = state => ({
-  hubRegionFilter: selectedHubFilters(state),
+  hubRegionFilter: useDenormalizeData(
+    state.groupFiltersReducer.result,
+    state.groupFiltersReducer.entities
+  ),
   selectedHubRegion: state.inputFieldReducers.hubRegionField,
   allHubFilters: state.groupFiltersReducer.group_filters
 });
@@ -234,6 +278,7 @@ export default connect<*, *, *, *, *, *>(
   mapStateToProps,
   {
     changeGroupFilterArrangement,
+    changeGroupChildFilterArrangement,
     hubRegionInputHandler,
     deleteGroupFilter,
     toggleFormModal,

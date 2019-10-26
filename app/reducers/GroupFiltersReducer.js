@@ -2,10 +2,12 @@
 /* eslint-disable camelcase */
 /* eslint-disable no-unused-vars */
 import { createSelector } from "reselect";
+import { denormalize } from "normalizr";
 import {
   SET_GROUP_FILTERS,
   LOAD_LOCAL_STORAGE_FILTERS,
   REARRANGE_GROUP_FILTERS,
+  REARRANGE_GROUP_CHILD_FILTERS,
   DELETE_GROUP_FILTER,
   DELETE_GROUP_FILTER_CHILD,
   UPDATE_FILTER,
@@ -50,12 +52,116 @@ export default function groupFiltersReducer(state = initialState, action) {
         {}
       );
 
-      return { ...state, result: Object.values(objectData) };
+      const reArrageGroupData = { ...state, result: Object.values(objectData) };
+
+      setStorageData(reArrageGroupData);
+
+      return reArrageGroupData;
+    // return state;
 
     case DELETE_GROUP_FILTER:
-      console.log(action.payload);
+      const arr_id = useDenormalizeData(state.result, state.entities).reduce(
+        (allData, curData) => ({ ...allData, [curData.id]: curData }),
+        {}
+      );
 
-      return state;
+      const { [action.payload.id]: value, ...restData } = arr_id;
+
+      setStorageData(useNormalizeData(restData));
+
+      return useNormalizeData(restData);
+
+    case DELETE_GROUP_FILTER_CHILD:
+      const childData = state.entities.groupFilter[action.payload.parentId];
+
+      const childDataArr = childData.child.filter(
+        curData => curData !== action.payload.id
+      );
+
+      const {
+        [action.payload.id]: valueData,
+        ...restChildData
+      } = state.entities.childFilter;
+
+      const deleteChildDataState = {
+        ...state,
+        entities: {
+          childFilter: restChildData,
+          groupFilter: {
+            ...state.entities.groupFilter,
+            [action.payload.parentId]: {
+              ...state.entities.groupFilter[action.payload.parentId],
+              child: childDataArr
+            }
+          }
+        }
+      };
+
+      setStorageData(deleteChildDataState);
+
+      return deleteChildDataState;
+
+    case UPDATE_FILTER:
+      const updateFilterData = {
+        ...state,
+        entities: {
+          ...state.entities,
+          groupFilter: {
+            ...state.entities.groupFilter,
+            [action.payload.id]: {
+              ...state.entities.groupFilter[action.payload.id],
+              [action.payload.key]: action.payload.value
+            }
+          }
+        }
+      };
+
+      setStorageData(updateFilterData);
+
+      return updateFilterData;
+
+    case UPDATE_FILTER_CHILD:
+      const updateFilterChildData = {
+        ...state,
+        entities: {
+          ...state.entities,
+          childFilter: {
+            ...state.entities.childFilter,
+            [action.payload.id]: {
+              ...state.entities.childFilter[action.payload.id],
+              [action.payload.key]: action.payload.value
+            }
+          }
+        }
+      };
+
+      setStorageData(updateFilterChildData);
+
+      return updateFilterChildData;
+
+    case REARRANGE_GROUP_CHILD_FILTERS:
+      const childIds = action.payload.reduce(
+        (allData, curData) => [...allData, curData.id],
+        []
+      );
+
+      const selectedParentId = action.payload[0].parentId;
+
+      const reArrangedGroupChildData = {
+        ...state,
+        entities: {
+          ...state.entities,
+          groupFilter: {
+            ...state.entities.groupFilter,
+            [selectedParentId]: {
+              ...state.entities.groupFilter[selectedParentId],
+              child: childIds
+            }
+          }
+        }
+      };
+
+      return reArrangedGroupChildData;
 
     default:
       return state;

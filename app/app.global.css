@@ -96,3 +96,7 @@ div.fancy-grid-body
 .acc_click > div {
   cursor: pointer !important;
 }
+
+.display-not-visible {
+  display: none !important;
+}

@@ -9,7 +9,8 @@ export type buttonPropTypes = {
   color: string,
   type: string,
   children: React.Node,
-  onClick?: function
+  onClick?: function,
+  className?: string
 };
 
 const ButtonComponent = (props: buttonPropTypes) => {

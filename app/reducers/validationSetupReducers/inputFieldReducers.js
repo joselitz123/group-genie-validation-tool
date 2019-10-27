@@ -41,12 +41,16 @@ const initialState = {
   },
   groupTypes: {
     single_group_type: {
-      name: "Single Group Type",
+      name: "Add a group",
       value: 1
     },
     multiple_group_type: {
-      name: "Multiple Group Type",
+      name: "Add a collection of groups",
       value: 2
+    },
+    add_a_subgroup: {
+      name: "Add groups to existing collection of groups",
+      value: 3
     }
   },
   accessTypes: {

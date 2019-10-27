@@ -5,8 +5,9 @@ import * as React from "react";
 import { connect } from "react-redux";
 import Fancy from "fancygrid";
 import PropTypes from "prop-types";
-import useFancyGridModal from "../../ReusableFunctions/fancyGridModal";
+// eslint-disable-next-line no-unused-vars
 import * as _ from "lodash";
+import useFancyGridModal from "../../ReusableFunctions/fancyGridModal";
 // import { withRouter } from "react-router-dom";
 // import routes from "../../../constants/routes.json";z
 
@@ -32,6 +33,7 @@ const ResultDataTable = (props: Props) => {
   const inputEl = React.useRef(null);
 
   const celldblclickHandler = (gridState, o) => {
+    // eslint-disable-next-line prefer-destructuring
     const index = o.column.index;
 
     if (index !== "user_accnt") {

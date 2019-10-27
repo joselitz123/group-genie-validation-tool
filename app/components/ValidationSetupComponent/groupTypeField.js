@@ -16,7 +16,7 @@ const GroupTypeField = (props: Props) => {
 
   return (
     <SelectFieldComponent
-      inputLabel="Group Type"
+      inputLabel="Add Type"
       menuItems={(Object.values(filterTypes): any)}
       selectFor="group-type"
       isRequired={true}

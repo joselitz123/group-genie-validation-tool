@@ -2,21 +2,20 @@
 
 const useValidateDuplicateData = (
   groupName: string,
-  existingHubFilterGroups: Array<{
-    id: string,
-    hub_region: string,
-    group_name: string
-  }>
+  filterIndexes: {
+    [key]: {
+      id: string,
+      hub_region: string,
+      group_name: string
+    }
+  }
 ): { isDuplicateFound: boolean, errorMsg?: string } => {
-  const filterResult = existingHubFilterGroups.filter(
-    data => data.group_name === groupName
-  );
+  const isDuplicateFound = typeof filterIndexes[groupName] !== "undefined";
 
   return {
     groupName,
-    isDuplicateFound: filterResult.length > 0,
-    errorMsg:
-      filterResult.length > 0 ? "Filter already existed in the record." : ""
+    isDuplicateFound,
+    errorMsg: isDuplicateFound ? "Filter already existed in the record." : ""
   };
 };
 

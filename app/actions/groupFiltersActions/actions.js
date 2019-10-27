@@ -2,6 +2,7 @@
 import uuid from "uuid/v4";
 import {
   SET_GROUP_FILTERS,
+  ADD_GROUPS_TO_EXISTING_COLLECTION_GROUP,
   LOAD_LOCAL_STORAGE_FILTERS,
   REARRANGE_GROUP_FILTERS,
   REARRANGE_GROUP_CHILD_FILTERS,
@@ -14,6 +15,13 @@ import {
 export const setGroupFilters = (data, allFilters) => dispatch => {
   dispatch({
     type: SET_GROUP_FILTERS,
+    payload: data
+  });
+};
+
+export const addGroupsToExistingCollectionGroup = data => dispatch => {
+  dispatch({
+    type: ADD_GROUPS_TO_EXISTING_COLLECTION_GROUP,
     payload: data
   });
 };

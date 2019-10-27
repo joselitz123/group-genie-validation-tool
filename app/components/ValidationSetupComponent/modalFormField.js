@@ -1,11 +1,12 @@
 /* eslint-disable no-plusplus */
+/* eslint-disable no-new */
 // @flow
 import * as React from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import { makeStyles } from "@material-ui/styles";
-import { FancyGridReact } from "fancygrid-react";
+import * as Fancy from "fancygrid";
 import uuid from "uuid/v4";
 import uniqBy from "lodash/uniqBy";
 import ModalComponent from "../ReusableComponent/ModalComponent/ModalComponent";
@@ -85,6 +86,8 @@ const ModalFormField = (props: Props) => {
 
   const [gridState, setGridState] = React.useState({});
 
+  const gridContainer = React.useRef(null);
+
   const classes = useStyles();
 
   const modalComponentProps = {
@@ -97,14 +100,16 @@ const ModalFormField = (props: Props) => {
     color: "primary",
     size: "small",
     type: "submit",
-    variant: "contained"
+    variant: "contained",
+    className: errorList.length !== 0 ? "display-not-visible" : ""
   };
 
   const backButtonComponentProps = {
     color: "primary",
     size: "small",
     type: "button",
-    variant: "contained"
+    variant: "contained",
+    className: errorList.length !== 0 ? "" : "display-not-visible"
   };
 
   const cancelButtonComponentProps = {
@@ -121,13 +126,22 @@ const ModalFormField = (props: Props) => {
     [groupType]
   );
 
+  React.useEffect(
+    () => {
+      if (gridContainer.current !== null) {
+        initiateGrid();
+      }
+    },
+    [errorList]
+  );
+
   const submitHandler = async e => {
     e.preventDefault();
     setIsValidatingStatus(true);
     if (filterType === 1) {
       const isDuplicate = useValidateDuplicateData(
         groupName.trim(),
-        existHubRegionFilters
+        groupNameIndexer(existHubRegionFilters)
       );
 
       if (!isDuplicate.isDuplicateFound) {
@@ -156,29 +170,33 @@ const ModalFormField = (props: Props) => {
         setIsValidatingStatus(false);
         triggerErrorOnGroupName(isDuplicate.errorMsg);
       }
-    } else {
+    } else if (filterType === 2) {
       const splittedGroupNames = groupnames.split("\n");
+
+      const indexedFilter = groupNameIndexer(existHubRegionFilters);
 
       const generatedDuplicateCheck = splittedGroupNames.reduce(
         (allData, curVal) => [
           ...allData,
-          useValidateDuplicateData(curVal.trim(), existHubRegionFilters)
+          useValidateDuplicateData(curVal.trim(), indexedFilter)
         ],
         []
       );
 
-      const duplicateCheckResult = Promise.all(generatedDuplicateCheck);
+      const duplicateCheckResult = await Promise.all(generatedDuplicateCheck);
 
       let duplicateFoundOrError = 0;
 
       // eslint-disable-next-line array-callback-return
-      (await duplicateCheckResult).map(curData => {
+      duplicateCheckResult.map(curData => {
         // eslint-disable-next-line no-unused-expressions
         curData.isDuplicateFound === true && curData.errorMsg !== ""
           ? // eslint-disable-next-line no-plusplus
             duplicateFoundOrError++
           : "";
       });
+
+      console.log(duplicateFoundOrError);
 
       if (duplicateFoundOrError === 0) {
         const generatedForCheckGroups = splittedGroupNames.reduce(
@@ -200,7 +218,10 @@ const ModalFormField = (props: Props) => {
         });
 
         if (notExistingOrErrorFound !== 0) {
-          setErrorList(checkedResults);
+          const errorResults = checkedResults.filter(
+            curData => curData.isSuccess === false
+          );
+          setErrorList(errorResults);
           setIsValidatingStatus(false);
         } else {
           const uniqData = uniqBy(checkedResults, "groupName");
@@ -233,41 +254,72 @@ const ModalFormField = (props: Props) => {
           };
           setGroupFilters(groupData);
           setIsValidatingStatus(false);
+          resetFormHandler();
         }
       } else {
-        setErrorList(await duplicateCheckResult);
+        const faultedResults = duplicateCheckResult.filter(
+          curData => curData.isDuplicateFound === true
+        );
+        console.log(faultedResults);
+        setErrorList(faultedResults);
         setIsValidatingStatus(false);
       }
+    } else {
     }
   };
 
-  const gridConfig = {
-    title: "Problems has been encountered",
-    height: 250,
-    width: 465,
-    modal: true,
-    columns: [
-      {
-        index: "groupName",
-        title: "Genie Name",
-        flex: 1
-      },
-      {
-        index: "errorMsg",
-        title: "Error Message",
-        flex: 1
-      }
-    ],
-    data: errorList
+  const initiateGrid = (): void => {
+    if (typeof gridState.destroy !== "undefined") {
+      gridState.destroy();
+    }
+    new Fancy.Grid({
+      renderTo: gridContainer.current,
+      title: "Problems has been encountered",
+      height: 250,
+      width: 465,
+      shadow: false,
+      selModel: "cells",
+      modal: true,
+      columns: [
+        {
+          index: "groupName",
+          title: "Genie Name",
+          flex: 1
+        },
+        {
+          index: "errorMsg",
+          title: "Error Message",
+          flex: 1
+        }
+      ],
+      events: fancyGridEventsHandler,
+      data: errorList
+    });
   };
 
   const resetFormHandler = () => {
     resetFormModal();
+    setErrorList([]);
     toggleFormModal(false);
   };
 
+  const groupNameIndexer = filters => {
+    const filterResult = filters.reduce((allData, curData) => {
+      if (typeof curData.child !== "undefined") {
+        const childFilters = curData.child.reduce(
+          (aData, cData) => ({ ...aData, [cData.group_name]: cData }),
+          {}
+        );
+
+        return { ...allData, ...childFilters };
+      }
+      return { ...allData, [curData.group_name]: curData };
+    }, {});
+
+    return filterResult;
+  };
+
   const backButtonHandler = () => {
-    gridState.clearData();
     setErrorList([]);
   };
 
@@ -280,17 +332,16 @@ const ModalFormField = (props: Props) => {
   return (
     <ModalComponent {...modalComponentProps}>
       <ModalHeaderComponent>
-        {errorList.length === 0 ? "Add Filter" : "An error has been found"}
+        {errorList.length === 0
+          ? `Add group for ${hubRegion.toUpperCase()} hub`
+          : "An error has been found"}
       </ModalHeaderComponent>
       <form onSubmit={submitHandler}>
         <ModalBodyComponent>
           {errorList.length === 0 ? (
             <FormFields />
           ) : (
-            <FancyGridReact
-              events={fancyGridEventsHandler()}
-              config={gridConfig}
-            />
+            <div ref={gridContainer} />
           )}
         </ModalBodyComponent>
         <ModalFooterComponent>
@@ -303,18 +354,15 @@ const ModalFormField = (props: Props) => {
           >
             <i className="material-icons">clear</i>Cancel
           </ButtonComponent>
-          {errorList.length === 0 ? (
-            <ButtonComponent disabled={isLoading} {...addButtonComponentProps}>
-              <i className="material-icons">check</i>Add
-            </ButtonComponent>
-          ) : (
-            <ButtonComponent
-              onClick={backButtonHandler}
-              {...backButtonComponentProps}
-            >
-              <i className="material-icons">keyboard_backspace</i>Back
-            </ButtonComponent>
-          )}
+          <ButtonComponent disabled={isLoading} {...addButtonComponentProps}>
+            <i className="material-icons">check</i>Add
+          </ButtonComponent>
+          <ButtonComponent
+            onClick={backButtonHandler}
+            {...backButtonComponentProps}
+          >
+            <i className="material-icons">keyboard_backspace</i>Back
+          </ButtonComponent>
         </ModalFooterComponent>
       </form>
     </ModalComponent>

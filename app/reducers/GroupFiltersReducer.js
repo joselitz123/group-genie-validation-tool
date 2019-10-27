@@ -5,6 +5,7 @@ import { createSelector } from "reselect";
 import { denormalize } from "normalizr";
 import {
   SET_GROUP_FILTERS,
+  ADD_GROUPS_TO_EXISTING_COLLECTION_GROUP,
   LOAD_LOCAL_STORAGE_FILTERS,
   REARRANGE_GROUP_FILTERS,
   REARRANGE_GROUP_CHILD_FILTERS,

@@ -9,6 +9,7 @@ import GroupNameField from "./groupNameField";
 import GroupNameTextArea from "./groupNameTextArea";
 import AccessTypeField from "./accessTypeField";
 import NecessityTypeField from "./necessityTypeField";
+import ExistingCollectionOfGroupsField from "./existingCollectionOfGroupsField";
 
 type Props = {
   groupType: string,
@@ -25,11 +26,20 @@ const FormFields = (props: Props) => {
           <GroupTypeField />
         </Col>
       </Row>
-      <Row>
-        <Col xs="12">
-          <AccessTypeField />
-        </Col>
-      </Row>
+      {parseInt(groupType, 10) === 3 ? (
+        <Row>
+          <Col xs="12">
+            <ExistingCollectionOfGroupsField />
+          </Col>
+        </Row>
+      ) : (
+        <Row>
+          <Col xs="12">
+            <AccessTypeField />
+          </Col>
+        </Row>
+      )}
+
       {accessType === "application_access_type" ? (
         <Row>
           <Col xs="12">
@@ -39,11 +49,16 @@ const FormFields = (props: Props) => {
       ) : (
         ""
       )}
-      <Row>
-        <Col xs="12">
-          <GroupAliasField />
-        </Col>
-      </Row>
+
+      {parseInt(groupType, 10) === 3 ? (
+        ""
+      ) : (
+        <Row>
+          <Col xs="12">
+            <GroupAliasField />
+          </Col>
+        </Row>
+      )}
       <Row>
         <Col xs="12">
           {parseInt(groupType, 10) === 1 ? (

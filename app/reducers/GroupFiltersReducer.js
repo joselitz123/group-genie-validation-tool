@@ -25,7 +25,7 @@ const initialState = {
 export default function groupFiltersReducer(state = initialState, action) {
   switch (action.type) {
     case SET_GROUP_FILTERS:
-      const data =
+      const groupFiltersData =
         state.result.length === 0
           ? [action.payload]
           : [
@@ -33,7 +33,7 @@ export default function groupFiltersReducer(state = initialState, action) {
               ...useDenormalizeData(state.result, state.entities)
             ];
 
-      const normalizedData = useNormalizeData(data);
+      const normalizedData = useNormalizeData(groupFiltersData);
 
       setStorageData(normalizedData);
 
@@ -163,6 +163,29 @@ export default function groupFiltersReducer(state = initialState, action) {
       };
 
       return reArrangedGroupChildData;
+    case ADD_GROUPS_TO_EXISTING_COLLECTION_GROUP:
+      const { data, parentId } = action.payload;
+      const addGroupsToExistingCollectionGroupData = {
+        ...state,
+        entities: {
+          ...state.entities,
+          childFilter: { ...state.entities.childFilter, ...data },
+          groupFilter: {
+            ...state.entities.groupFilter,
+            [parentId]: {
+              ...state.entities.groupFilter[parentId],
+              child: [
+                ...Object.keys(data),
+                ...state.entities.groupFilter[parentId].child
+              ]
+            }
+          }
+        }
+      };
+
+      console.log(addGroupsToExistingCollectionGroupData);
+
+      return addGroupsToExistingCollectionGroupData;
 
     default:
       return state;
@@ -211,6 +234,28 @@ export const selectedHubRegionFilters = createSelector(
           : allFilters,
       []
     );
+
+    return data;
+  }
+);
+
+export const hubRegionCollectionGroups = createSelector(
+  [getGroupFilters, getSelectedHubRegion],
+  (groupFilters, selectedHubRegion) => {
+    const data = groupFilters.reduce((allFilters, curFilter) => {
+      if (curFilter.hub_region === selectedHubRegion) {
+        if (typeof curFilter.child !== "undefined") {
+          console.log(curFilter);
+          return [
+            ...allFilters,
+            { value: curFilter.id, name: curFilter.group_alias }
+          ];
+        }
+        return allFilters;
+      }
+
+      return allFilters;
+    }, []);
 
     return data;
   }

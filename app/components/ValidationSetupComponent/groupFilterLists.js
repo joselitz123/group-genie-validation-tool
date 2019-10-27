@@ -12,7 +12,6 @@ import {
   deleteGroupFilterChild,
   changeGroupChildFilterArrangement
 } from "../../actions/groupFiltersActions/actions";
-import { selectedHubFilters } from "../../reducers/GroupFiltersReducer";
 import {
   hubRegionInputHandler,
   toggleFormModal
@@ -22,7 +21,6 @@ import { useDenormalizeData } from "../../constants/schema";
 type Props = {
   changeGroupFilterArrangement: function,
   changeGroupChildFilterArrangement: function,
-  hubRegionFilter: function,
   selectedHubRegion: function,
   hubRegionInputHandler: function,
   deleteGroupFilter: function,
@@ -35,7 +33,6 @@ const GroupFilterLists = (props: Props) => {
   const {
     changeGroupFilterArrangement,
     changeGroupChildFilterArrangement,
-    hubRegionFilter,
     selectedHubRegion,
     hubRegionInputHandler,
     deleteGroupFilter,
@@ -58,13 +55,13 @@ const GroupFilterLists = (props: Props) => {
     () => {
       const groupFilters = useDenormalizeData(result, entities);
 
-      const data = groupFilters.reduce(
-        (allFilters, curFilter) =>
-          curFilter.hub_region === selectedHubRegion
-            ? [...allFilters, curFilter]
-            : allFilters,
-        []
-      );
+      // const data = groupFilters.reduce(
+      //   (allFilters, curFilter) =>
+      //     curFilter.hub_region === selectedHubRegion
+      //       ? [...allFilters, curFilter]
+      //       : allFilters,
+      //   []
+      // );
 
       if (toArray(gridState).length !== 0) {
         gridState.removeAll();
@@ -84,7 +81,7 @@ const GroupFilterLists = (props: Props) => {
     [selectedHubRegion, addFilterValStatus, childDataDragState]
   );
 
-  const dragRowsHandler = (grid, index) => {
+  const dragRowsHandler = grid => {
     // checks if the data being rearranged is a child data
     // let childDataCount = 0;
     // grid.getData().map(
@@ -256,7 +253,6 @@ const GroupFilterLists = (props: Props) => {
 GroupFilterLists.propTypes = {
   changeGroupFilterArrangement: PropTypes.func.isRequired,
   changeGroupChildFilterArrangement: PropTypes.func.isRequired,
-  hubRegionFilter: PropTypes.array.isRequired,
   selectedHubRegion: PropTypes.string.isRequired,
   hubRegionInputHandler: PropTypes.func.isRequired,
   deleteGroupFilter: PropTypes.func.isRequired,

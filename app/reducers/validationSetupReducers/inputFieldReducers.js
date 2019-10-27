@@ -14,6 +14,7 @@ const initialState = {
   groupAliasField: "",
   groupTypeField: 1,
   necessityTypeField: "",
+  existingCollectionOfGroupsField: "",
   accessTypeField: "",
   groupNameTextArea: "",
   isValidating: false,

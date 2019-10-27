@@ -25,7 +25,10 @@ import {
 import useCheckGroupNameAvailability from "./functionHooks/useCheckGroupNameAvailability";
 import useValidateDuplicateData from "./functionHooks/useValidateDuplicateData";
 import { selectedHubFilters } from "../../reducers/GroupFiltersReducer";
-import { setGroupFilters } from "../../actions/groupFiltersActions/actions";
+import {
+  setGroupFilters,
+  addGroupsToExistingCollectionGroup
+} from "../../actions/groupFiltersActions/actions";
 
 const useStyles = makeStyles({
   loaderUI: {
@@ -58,7 +61,9 @@ type Props = {
   hubRegion: string,
   groupnames: string,
   accessType: string,
-  necessityType: string
+  necessityType: string,
+  addGroupsToExistingCollectionGroup: function,
+  existingCollectionOfGroupsField: string
 };
 
 const ModalFormField = (props: Props) => {
@@ -79,7 +84,9 @@ const ModalFormField = (props: Props) => {
     hubRegion,
     groupnames,
     accessType,
-    necessityType
+    necessityType,
+    addGroupsToExistingCollectionGroup,
+    existingCollectionOfGroupsField
   } = props;
 
   const [errorList, setErrorList] = React.useState([]);
@@ -171,101 +178,134 @@ const ModalFormField = (props: Props) => {
         triggerErrorOnGroupName(isDuplicate.errorMsg);
       }
     } else if (filterType === 2) {
-      const splittedGroupNames = groupnames.split("\n");
+      const { valid, data } = await validationForCollectionOfGroups();
 
-      const indexedFilter = groupNameIndexer(existHubRegionFilters);
+      if (valid) {
+        const uniqData = uniqBy(data, "groupName");
+        const dataGrid = uniqData.reduce((allData, curData) => {
+          const id = uuid();
+          return [
+            {
+              id,
+              hub_region: hubRegion,
+              group_name: curData.groupName,
+              group_alias: groupAlias,
+              description: curData.description,
+              leaf: true
+            },
+            ...allData
+          ];
+        }, []);
 
-      const generatedDuplicateCheck = splittedGroupNames.reduce(
+        const groupID = uuid();
+
+        const groupData = {
+          id: groupID,
+          hub_region: hubRegion,
+          group_alias: groupAlias,
+          access_type: accessType,
+          necessity_type: necessityType,
+          group_name: groupName,
+          description: "",
+          child: dataGrid
+        };
+        setGroupFilters(groupData);
+        setIsValidatingStatus(false);
+        resetFormHandler();
+      }
+    } else {
+      const { valid, data } = await validationForCollectionOfGroups();
+
+      if (valid) {
+        const uniqData = uniqBy(data, "groupName");
+        const dataGrid = uniqData.reduce((allData, curData) => {
+          const id = uuid();
+          return {
+            [id]: {
+              id,
+              hub_region: hubRegion,
+              group_name: curData.groupName,
+              group_alias: "New Added Filter",
+              description: curData.description,
+              leaf: true
+            },
+            ...allData
+          };
+        }, {});
+
+        addGroupsToExistingCollectionGroup({
+          parentId: existingCollectionOfGroupsField,
+          data: dataGrid
+        });
+        setIsValidatingStatus(false);
+        resetFormHandler();
+      }
+    }
+  };
+
+  const validationForCollectionOfGroups = async () => {
+    const splittedGroupNames = groupnames.split("\n");
+
+    const indexedFilter = groupNameIndexer(existHubRegionFilters);
+
+    const generatedDuplicateCheck = splittedGroupNames.reduce(
+      (allData, curVal) => [
+        ...allData,
+        useValidateDuplicateData(curVal.trim(), indexedFilter)
+      ],
+      []
+    );
+
+    const duplicateCheckResult = await Promise.all(generatedDuplicateCheck);
+
+    let duplicateFoundOrError = 0;
+
+    // eslint-disable-next-line array-callback-return
+    duplicateCheckResult.map(curData => {
+      // eslint-disable-next-line no-unused-expressions
+      curData.isDuplicateFound === true && curData.errorMsg !== ""
+        ? // eslint-disable-next-line no-plusplus
+          duplicateFoundOrError++
+        : "";
+    });
+
+    if (duplicateFoundOrError === 0) {
+      const generatedForCheckGroups = splittedGroupNames.reduce(
         (allData, curVal) => [
           ...allData,
-          useValidateDuplicateData(curVal.trim(), indexedFilter)
+          useCheckGroupNameAvailability(curVal.trim())
         ],
         []
       );
 
-      const duplicateCheckResult = await Promise.all(generatedDuplicateCheck);
+      const checkedResults = await Promise.all(generatedForCheckGroups);
 
-      let duplicateFoundOrError = 0;
+      let notExistingOrErrorFound = 0;
 
       // eslint-disable-next-line array-callback-return
-      duplicateCheckResult.map(curData => {
+      checkedResults.map(curData => {
         // eslint-disable-next-line no-unused-expressions
-        curData.isDuplicateFound === true && curData.errorMsg !== ""
-          ? // eslint-disable-next-line no-plusplus
-            duplicateFoundOrError++
-          : "";
+        curData.isSuccess === false ? notExistingOrErrorFound++ : "";
       });
 
-      console.log(duplicateFoundOrError);
-
-      if (duplicateFoundOrError === 0) {
-        const generatedForCheckGroups = splittedGroupNames.reduce(
-          (allData, curVal) => [
-            ...allData,
-            useCheckGroupNameAvailability(curVal.trim())
-          ],
-          []
+      if (notExistingOrErrorFound !== 0) {
+        const errorResults = checkedResults.filter(
+          curData => curData.isSuccess === false
         );
-
-        const checkedResults = await Promise.all(generatedForCheckGroups);
-
-        let notExistingOrErrorFound = 0;
-
-        // eslint-disable-next-line array-callback-return
-        checkedResults.map(curData => {
-          // eslint-disable-next-line no-unused-expressions
-          curData.isSuccess === false ? notExistingOrErrorFound++ : "";
-        });
-
-        if (notExistingOrErrorFound !== 0) {
-          const errorResults = checkedResults.filter(
-            curData => curData.isSuccess === false
-          );
-          setErrorList(errorResults);
-          setIsValidatingStatus(false);
-        } else {
-          const uniqData = uniqBy(checkedResults, "groupName");
-          const dataGrid = uniqData.reduce((allData, curData) => {
-            const id = uuid();
-            return [
-              {
-                id,
-                hub_region: hubRegion,
-                group_name: curData.groupName,
-                access_type: accessType,
-                necessity_type: necessityType,
-                group_alias: groupAlias,
-                description: curData.description,
-                leaf: true
-              },
-              ...allData
-            ];
-          }, []);
-
-          const groupID = uuid();
-
-          const groupData = {
-            id: groupID,
-            hub_region: hubRegion,
-            group_alias: groupAlias,
-            group_name: groupName,
-            description: "",
-            child: dataGrid
-          };
-          setGroupFilters(groupData);
-          setIsValidatingStatus(false);
-          resetFormHandler();
-        }
-      } else {
-        const faultedResults = duplicateCheckResult.filter(
-          curData => curData.isDuplicateFound === true
-        );
-        console.log(faultedResults);
-        setErrorList(faultedResults);
+        setErrorList(errorResults);
         setIsValidatingStatus(false);
+        return { valid: false };
       }
-    } else {
+
+      return { valid: true, data: checkedResults };
     }
+    const faultedResults = duplicateCheckResult.filter(
+      curData => curData.isDuplicateFound === true
+    );
+    setErrorList(faultedResults);
+    setIsValidatingStatus(false);
+
+    return { valid: false };
   };
 
   const initiateGrid = (): void => {
@@ -386,7 +426,9 @@ ModalFormField.propTypes = {
   hubRegion: PropTypes.string.isRequired,
   groupnames: PropTypes.string.isRequired,
   accessType: PropTypes.string.isRequired,
-  necessityType: PropTypes.string.isRequired
+  necessityType: PropTypes.string.isRequired,
+  addGroupsToExistingCollectionGroup: PropTypes.func.isRequired,
+  existingCollectionOfGroupsField: PropTypes.string.isRequired
 };
 
 const mapStateToProps = state => ({
@@ -400,7 +442,9 @@ const mapStateToProps = state => ({
   hubRegion: state.inputFieldReducers.hubRegionField,
   groupnames: state.inputFieldReducers.groupNameTextArea,
   accessType: state.inputFieldReducers.accessTypeField,
-  necessityType: state.inputFieldReducers.necessityTypeField
+  necessityType: state.inputFieldReducers.necessityTypeField,
+  existingCollectionOfGroupsField:
+    state.inputFieldReducers.existingCollectionOfGroupsField
 });
 
 export default connect<*, *, *, *, *, *>(
@@ -411,6 +455,7 @@ export default connect<*, *, *, *, *, *>(
     resetFormModalFields,
     triggerErrorOnGroupName,
     setIsValidatingStatus,
-    setGroupFilters
+    setGroupFilters,
+    addGroupsToExistingCollectionGroup
   }
 )(ModalFormField);

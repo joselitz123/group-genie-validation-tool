@@ -8,8 +8,7 @@ import PropTypes from "prop-types";
 // eslint-disable-next-line no-unused-vars
 import * as _ from "lodash";
 import useFancyGridModal from "../../ReusableFunctions/fancyGridModal";
-// import { withRouter } from "react-router-dom";
-// import routes from "../../../constants/routes.json";z
+import { selectedObjectFormatHubRegionFilters } from "../../../reducers/GroupFiltersReducer";
 
 type Props = {
   validationResult: function,
@@ -39,9 +38,9 @@ const ResultDataTable = (props: Props) => {
     if (index !== "user_accnt") {
       const filterIndex = index.toString().replace(/_/g, "-");
 
-      console.log([allFilters[filterIndex]]);
-
       const filterData = allFilters[filterIndex];
+
+      console.log(filterData);
 
       const modalColumns = [
         {
@@ -91,9 +90,36 @@ const ResultDataTable = (props: Props) => {
   ];
 
   const createColumns = () => {
+    const hasApplicationAccess = {
+      index: "hasApplicationAccess",
+      title: "Application Access",
+      sortable: true,
+      type: "combo",
+      data: ["", `✔`, "❌"],
+      flex: 1,
+      align: "center",
+      cellAlign: "center",
+      draggable: true,
+      filter: { header: true, emptyText: "Filter" }
+    };
+
+    const hasDataAccess = {
+      index: "hasDataAccess",
+      title: "Data Access",
+      sortable: true,
+      type: "combo",
+      data: ["", `✔`, "❌"],
+      flex: 1,
+      align: "center",
+      cellAlign: "center",
+      draggable: true,
+      filter: { header: true, emptyText: "Filter" }
+    };
+
     const userColumn = {
       index: "user_accnt",
       title: "User",
+      locked: true,
       sortable: true,
       type: "string",
       flex: 1,
@@ -187,7 +213,7 @@ const ResultDataTable = (props: Props) => {
 
         return [...allColumns, functionColumn];
       },
-      [userColumn]
+      [userColumn, hasApplicationAccess, hasDataAccess]
     );
 
     return createdColumns;
@@ -227,14 +253,14 @@ const ResultDataTable = (props: Props) => {
 ResultDataTable.propTypes = {
   validationResult: PropTypes.object.isRequired,
   filtersSelected: PropTypes.array.isRequired,
-  allFilters: PropTypes.object.isRequired,
+  allFilters: PropTypes.object,
   totalAccessView: PropTypes.object.isRequired
 };
 
 const mapStateToProps = state => ({
   validationResult: state.validationReducer.validationResult,
   filtersSelected: state.groupFiltersSelectionBoxReducer.groupsSelected,
-  allFilters: state.groupFiltersReducer.group_filters,
+  allFilters: selectedObjectFormatHubRegionFilters(state),
   totalAccessView: state.totalAccessView.allUsersAccess
 });
 

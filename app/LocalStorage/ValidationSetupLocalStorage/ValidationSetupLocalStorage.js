@@ -31,13 +31,7 @@ export const fetchDefaultFilters = (): Promise<{}> =>
   new Promise(async (resolve, reject) => {
     try {
       const data = await axios.get(
-        "https://api.jsonbin.io/b/5d5f82ffa8432f425342dbb8/7",
-        {
-          headers: {
-            "secret-key":
-              "$2a$10$2O6JAOYDz43/GqC.940SEO0YIRTFb6VygXS8Lfwy.qJ4AaL.XZe2i"
-          }
-        }
+        "https://api.npoint.io/ef745006ff0b126df5ce"
       );
       // const reversedData = Object.values(data.data).reverse(); // a workaround on the issue in https://jsonbin.io wherein it reverses the correct order of the filter.
       // const resultData = reversedData.reduce((allData, curData: any) => {

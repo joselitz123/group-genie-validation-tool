@@ -189,7 +189,7 @@ const ModalFormField = (props: Props) => {
               id,
               hub_region: hubRegion,
               group_name: curData.groupName,
-              group_alias: groupAlias,
+              group_alias: curData.groupName,
               description: curData.description,
               leaf: true
             },
@@ -225,7 +225,7 @@ const ModalFormField = (props: Props) => {
               id,
               hub_region: hubRegion,
               group_name: curData.groupName,
-              group_alias: "New Added Filter",
+              group_alias: curData.groupName,
               description: curData.description,
               leaf: true
             },

@@ -18,7 +18,10 @@ import { setStorageData } from "../LocalStorage/ValidationSetupLocalStorage/Vali
 import { useDenormalizeData, useNormalizeData } from "../constants/schema";
 
 const initialState = {
-  entities: {},
+  entities: {
+    groupFilter: {},
+    childFilter: {}
+  },
   result: []
 };
 
@@ -183,7 +186,7 @@ export default function groupFiltersReducer(state = initialState, action) {
         }
       };
 
-      console.log(addGroupsToExistingCollectionGroupData);
+      setStorageData(addGroupsToExistingCollectionGroupData);
 
       return addGroupsToExistingCollectionGroupData;
 
@@ -233,6 +236,21 @@ export const selectedHubRegionFilters = createSelector(
           ? [...allFilters, curFilter]
           : allFilters,
       []
+    );
+
+    return data;
+  }
+);
+
+export const selectedObjectFormatHubRegionFilters = createSelector(
+  [getGroupFilters, getSelectedHubRegionForFilter],
+  (groupFilters, selectedHubRegion) => {
+    const data = groupFilters.reduce(
+      (allFilters, curFilter) =>
+        curFilter.hub_region === selectedHubRegion
+          ? { ...allFilters, [curFilter.id]: curFilter }
+          : allFilters,
+      {}
     );
 
     return data;

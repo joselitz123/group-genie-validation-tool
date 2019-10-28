@@ -14,11 +14,13 @@ const checkAccessAvailability = (
     id: string,
     group_name: string,
     group_alias: string,
+    access_type: string,
     child?: Array<{
       group_name: string,
       id: string,
       parentId: string,
-      group_alias: string
+      group_alias: string,
+      access_type: string
     }>
   }>
 ) => {
@@ -35,12 +37,22 @@ const checkAccessAvailability = (
       curAccessObject: accountAccess
     ) => {
       const childData = [];
+      const dataAccess = [];
+      const applicationRequiredAccess = [];
 
       const access = filterGroups.reduce((pVal, cVal): {
         child: Array<{ [key: string]: string | boolean }>,
         [key: string]: string
       } => {
         if (typeof curAccessObject.access[cVal.group_name] !== "undefined") {
+          if (cVal.access_type === "data_access_type") {
+            dataAccess.push(cVal);
+          } else if (
+            cVal.access_type === "application_access_type" &&
+            cVal.necessity_type === "mandatory"
+          ) {
+            applicationRequiredAccess.push(cVal);
+          }
           return {
             ...pVal,
             [dashToUnderscoreConverter(cVal.id)]: `✔`
@@ -68,6 +80,14 @@ const checkAccessAvailability = (
           childData.push(childResult);
 
           if (childResult.length !== 0) {
+            if (cVal.access_type === "data_access_type") {
+              dataAccess.push(cVal);
+            } else if (
+              cVal.access_type === "application_access_type" &&
+              cVal.necessity_type === "mandatory"
+            ) {
+              applicationRequiredAccess.push(cVal);
+            }
             return {
               ...pVal,
               [dashToUnderscoreConverter(cVal.id)]: `✔`
@@ -87,6 +107,9 @@ const checkAccessAvailability = (
         ...totalVal,
         [curAccessObject.user]: {
           user_accnt: curAccessObject.user,
+          hasApplicationAccess:
+            applicationRequiredAccess.length !== 0 ? `✔` : "❌",
+          hasDataAccess: dataAccess.length !== 0 ? `✔` : "❌",
           error_code:
             typeof curAccessObject.error_code !== "undefined"
               ? curAccessObject.error_code
@@ -102,6 +125,8 @@ const checkAccessAvailability = (
     },
     {}
   );
+
+  console.log(result);
 
   return result;
 };

@@ -184,6 +184,14 @@ const GroupFilterLists = (props: Props) => {
         type: "tree"
       },
       {
+        index: "description",
+        title: "Description",
+        type: "string",
+        flex: 2,
+        draggable: true,
+        align: "center"
+      },
+      {
         index: "group_name",
         title: "Genie Group",
         type: "string",
@@ -191,14 +199,6 @@ const GroupFilterLists = (props: Props) => {
         draggable: true,
         align: "center",
         editable: false
-      },
-      {
-        index: "description",
-        title: "Description",
-        type: "string",
-        flex: 2,
-        draggable: true,
-        align: "center"
       },
       {
         title: "Action",

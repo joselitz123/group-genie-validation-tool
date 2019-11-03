@@ -29,6 +29,10 @@ const ResultDataTable = (props: Props) => {
 
   const [initGridState, setInitGridState] = React.useState({});
 
+  const [maxDataColumn, setMaxDataColumn] = React.useState();
+
+  const [maxColumnWidth, setMaxColumnWidth] = React.useState({});
+
   const inputEl = React.useRef(null);
 
   const celldblclickHandler = (gridState, o) => {
@@ -39,8 +43,6 @@ const ResultDataTable = (props: Props) => {
       const filterIndex = index.toString().replace(/_/g, "-");
 
       const filterData = allFilters[filterIndex];
-
-      console.log(filterData);
 
       const modalColumns = [
         {
@@ -84,6 +86,40 @@ const ResultDataTable = (props: Props) => {
     }
   };
 
+  // Auto resizes the columns depending on how many characters are there on its child data
+  React.useEffect(
+    () => {
+      if (typeof maxDataColumn !== "undefined") {
+        const defaultColumnsWidth = initGridState.getColumns().reduce(
+          (allData, curData) => ({
+            ...allData,
+            [curData.index]: { index: curData.index, width: curData.width }
+          }),
+          {}
+        );
+
+        const { index, value } = maxDataColumn;
+
+        if (
+          typeof maxColumnWidth[index] === "undefined" ||
+          maxColumnWidth[index].value < value
+        ) {
+          initGridState.setColumnWidth(
+            Object.values({
+              ...defaultColumnsWidth,
+              [index]: { index, width: value.length * 15 }
+            })
+          );
+          setMaxColumnWidth({
+            ...maxColumnWidth,
+            [maxDataColumn.index]: maxDataColumn
+          });
+        }
+      }
+    },
+    [maxDataColumn]
+  );
+
   const initialEventsHandler = () => [
     { init: setInitGridState },
     { celldblclick: celldblclickHandler }
@@ -96,7 +132,7 @@ const ResultDataTable = (props: Props) => {
       sortable: true,
       type: "combo",
       data: ["", `✔`, "❌"],
-      flex: 1,
+      flex: 2,
       align: "center",
       cellAlign: "center",
       draggable: true,
@@ -194,17 +230,19 @@ const ResultDataTable = (props: Props) => {
               : "tree",
           data: ["", `✔`, "❌"],
           subSearch: typeof allFilters[currentColumn].child === "undefined",
-          flex: 1,
+          sortable: true,
+          ellipsis: false,
+          flex: typeof allFilters[currentColumn].child === "undefined" ? 1 : 2,
           cellAlign: "center",
           align: "center",
           draggable: true,
-          filter: {
-            header: true,
-            emptyText: "Filter"
-          },
+          filter: { header: true, emptyText: "Filter" },
           render: o => {
-            if (o.value === "❌") {
-              o.cls = "xmark";
+            if (o.value.length > 1) {
+              setMaxDataColumn({
+                index: o.column.index,
+                value: o.value
+              });
             }
 
             return o;

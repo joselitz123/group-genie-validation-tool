@@ -23,7 +23,6 @@ const useFancyGridModal = (
           text: "Close",
           handler: () => {
             modalGrid.hide();
-            // modalGrid.destroy();
           }
         }
       ]

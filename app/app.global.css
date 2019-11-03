@@ -100,3 +100,51 @@ div.fancy-grid-body
 .display-not-visible {
   display: none !important;
 }
+
+::-webkit-scrollbar {
+  height: 10px !important;
+}
+
+::-webkit-scrollbar-track {
+  background-color: #f5f5f5 !important;
+  border-radius: 10px !important;
+}
+
+.fancy-grid-body::-webkit-scrollbar-thumb {
+  background-image: linear-gradient(
+    to right,
+    #30cfd0 0%,
+    #330867 100%
+  ) !important;
+  border-radius: 10px !important;
+}
+
+.fancy-grid-body::-webkit-scrollbar-thumb:hover {
+  box-shadow: rgba(0, 0, 0, 0.1) !important;
+  background-image: linear-gradient(
+    to right,
+    #30cfd0 0%,
+    #330867 100%
+  ) !important;
+  border-radius: 10px !important;
+}
+
+::-webkit-scrollbar-thumb {
+  box-shadow: rgba(0, 0, 0, 0.1) !important;
+  background-image: linear-gradient(
+    to top,
+    #30cfd0 0%,
+    #330867 100%
+  ) !important;
+  border-radius: 10px !important;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  box-shadow: rgba(0, 0, 0, 0.1) !important;
+  background-image: linear-gradient(
+    to top,
+    #30cfd0 0%,
+    #330867 100%
+  ) !important;
+  border-radius: 10px !important;
+}

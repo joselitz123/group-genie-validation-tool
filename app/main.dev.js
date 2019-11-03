@@ -96,10 +96,14 @@ app.on("ready", async () => {
     mainWindow = null;
   });
 
+  mainWindow.on("restore", () => {
+    mainWindow.setSize(1400, 747);
+  });
+
   const menuBuilder = new MenuBuilder(mainWindow);
   menuBuilder.buildMenu();
 
   // Remove this if your app does not use auto updates
   // eslint-disable-next-line
-  new AppUpdater();
+  // new AppUpdater();
 });

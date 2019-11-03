@@ -57,6 +57,7 @@ const SelectFieldComponent = (props: Props) => {
           {inputLabel}
         </InputLabel>
         <Select
+          required={isRequired}
           value={input}
           onChange={inputHandler}
           inputProps={{ id: selectFor }}

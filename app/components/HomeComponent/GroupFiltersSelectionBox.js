@@ -26,7 +26,9 @@ export const useStyles = makeStyles(theme => ({
   },
   chips: {
     display: "flex",
-    flexWrap: "wrap"
+    flexWrap: "wrap",
+    overflow: "auto",
+    height: "70px"
   },
   chip: {
     margin: 2,
@@ -37,9 +39,7 @@ export const useStyles = makeStyles(theme => ({
     marginTop: theme.spacing(3)
   },
   select: {
-    // '&.Mui-focused': {
-    //   backgroundColor: 'rgba(0, 0, 0, 0.05) !important'
-    // },
+    height: "70px",
     "&:before": {
       borderBottom: "1px solid rgba(255, 255, 255, 0.42)"
     },
@@ -49,16 +49,9 @@ export const useStyles = makeStyles(theme => ({
     "& svg": {
       color: "rgba(255, 255, 255, 0.54)"
     }
-    // '& .MuiSelect-root:focus': {
-    //   backgroundColor: 'transparent'
-    // },
-    // paddingTop: '36px',
-    // paddingBottom: '20px',
-    // backgroundColor: 'rgba(0, 0, 0, 0.09)'
   },
   inputLabel: {
     color: "rgba(255, 255, 255, 0.54)"
-    // top: '12px'
   }
 }));
 

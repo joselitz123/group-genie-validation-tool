@@ -52,7 +52,8 @@ type Props = {
   existHubRegionFilters: Array<{
     id: string,
     hub_region: string,
-    group_name: string
+    group_name: string,
+    child: Array<{ group_name: string }>
   }>,
   triggerErrorOnGroupName: function,
   setIsValidatingStatus: function,
@@ -294,7 +295,7 @@ const ModalFormField = (props: Props) => {
         );
         setErrorList(errorResults);
         setIsValidatingStatus(false);
-        return { valid: false };
+        return { valid: false, data: [] };
       }
 
       return { valid: true, data: checkedResults };
@@ -305,7 +306,7 @@ const ModalFormField = (props: Props) => {
     setErrorList(faultedResults);
     setIsValidatingStatus(false);
 
-    return { valid: false };
+    return { valid: false, data: [] };
   };
 
   const initiateGrid = (): void => {

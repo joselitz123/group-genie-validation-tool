@@ -3,7 +3,7 @@
 const useValidateDuplicateData = (
   groupName: string,
   filterIndexes: {
-    [key]: {
+    [key: string]: {
       id: string,
       hub_region: string,
       group_name: string

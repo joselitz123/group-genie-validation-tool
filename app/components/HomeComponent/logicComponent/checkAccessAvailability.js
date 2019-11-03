@@ -15,12 +15,12 @@ const checkAccessAvailability = (
     group_name: string,
     group_alias: string,
     access_type: string,
+    necessity_type: string,
     child?: Array<{
       group_name: string,
       id: string,
       parentId: string,
-      group_alias: string,
-      access_type: string
+      group_alias: string
     }>
   }>
 ) => {

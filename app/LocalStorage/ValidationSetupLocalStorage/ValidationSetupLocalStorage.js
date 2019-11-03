@@ -5,7 +5,6 @@ import axios from "axios";
 
 export const getStorageData = (): Promise<{}> =>
   new Promise((resolve, reject) => {
-    console.log(storage.getDataPath());
     storage.get("group_filters", async (error: Error, data: any) => {
       if (error) {
         reject(error);
@@ -19,6 +18,7 @@ export const getStorageData = (): Promise<{}> =>
   });
 
 export const setStorageData = (data: function) => {
+  console.log("performed");
   storage.set("group_filters", data, error => {
     if (error) {
       console.error(error);
@@ -37,7 +37,6 @@ export const fetchDefaultFilters = (): Promise<{}> =>
       // const resultData = reversedData.reduce((allData, curData: any) => {
       //   return { ...allData, [curData.id]: curData };
       // }, {});
-
       resolve(data.data);
     } catch (error) {
       reject(error);

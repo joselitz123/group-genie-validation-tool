@@ -7,7 +7,7 @@ import SelectFieldComponent from "../ReusableComponent/SelectFieldComponent/Sele
 import { hubRegionCollectionGroups } from "../../reducers/GroupFiltersReducer";
 
 type Props = {
-  existingCollectionGroups: Array<{ name: string, value: number }>,
+  existingCollectionGroups: Array<{ name: string, value: number | string }>,
   value: string,
   valSetupInputHandler: function
 };

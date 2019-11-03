@@ -229,6 +229,7 @@ const ResultDataTable = (props: Props) => {
         renderTo: inputEl.current,
         title: "Validation Result Table",
         height: 460,
+        nativeScroller: true,
         width: tableWidth,
         shadow: false,
         selModel: { type: "rows" },

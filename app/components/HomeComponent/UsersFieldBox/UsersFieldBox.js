@@ -22,7 +22,8 @@ const UsersFieldBox = (componentProps: Props) => {
     label: "User/s to validate access",
     onChange: setInputUsersField,
     rows: 3,
-    name: "usersField"
+    name: "usersField",
+    className: "userFieldBox"
   };
 
   return (

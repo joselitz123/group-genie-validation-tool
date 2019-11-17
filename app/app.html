@@ -1,18 +1,18 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <meta charset="utf-8">
-    <title>Group Genie Validation Tool</title>
+    <meta charset="utf-8" />
+    <title>Data Hub Access Validation Tool</title>
     <script>
       (function() {
         if (!process.env.HOT) {
-          const link = document.createElement('link');
-          link.rel = 'stylesheet';
-          link.href = './dist/style.css';
+          const link = document.createElement("link");
+          link.rel = "stylesheet";
+          link.href = "./dist/style.css";
           // HACK: Writing the script path should be done with webpack
-          document.getElementsByTagName('head')[0].appendChild(link);
+          document.getElementsByTagName("head")[0].appendChild(link);
         }
-      }());
+      })();
     </script>
     <style>
       body {
@@ -26,23 +26,49 @@
 
       /* Track */
       ::-webkit-scrollbar-track {
-        background: #f1f1f1 !important; 
+        background: #f1f1f1 !important;
       }
-      
+
       /* Handle */
       ::-webkit-scrollbar-thumb {
-        background: #888 !important; 
+        background: #888 !important;
       }
 
       /* Handle on hover */
       ::-webkit-scrollbar-thumb:hover {
-        background: #555 !important; 
+        background: #555 !important;
       }
     </style>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
-    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.3/css/bootstrap.css"/>
-    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.19/css/dataTables.bootstrap4.min.css"/>
-    <link rel="icon" href="../resources//icon.ico" type="image/gif">
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/icon?family=Material+Icons"
+    />
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.3/css/bootstrap.css"
+    />
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="https://cdn.datatables.net/1.10.19/css/dataTables.bootstrap4.min.css"
+    />
+
+    <link rel="icon" href="../resources//icon.ico" type="image/gif" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/intro.js/2.9.3/introjs.min.css"
+      integrity="sha256-/oZ7h/Jkj6AfibN/zTWrCoba0L+QhP9Tf/ZSgyZJCnY="
+      crossorigin="anonymous"
+    />
+    <link
+      rel="stylesheet"
+      href="http://fenixrepo.fao.org/cdn/js/introjs/1.0.0/themes/introjs-nassim.css"
+    />
+    <script
+      type="text/javascript"
+      src="https://code.jquery.com/jquery-1.9.0.min.js"
+    ></script>
   </head>
   <body>
     <div id="root"></div>
@@ -52,25 +78,24 @@
 
         // Dynamically insert the DLL script in development env in the
         // renderer process
-        if (process.env.NODE_ENV === 'development') {
-          scripts.push('../dll/renderer.dev.dll.js');
+        if (process.env.NODE_ENV === "development") {
+          scripts.push("../dll/renderer.dev.dll.js");
         }
 
         // Dynamically insert the bundled app script in the renderer process
         const port = process.env.PORT || 1212;
         scripts.push(
-          (process.env.HOT)
-            ? 'http://localhost:' + port + '/dist/renderer.dev.js'
-            : './dist/renderer.prod.js'
+          process.env.HOT
+            ? "http://localhost:" + port + "/dist/renderer.dev.js"
+            : "./dist/renderer.prod.js"
         );
 
         document.write(
           scripts
             .map(script => `<script defer src="${script}"><\/script>`)
-            .join('')
+            .join("")
         );
       }
-    </script> 
-
+    </script>
   </body>
 </html>

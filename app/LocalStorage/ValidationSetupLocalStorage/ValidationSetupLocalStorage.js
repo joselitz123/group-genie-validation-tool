@@ -5,7 +5,7 @@ import axios from "axios";
 
 export const getStorageData = (): Promise<{}> =>
   new Promise((resolve, reject) => {
-    storage.get("group_filters", async (error: Error, data: any) => {
+    storage.get("data_validation_filters", async (error: Error, data: any) => {
       if (error) {
         reject(error);
       } else if (data === "" || Object.values(data).length === 0) {
@@ -18,15 +18,13 @@ export const getStorageData = (): Promise<{}> =>
   });
 
 export const setStorageData = (data: function) => {
-  console.log("performed");
-  storage.set("group_filters", data, error => {
+  storage.set("data_validation_filters", data, error => {
     if (error) {
       console.error(error);
     }
   });
 };
 
-// Data is stored in https://jsonbin.io
 export const fetchDefaultFilters = (): Promise<{}> =>
   new Promise(async (resolve, reject) => {
     try {

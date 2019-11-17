@@ -97,7 +97,9 @@ app.on("ready", async () => {
   });
 
   mainWindow.on("restore", () => {
-    mainWindow.setSize(1400, 747);
+    if (mainWindow !== null) {
+      mainWindow.setSize(1400, 747);
+    }
   });
 
   const menuBuilder = new MenuBuilder(mainWindow);

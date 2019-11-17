@@ -12,11 +12,18 @@ const style = {
     "& .MuiInputBase-input": {
       color: "white"
     },
+    "& .MuiInputBase-input::selection": {
+      color: "white",
+      "background-color": "blue"
+    },
     "& .MuiFilledInput-underline:before": {
       borderBottom: "1px solid rgba(255, 255, 255, 0.42)"
     },
     "& .MuiFilledInput-underline:hover:before": {
       borderBottom: "1px solid rgba(255, 255, 255, 0.87)"
+    },
+    "& .MuiFilledInput-root": {
+      "background-color": "rgba(0, 0, 0, 0.15)"
     }
   }
 };

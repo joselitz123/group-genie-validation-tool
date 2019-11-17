@@ -13,10 +13,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import GroupFiltersSelectionBox from "./GroupFiltersSelectionBox";
 
 import { loadLocalStorageGroupFilters } from "../../actions/groupFiltersActions/actions";
-import {
-  getStorageData,
-  fetchDefaultFilters
-} from "../../LocalStorage/ValidationSetupLocalStorage/ValidationSetupLocalStorage";
+import { getStorageData } from "../../LocalStorage/ValidationSetupLocalStorage/ValidationSetupLocalStorage";
 import {
   loadAllUserAccess,
   loadTotalCountUsers,
@@ -40,6 +37,7 @@ import HubSelectionBox from "./hubSelectionField/hubSelectionField";
 import Notifier from "../ReusableFunctions/NotificationFunction";
 import type { accountAccess } from "../../constants/flowInterfaces";
 import { setSelectedGroupInFieldBox } from "../../actions/HomeComponentActions/GroupFiltersSelectionBoxActions/action";
+import HomeTour from "../../appTourDeclarations/home/homeTour";
 
 type Props = {
   users: string,
@@ -109,14 +107,7 @@ const Home = (props: Props) => {
       await loadLocalStorageGroupFilters(data);
     };
 
-    FetchLocalStorageFilters();
-
-    // Listens to Main process to restore to default the filters
-    ipcRenderer.on("restore_default_filters", async () => {
-      const defaultFilterData = await fetchDefaultFilters();
-      loadLocalStorageGroupFilters(defaultFilterData);
-      FetchLocalStorageFilters();
-    });
+    FetchLocalStorageFilters();    
   }, []);
 
   const pullUsersAccess = async () => {
@@ -171,6 +162,7 @@ const Home = (props: Props) => {
 
   return (
     <div className="container-flex" style={containerStyle}>
+      <HomeTour />
       <LoadingIndicatorModal />
       <Row>
         <Col>

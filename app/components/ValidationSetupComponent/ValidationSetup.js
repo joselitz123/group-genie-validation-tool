@@ -35,18 +35,6 @@ const ValidationSetup = (props: Props) => {
         </div>
         <div className="col-sm-12">
           <GroupFilterLists />
-          {/* <form onSubmit={submitHandler}>
-            <Row>
-              <Col xs="2">
-                <HubRegionField />
-              </Col>
-              <Col xs="2" className={classes.buttonContainer}>
-                <ButtonComponent {...buttonProps}>
-                  <i className="material-icons">add</i> Add Filter
-                </ButtonComponent>
-              </Col>
-            </Row>
-          </form> */}
         </div>
       </div>
     </div>

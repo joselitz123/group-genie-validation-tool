@@ -32,6 +32,7 @@ node_modules
 
 # flow-typed
 flow-typed/npm/*
+flow-typed/
 !flow-typed/npm/module_vx.x.x.js
 
 # App packaged

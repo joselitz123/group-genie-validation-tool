@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 // @flow
 import { Row, Col } from "reactstrap";
 import React, { useState, useEffect } from "react";
@@ -10,13 +11,15 @@ import {
   deleteGroupFilter,
   updateFilter,
   deleteGroupFilterChild,
-  changeGroupChildFilterArrangement
+  changeGroupChildFilterArrangement,
+  loadLocalStorageGroupFilters
 } from "../../actions/groupFiltersActions/actions";
 import {
   hubRegionInputHandler,
   toggleFormModal
 } from "../../actions/validationSetupActions/actions";
 import { useDenormalizeData } from "../../constants/schema";
+import { fetchDefaultFilters } from "../../LocalStorage/ValidationSetupLocalStorage/ValidationSetupLocalStorage";
 
 type Props = {
   changeGroupFilterArrangement: function,
@@ -26,7 +29,8 @@ type Props = {
   deleteGroupFilter: function,
   toggleFormModal: function,
   updateFilter: function,
-  deleteGroupFilterChild: function
+  deleteGroupFilterChild: function,
+  loadLocalStorageGroupFilters: function
 };
 
 const GroupFilterLists = (props: Props) => {
@@ -38,12 +42,15 @@ const GroupFilterLists = (props: Props) => {
     deleteGroupFilter,
     toggleFormModal,
     updateFilter,
-    deleteGroupFilterChild
+    deleteGroupFilterChild,
+    loadLocalStorageGroupFilters
   } = props;
 
   const [gridState, setGridState] = useState({});
   const [childDataDragState, setChildDataDragState] = useState({});
-
+  const [draggedTreeData, setDraggedTreeData] = useState("");
+  const [selectedRow, setSelectedRow] = useState(null);
+  
   const hubRegions = useSelector(state => state.inputFieldReducers.hubRegions);
   const addFilterValStatus = useSelector(
     state => state.inputFieldReducers.isValidating
@@ -53,43 +60,39 @@ const GroupFilterLists = (props: Props) => {
 
   useEffect(
     () => {
-      const groupFilters = useDenormalizeData(result, entities);
-
-      // const data = groupFilters.reduce(
-      //   (allFilters, curFilter) =>
-      //     curFilter.hub_region === selectedHubRegion
-      //       ? [...allFilters, curFilter]
-      //       : allFilters,
-      //   []
-      // );
 
       if (toArray(gridState).length !== 0) {
+        
+        const groupFilters = useDenormalizeData(result, entities);
+
         gridState.removeAll();
-        gridState.setData(
-          groupFilters.reduce(
-            (allFilters, curFilter) =>
-              curFilter.hub_region === selectedHubRegion
-                ? [...allFilters, curFilter]
-                : allFilters,
-            []
-          )
-        );
+
+
+        const hubData = groupFilters.reduce(
+            (allFilters, curFilter, index) => {
+              if (curFilter.hub_region === selectedHubRegion) {
+
+                return [...allFilters, curFilter];
+
+              }
+              return allFilters;
+              }, []);
+        
+        
+        gridState.setData(hubData);
 
         gridState.update();
+
+        if (draggedTreeData !== "") {
+          gridState.expand(draggedTreeData);
+        }
       }
     },
     [selectedHubRegion, addFilterValStatus, childDataDragState]
   );
+  
 
-  const dragRowsHandler = grid => {
-    // checks if the data being rearranged is a child data
-    // let childDataCount = 0;
-    // grid.getData().map(
-    //   (curData): void => {
-    //     curData.$deep === 2 ? childDataCount++ : "";
-    //   }
-    // )
-
+  const dragRowsHandler = (grid,rows) => {
     const childFilters = grid
       .getData()
       .reduce(
@@ -98,16 +101,29 @@ const GroupFilterLists = (props: Props) => {
         []
       );
 
-    if (childFilters.length > 0) {
-      console.log(childFilters);
-      changeGroupChildFilterArrangement(childFilters);
-      setChildDataDragState(grid.getData());
+    if (childFilters.length > 0) { // Check if the dragged row is under a tree data
+      
+      const parentIds  = childFilters.reduce((allData, curData) => (
+        {...allData, [curData.parentId]: curData.parentId}), {});
+
+      if (Object.values(parentIds).length === 1) { // This is to prevent dragging data from more than 1 tree data
+
+        setDraggedTreeData(Object.values(parentIds)[0]);
+        changeGroupChildFilterArrangement(childFilters);
+        setChildDataDragState(grid.getData());
+      } else {
+
+        setChildDataDragState(grid.getData());
+
+      }
     } else {
+      
       const gridData = grid
         .getData()
         .reduce((allData, acc) => [...allData, acc.id], []);
       changeGroupFilterArrangement(gridData);
     }
+
   };
 
   const removeHandler = (grid, id) => {
@@ -122,15 +138,17 @@ const GroupFilterLists = (props: Props) => {
     grid.clearDirty();
   };
 
-  const updateHandler = (grid, data) => {
+  const setHandler = (grid, data) => {
     updateFilter(data);
     grid.clearDirty();
   };
 
-  const selectRowHandler = (grid, index) => {
+  const selectRowHandler = (grid, index, dataItem) => {
     if (grid.get(index).data.expanded) {
       grid.deSelectRow(index);
     }
+    
+    setSelectedRow(index);
   };
 
   const config = {
@@ -140,6 +158,7 @@ const GroupFilterLists = (props: Props) => {
     height: 590,
     width: 1350,
     defaults: { editable: true },
+    nativeScroller: true,
     tbar: [
       {
         type: "combo",
@@ -170,7 +189,16 @@ const GroupFilterLists = (props: Props) => {
           toggleFormModal(true);
         }
       },
-      { type: "button", text: "Remove", width: 50, action: "remove" }
+      { type: "button", text: "Remove", width: 50, action: "remove" },
+      {
+        type: "button",
+        text: "Restore/Update Filters",
+        width: 180,
+        handler: async () => {
+          const defaultFilterData = await fetchDefaultFilters();
+          loadLocalStorageGroupFilters(defaultFilterData);
+        }
+      }
     ],
     selModel: "rows",
     columns: [
@@ -221,23 +249,20 @@ const GroupFilterLists = (props: Props) => {
       }
     ]
   };
-  // autoHeight: true
 
-  const getEvents = () => [
+  const getEvents = (selectedRow) => [
     {
       init: grid => {
         setGridState(grid);
       }
     },
     {
-      dragrows: grid => {
-        dragRowsHandler(grid);
-      }
+      dragrows: dragRowsHandler
     },
     {
       remove: removeHandler
     },
-    { set: updateHandler },
+    { set: setHandler },
     { selectrow: selectRowHandler }
   ];
 
@@ -258,7 +283,8 @@ GroupFilterLists.propTypes = {
   deleteGroupFilter: PropTypes.func.isRequired,
   toggleFormModal: PropTypes.func.isRequired,
   updateFilter: PropTypes.func.isRequired,
-  deleteGroupFilterChild: PropTypes.func.isRequired
+  deleteGroupFilterChild: PropTypes.func.isRequired,
+  loadLocalStorageGroupFilters: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => ({
@@ -279,6 +305,7 @@ export default connect<*, *, *, *, *, *>(
     deleteGroupFilter,
     toggleFormModal,
     updateFilter,
-    deleteGroupFilterChild
+    deleteGroupFilterChild,
+    loadLocalStorageGroupFilters
   }
 )(GroupFilterLists);

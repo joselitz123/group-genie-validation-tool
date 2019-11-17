@@ -43,6 +43,7 @@ export default function groupFiltersReducer(state = initialState, action) {
       return normalizedData;
 
     case LOAD_LOCAL_STORAGE_FILTERS:
+      setStorageData(action.payload);
       return action.payload;
 
     case REARRANGE_GROUP_FILTERS:

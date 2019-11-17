@@ -7,7 +7,7 @@ import { makeStyles } from "@material-ui/styles";
 const useStyles = makeStyles({
   root: {
     borderTop: "1px solid rgba(0, 0, 0, 0.1) !important",
-    backgroundColor: "#0bab7d"
+    backgroundColor: "rgb(61, 173, 228)"
   }
 });
 

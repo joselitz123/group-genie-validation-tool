@@ -126,8 +126,6 @@ const checkAccessAvailability = (
     {}
   );
 
-  console.log(result);
-
   return result;
 };
 
@@ -135,12 +133,11 @@ const mergeArrayObjects = (
   arrObjects: Array<Array<{ [key: string]: string, leaf: boolean }>>
 ) => {
   const arrContainer = [];
-
   arrObjects.map(groups => {
     groups.map((group, iterations: number) => {
       if (
         groups.length > arrContainer.length &&
-        iterations + 1 >= arrContainer.length
+        iterations + 1 > arrContainer.length
       ) {
         arrContainer.push(group);
       } else {

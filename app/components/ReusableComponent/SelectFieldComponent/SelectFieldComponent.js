@@ -20,6 +20,9 @@ const useStyles = makeStyles({
     },
     "& svg": {
       color: "rgba(255, 255, 255, 0.54)"
+    },
+    "& .MuiFilledInput-root": {
+      "background-color": "rgba(0, 0, 0, 0.15)"
     }
   },
   inputLabel: {

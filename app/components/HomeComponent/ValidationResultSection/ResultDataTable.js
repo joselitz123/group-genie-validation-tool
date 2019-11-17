@@ -27,6 +27,8 @@ const ResultDataTable = (props: Props) => {
 
   const tableWidth = 1350;
 
+  const columnWidthMultiplier = 10;
+
   const [initGridState, setInitGridState] = React.useState({});
 
   const [maxDataColumn, setMaxDataColumn] = React.useState();
@@ -89,11 +91,17 @@ const ResultDataTable = (props: Props) => {
   // Auto resizes the columns depending on how many characters are there on its child data
   React.useEffect(
     () => {
-      if (typeof maxDataColumn !== "undefined") {
+      if (
+        typeof maxDataColumn !== "undefined" &&
+        typeof initGridState.getColumns !== "undefined"
+      ) {
         const defaultColumnsWidth = initGridState.getColumns().reduce(
           (allData, curData) => ({
             ...allData,
-            [curData.index]: { index: curData.index, width: curData.width }
+            [curData.index]: {
+              index: curData.index,
+              width: curData.width
+            }
           }),
           {}
         );
@@ -102,12 +110,17 @@ const ResultDataTable = (props: Props) => {
 
         if (
           typeof maxColumnWidth[index] === "undefined" ||
-          maxColumnWidth[index].value < value
+          maxColumnWidth[index].value.length < value.length ||
+          defaultColumnsWidth[index].width <
+            value.length * columnWidthMultiplier
         ) {
           initGridState.setColumnWidth(
             Object.values({
               ...defaultColumnsWidth,
-              [index]: { index, width: value.length * 15 }
+              [index]: {
+                index,
+                width: value.length * columnWidthMultiplier
+              }
             })
           );
           setMaxColumnWidth({
@@ -146,6 +159,7 @@ const ResultDataTable = (props: Props) => {
       type: "combo",
       data: ["", `✔`, "❌"],
       flex: 1,
+      minWidth: 100,
       align: "center",
       cellAlign: "center",
       draggable: true,
@@ -159,6 +173,7 @@ const ResultDataTable = (props: Props) => {
       sortable: true,
       type: "string",
       flex: 1,
+      minWidth: 120,
       align: "center",
       cellAlign: "center",
       draggable: true,
@@ -232,7 +247,10 @@ const ResultDataTable = (props: Props) => {
           subSearch: typeof allFilters[currentColumn].child === "undefined",
           sortable: true,
           ellipsis: false,
-          flex: typeof allFilters[currentColumn].child === "undefined" ? 1 : 2,
+          flex: 1,
+          minWidth:
+            allFilters[currentColumn].group_alias.length *
+            columnWidthMultiplier,
           cellAlign: "center",
           align: "center",
           draggable: true,

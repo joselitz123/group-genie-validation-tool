@@ -1,12 +1,5 @@
 // @flow
-import {
-  app,
-  Menu,
-  shell,
-  BrowserWindow,
-  Notification,
-  DownloadItem
-} from "electron";
+import { app, Menu, shell, BrowserWindow } from "electron";
 
 export default class MenuBuilder {
   mainWindow: BrowserWindow;
@@ -267,21 +260,10 @@ export default class MenuBuilder {
         ]
       },
       {
-        label: "Options",
-        submenu: [
-          {
-            label: "Setup or Rearrange Filters",
-            click: () => {
-              this.mainWindow.webContents.send("setup_hub_filters");
-            }
-          },
-          {
-            label: "Restore Default Filters",
-            click: () => {
-              this.mainWindow.webContents.send("restore_default_filters");
-            }
-          }
-        ]
+        label: "Filter Settings",
+        click: () => {
+          this.mainWindow.webContents.send("setup_hub_filters");
+        }
       }
     ];
 

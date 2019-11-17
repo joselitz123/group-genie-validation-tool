@@ -1,7 +1,7 @@
 {
   "name": "data-hub-access-validation-tool",
   "productName": "DataHubAccessValidationTool",
-  "version": "1.1.0",
+  "version": "2.0.0",
   "description": "This is a tool to help easier validate the access of the P&G users that is tailored for Data Hub.",
   "scripts": {
     "build": "node_modules/.bin/concurrently \"yarn build-main\" \"yarn build-renderer\"",
@@ -58,7 +58,7 @@
   "main": "./app/main.prod.js",
   "build": {
     "productName": "DataHubAccessValidationTool",
-    "appId": "com.electron.groupgenievalidationtool",
+    "appId": "com.electron.datahubaccessvalidationtool",
     "files": [
       "app/dist/",
       "app/app.html",
@@ -260,7 +260,9 @@
     "fancygrid": "^1.7.80",
     "fancygrid-react": "^1.0.3",
     "history": "^4.7.2",
-    "jquery": "^3.4.1",
+    "intro.js": "^2.9.3",
+    "intro.js-react": "^0.2.0",
+    "jquery": "^1.9.1",
     "lodash": "^4.17.15",
     "normalizr": "^3.4.1",
     "react": "^16.8.6",

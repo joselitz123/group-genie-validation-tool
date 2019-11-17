@@ -11,7 +11,8 @@ export type TextFieldStyleInterface = {
   multiline?: boolean,
   style?: {},
   rows?: number,
-  errorMsg?: string
+  errorMsg?: string,
+  className?: string
 };
 
 export type accountAccess = {

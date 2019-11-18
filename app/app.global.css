@@ -179,3 +179,7 @@ textarea::-webkit-scrollbar-thumb:vertical:hover {
   ) !important;
   border-radius: 10px !important;
 }
+
+.introjs-helperLayer {
+  background-color: rgba(68, 118, 224, 0.9);
+}

@@ -48,7 +48,7 @@ const LoadingIndicator = (props: Props) => {
         <h5>
           Fetching {currentExtractCount} of {totalUsers}
         </h5>
-        <Progress animated color="success" value={loadPercent}>
+        <Progress animated value={loadPercent}>
           <Spring
             config={config.default}
             from={{ number: 0 }}

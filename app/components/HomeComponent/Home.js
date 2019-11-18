@@ -162,7 +162,6 @@ const Home = (props: Props) => {
 
   return (
     <div className="container-flex" style={containerStyle}>
-      <HomeTour />
       <LoadingIndicatorModal />
       <Row>
         <Col>
@@ -183,6 +182,7 @@ const Home = (props: Props) => {
                 color="primary"
                 variant="contained"
                 size="medium"
+                className="valSubmitButton"
                 tyle={buttonStyle}
                 onClick={() => pullUsersAccess()}
                 disabled={loadingState}
@@ -205,6 +205,7 @@ const Home = (props: Props) => {
           </Row>
         </Col>
       </Row>
+      <HomeTour />
     </div>
   );
 };

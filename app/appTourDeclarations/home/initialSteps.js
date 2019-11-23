@@ -12,11 +12,11 @@ const initialSteps = [
         </br><span>john.d</span></br><span>DI9999</span></b></div>`
   },
   {
-    element: ".makeStyles-control-66",
+    element: ".hubRegionField",
     intro: "Next, select the hub region to check the access of the user with."
   },
   {
-    element: ".makeStyles-formControl-86",
+    element: ".groupFilterSelectionBox",
     intro:
       "By default all access types available on a hub region are selected, but feel free to select only the access/es that are relevant to you after this tour by selecting the textarea."
   },

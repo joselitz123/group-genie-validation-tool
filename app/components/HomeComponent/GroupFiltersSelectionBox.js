@@ -82,7 +82,7 @@ const GroupFiltersSelectionBox = ({
       fullWidth
       variant="filled"
       margin="dense"
-      className={classes.formControl}
+      className={`${classes.formControl} groupFilterSelectionBox`}
     >
       <InputLabel
         htmlFor="select-multiple-placeholder"

@@ -248,6 +248,7 @@ const ResultDataTable = (props: Props) => {
           data: ["", `✔`, "❌"],
           subSearch: typeof allFilters[currentColumn].child === "undefined",
           sortable: true,
+          cls: allFilters[currentColumn].child === "undefined" ? "tree_data" : "combo_data",
           ellipsis: false,
           flex: 1,
           minWidth:
@@ -258,7 +259,7 @@ const ResultDataTable = (props: Props) => {
           draggable: true,
           filter: { header: true, emptyText: "Filter" },
           render: o => {
-            if (o.value.length > 1) {
+            if (o.value.length > 1) {              
               setMaxDataColumn({
                 index: o.column.index,
                 value: o.value

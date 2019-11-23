@@ -54,6 +54,11 @@ const HomeTour = () => {
             intro: `Great!, now that the validation has finished, I'll be talking about the <i>"Validation Result Table"</i> section.`
           },
           {
+            element: ".combo_data div:first-of-type ",
+            intro: `Have you wondered what corresponding genie groups where used to identify an access?
+            <br/> You can double click the cell to see more details.`
+          },
+          {
             element: ".fancy-panel-grid-inside",
             intro:
               "Let's get you familiar with the different information and features that are available on this table."
@@ -80,6 +85,10 @@ const HomeTour = () => {
           {
             element: ".data_access",
             intro: `Second is <i>"Data access"</i> that defines which data that are available for you to view. To gain access with this, one will only need either of these accesses(Retail POS, Direct Shipments or RTDC).`
+          },
+          {
+            element: ".fancy-grid-tree-expander:first-of-type",
+            intro: `You can also toggle down this arrow to view the markets/access types that are under it.`
           }
         ];
         setTourSteps(additionalTourSteps);
@@ -129,7 +138,8 @@ const HomeTour = () => {
         overlayOpacity: 0.4,
         exitOnOverlayClick: false,
         keyboardNavigation: false,
-        skipLabel: "Exit"
+        skipLabel: "Exit",
+        showStepNumbers: false
       }}
       onChange={onChangeHandler}
       onBeforeChange={onBeforeChangeHandler}

@@ -73,6 +73,7 @@ const HubRegionField = (props: Props) => {
       fullWidth
       variant="filled"
       margin="dense"
+      className="hubRegionField"
     >
       <InputLabel className={classes.inputLabel} shrink>
         Data Hub

@@ -51,6 +51,10 @@ a:hover {
   cursor: pointer;
 }
 
+svg.MuiSvgIcon-root {
+  color: rgba(255, 255, 255, 0.54);
+}
+
 .loading_indicator .modal-content {
   background-color: #0bab7d;
 }
@@ -107,6 +111,7 @@ div.fancy-grid-body
 
 div::-webkit-scrollbar {
   height: 10px !important;
+  width: 10px !important;
 }
 
 div::-webkit-scrollbar-track {
@@ -183,3 +188,9 @@ textarea::-webkit-scrollbar-thumb:vertical:hover {
 .introjs-helperLayer {
   background-color: rgba(68, 118, 224, 0.9);
 }
+
+span.fancy-grid-tree-expander.introjs-showElement {
+  filter: brightness(10);
+}
+
+@import "./introjs-nassim.css";

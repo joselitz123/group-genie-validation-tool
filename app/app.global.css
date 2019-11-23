@@ -15,7 +15,7 @@ body {
     rgba(0, 55, 177) 50%,
     rgb(61, 173, 228)
   );
-  font-family: Arial, Helvetica, Helvetica Neue, serif;
+  font-family: Arial, Helvetica, Helvetica Neue, serif !important;
   overflow-y: hidden;
 }
 
@@ -186,11 +186,23 @@ textarea::-webkit-scrollbar-thumb:vertical:hover {
 }
 
 .introjs-helperLayer {
-  background-color: rgba(68, 118, 224, 0.9);
+  background-color: rgba(68, 118, 224, 0.9) !important;
 }
 
 span.fancy-grid-tree-expander.introjs-showElement {
   filter: brightness(10);
+}
+
+.fancy-grid-cell.introjs-showElement {
+  background-color: #fff;
+}
+
+.valSubmitButton.introjs-showElement {
+  z-index: 100000000 !important;
+}
+
+.fancy-grid-cell.introjs-showElement {
+  z-index: 100000000 !important;
 }
 
 @import "./introjs-nassim.css";

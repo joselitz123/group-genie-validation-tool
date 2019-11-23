@@ -9,3 +9,4 @@ export const RESET_LOADER_UI_STATE: string = "RESET_LOADER_UI_STATE";
 export const LOAD_ALL_USERS_ACCESS: string = "LOAD_ALL_USERS_ACCESS";
 export const IS_ERROR_OCCURED: string = "IS_ERROR_OCCURED";
 export const SET_CANCEL_TOKEN: string = "SET_CANCEL_TOKEN";
+export const SET_SHOW_MODAL_INFO: string = "SET_SHOW_MODAL_INFO";

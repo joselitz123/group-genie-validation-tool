@@ -9,11 +9,13 @@ import PropTypes from "prop-types";
 import * as _ from "lodash";
 import useFancyGridModal from "../../ReusableFunctions/fancyGridModal";
 import { selectedObjectFormatHubRegionFilters } from "../../../reducers/GroupFiltersReducer";
+import { setShowModalInfo} from "../../../actions/HomeComponentActions/TriggerValidate/actions";
 
 type Props = {
   validationResult: function,
   filtersSelected: Array<string>,
   allFilters: function,
+  setShowModalInfo: function,
   totalAccessView: {}
 };
 
@@ -22,7 +24,8 @@ const ResultDataTable = (props: Props) => {
     validationResult,
     filtersSelected,
     allFilters,
-    totalAccessView
+    totalAccessView,
+    setShowModalInfo
   } = props;
 
   const tableWidth = 1350;
@@ -85,6 +88,8 @@ const ResultDataTable = (props: Props) => {
       );
 
       grid.show();
+
+      setShowModalInfo(true);
     }
   };
 
@@ -314,7 +319,8 @@ ResultDataTable.propTypes = {
   validationResult: PropTypes.object.isRequired,
   filtersSelected: PropTypes.array.isRequired,
   allFilters: PropTypes.object,
-  totalAccessView: PropTypes.object.isRequired
+  totalAccessView: PropTypes.object.isRequired,
+  setShowModalInfo: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => ({
@@ -324,4 +330,4 @@ const mapStateToProps = state => ({
   totalAccessView: state.totalAccessView.allUsersAccess
 });
 
-export default connect<*, *, *, *, *, *>(mapStateToProps)(ResultDataTable);
+export default connect<*, *, *, *, *, *>(mapStateToProps, {setShowModalInfo})(ResultDataTable);

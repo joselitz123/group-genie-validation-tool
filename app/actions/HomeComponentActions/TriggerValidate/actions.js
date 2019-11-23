@@ -7,7 +7,8 @@ import {
   RESET_LOADER_UI_STATE,
   LOAD_ALL_USERS_ACCESS,
   IS_ERROR_OCCURED,
-  SET_CANCEL_TOKEN
+  SET_CANCEL_TOKEN,
+  SET_SHOW_MODAL_INFO
 } from "./actionTypes";
 import type { Dispatch } from "../../../reducers/types";
 import type { accountAccess } from "../../../constants/flowInterfaces";
@@ -88,5 +89,14 @@ export const setCancelToken = (cancelToken: {}) => (
   dispatch({
     type: SET_CANCEL_TOKEN,
     payload: cancelToken
+  });
+};
+
+export const setShowModalInfo = (val: boolean) => (
+  dispatch: Dispatch
+): void => {
+  dispatch({
+    type: SET_SHOW_MODAL_INFO,
+    payload: val
   });
 };

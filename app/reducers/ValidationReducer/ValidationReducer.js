@@ -1,14 +1,20 @@
 import { createSelector } from "reselect";
-import { LOAD_VALIDATION_RESULT } from "../../actions/HomeComponentActions/TriggerValidate/actionTypes";
+import {
+  LOAD_VALIDATION_RESULT,
+  SET_SHOW_MODAL_INFO
+} from "../../actions/HomeComponentActions/TriggerValidate/actionTypes";
 import { useDenormalizeData } from "../../constants/schema";
 
 const initialState = {
-  validationResult: {}
+  validationResult: {},
+  showModalInfo: false
 };
 
 export default function validationReducer(state = initialState, action) {
   if (action.type === LOAD_VALIDATION_RESULT) {
     return { ...state, validationResult: action.payload };
+  } else if (action.type === SET_SHOW_MODAL_INFO) {
+    return { ...state, showModalInfo: action.payload };
   }
   return state;
 }

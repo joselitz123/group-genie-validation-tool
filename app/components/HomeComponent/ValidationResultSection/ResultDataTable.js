@@ -201,41 +201,45 @@ const ResultDataTable = (props: Props) => {
                 }`
               : "No Data can be shown at the moment";
 
-          o.inner.dom.onclick = () => {
-            const modalColumns = [
-              {
-                title: "Group Name",
-                index: "name",
-                type: "string",
-                flex: 1,
-                selectable: true,
-                filter: { header: true, emptyText: "Filter" }
-              },
-              {
-                title: "Description",
-                index: "description",
-                type: "string",
-                flex: 1,
-                selectable: true,
-                filter: { header: true, emptyText: "Filter" }
-              }
-            ];
-            const modalData: function = Object.values(
-              totalAccessView[o.value].access
-            );
+          if(typeof o.inner !== "undefined") {
+            o.inner.dom.onclick = () => {
+              const modalColumns = [
+                {
+                  title: "Group Name",
+                  index: "name",
+                  type: "string",
+                  flex: 1,
+                  selectable: true,
+                  filter: { header: true, emptyText: "Filter" }
+                },
+                {
+                  title: "Description",
+                  index: "description",
+                  type: "string",
+                  flex: 1,
+                  selectable: true,
+                  filter: { header: true, emptyText: "Filter" }
+                }
+              ];
+              const modalData: function = Object.values(
+                totalAccessView[o.value].access
+              );
+  
+              const grid = useFancyGridModal(
+                `All applications that ${o.value} have access.`,
+                modalColumns,
+                modalData,
+                emptyMsg,
+                "rows",
+                [{ type: "copy+", text: "Copy" }],
+                ["name", "description"]
+              );
+  
+              grid.show();
+            };
+          }
 
-            const grid = useFancyGridModal(
-              `All applications that ${o.value} have access.`,
-              modalColumns,
-              modalData,
-              emptyMsg,
-              "rows",
-              [{ type: "copy+", text: "Copy" }],
-              ["name", "description"]
-            );
-
-            grid.show();
-          };
+          
         }
 
         return o;
@@ -264,11 +268,13 @@ const ResultDataTable = (props: Props) => {
           draggable: true,
           filter: { header: true, emptyText: "Filter" },
           render: o => {
-            if (o.value.length > 1) {              
-              setMaxDataColumn({
-                index: o.column.index,
-                value: o.value
-              });
+            if (o.value.length > 1) {
+              if(typeof o.column !== "undefined") {
+                setMaxDataColumn({
+                  index: o.column.index,
+                  value: o.value
+                });
+              }              
             }
 
             return o;
@@ -289,19 +295,35 @@ const ResultDataTable = (props: Props) => {
         initGridState.destroy();
       }
       // eslint-disable-next-line no-new
-      new Fancy.Grid({
+      const gridState = new Fancy.Grid({
         renderTo: inputEl.current,
         title: "Validation Result Table",
         height: 460,
         nativeScroller: true,
         width: tableWidth,
+        exporter: true,
         shadow: false,
         selModel: { type: "rows" },
         cellStylingCls: ["xmark", "non-existent"],
+        subTBar: [{
+          type: "button",
+          text: "Expand all rows",
+          width: 110,
+          handler: () => {
+            gridState.expandAll()
+          }
+        }, "|",{
+          type: "button",
+          text: "Export File",
+          width: 120,
+          handler: () => {
+            gridState.exportToExcel()
+          }
+        }],
         defaults: {
           resizable: true
         },
-        contextmenu: ["copy"],
+        contextmenu: ["copy","export"],
         columnTrackOver: true,
         events: initialEventsHandler(),
         emptyText: "No data can be shown at the moment",

@@ -95,6 +95,7 @@ const Home = (props: Props) => {
 
   const classess = useStyles();
 
+
   React.useEffect(() => {
     // For listening on the signal gave from electron Main on going to setup page for the filter hub
     ipcRenderer.on("setup_hub_filters", () => {

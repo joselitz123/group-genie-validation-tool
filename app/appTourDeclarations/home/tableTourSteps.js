@@ -28,7 +28,7 @@ const tableTourSteps = [
     intro: `Second is <i>"Data access"</i> that defines which data that are available for you to view. To gain access, one will only need either of these accesses(Retail POS, Direct Shipments or RTDC).`
   },
   {
-    intro: `More on data hub access is discussed further from our knowledge article which you can visit through this <b><a href="https://pgglobalenterprise.service-now.com/kb_view.do?sysparm_article=KB0542677">link</a></b>.`
+    intro: `More on data hub access is discussed further from our knowledge article which you can visit through this <b><a class="external_link" href="https://pgglobalenterprise.service-now.com/kb_view.do?sysparm_article=KB0542677">link</a></b>.`
   },
   {
     element: ".fancy-grid-tree-expander:first-of-type",

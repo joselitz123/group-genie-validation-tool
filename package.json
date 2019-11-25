@@ -1,7 +1,7 @@
 {
-  "name": "data-hub-access-validation-tool",
-  "productName": "DataHubAccessValidationTool",
-  "version": "2.0.0",
+  "name": "data-hub-user-access-validation-tool",
+  "productName": "Data Hub User Access Validation Tool",
+  "version": "2.1.0",
   "description": "This is a tool to help easier validate the access of the P&G users that is tailored for Data Hub.",
   "scripts": {
     "build": "node_modules/.bin/concurrently \"yarn build-main\" \"yarn build-renderer\"",
@@ -57,8 +57,8 @@
   },
   "main": "./app/main.prod.js",
   "build": {
-    "productName": "DataHubAccessValidationTool",
-    "appId": "com.electron.datahubaccessvalidationtool",
+    "productName": "Data Hub User Access Validation Tool",
+    "appId": "com.pg.datahubaccessvalidationtool",
     "files": [
       "app/dist/",
       "app/app.html",
@@ -102,7 +102,7 @@
     "publish": {
       "provider": "github",
       "owner": "Jose Lito Phala",
-      "repo": "data-hub-access-validation-tool",
+      "repo": "data-hub-user-access-validation-tool",
       "private": false
     }
   },

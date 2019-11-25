@@ -5,6 +5,12 @@ import Root from "./containers/Root";
 import { configureStore, history } from "./store/configureStore";
 import "./app.global.css";
 
+window.$("body").on("click", "a", event => {
+  event.preventDefault();
+  let link = event.target.href;
+  require("electron").shell.openExternal(link);
+});
+
 const store = configureStore();
 
 render(

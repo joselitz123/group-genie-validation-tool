@@ -31,6 +31,10 @@ h2 {
   color: #fff;
 }
 
+h5 {
+  color: #fff !important;
+}
+
 p {
   font-size: 24px;
 }
@@ -203,6 +207,14 @@ span.fancy-grid-tree-expander.introjs-showElement {
 
 .fancy-grid-cell.introjs-showElement {
   z-index: 100000000 !important;
+}
+
+.export_file.introjs-showElement {
+  background-color: #fff !important;
+}
+
+a {
+  color: #007bff !important;
 }
 
 @import "./introjs-nassim.css";

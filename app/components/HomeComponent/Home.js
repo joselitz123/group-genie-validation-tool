@@ -68,6 +68,7 @@ type Props = {
 };
 
 const Home = (props: Props) => {
+
   const {
     users,
     selectedGroupFilters,
@@ -98,6 +99,11 @@ const Home = (props: Props) => {
     // For listening on the signal gave from electron Main on going to setup page for the filter hub
     ipcRenderer.on("setup_hub_filters", () => {
       history.push("/validation_setup");
+      setSelectedGroupInFieldBox([]);
+    });
+
+    ipcRenderer.on("home", () => {
+      history.push("/");
       setSelectedGroupInFieldBox([]);
     });
 
@@ -159,6 +165,8 @@ const Home = (props: Props) => {
   const buttonStyle: { border: string } = {
     border: "1px solid #1785c5"
   };
+
+
 
   return (
     <div className="container-flex" style={containerStyle}>

@@ -5,13 +5,22 @@ import { Steps } from "intro.js-react";
 import introJs from "intro.js";
 import initialSteps from "./initialSteps";
 import tableTourSteps from "./tableTourSteps";
+import {
+  setTourData,
+  getTourData
+} from "../../LocalStorage/TourDataLocalStorage/tourDataLocalStorage";
 
 const HomeTour = () => {
-  const [stepEnabled, setStepEnabled] = useState(true);
+  const [stepEnabled, setStepEnabled] = useState(false);
 
   const [currentStep, setCurrentStep] = useState(null);
 
+  // Help identify of which part of the tour is being show already to the user
+  const [tourPart, setTourPart] = useState(1);
+
   const [tourSteps, setTourSteps] = useState(initialSteps);
+
+  const [tourObject, setTourObject] = useState({});
 
   const userFieldBox: string = useSelector(
     state => state.usersFieldBoxReducer.input
@@ -35,6 +44,32 @@ const HomeTour = () => {
 
   const stepRef: any = useRef(null);
 
+  const getTourStatus = (): any => {
+    return new Promise(async (resolve, reject) => {
+      const result = await getTourData();
+      resolve(result);
+    });
+  };
+
+  useEffect(
+    () => {
+      const checkToRunTour = async () => {
+        const result = await getTourStatus();
+        setTourObject(result);
+        if (
+          typeof result.hasFinishedInitialTour === "undefined" ||
+          result.hasFinishedInitialTour === false
+        ) {
+          setTourSteps(initialSteps);
+          setStepEnabled(true);
+        }
+      };
+
+      checkToRunTour();
+    },
+    [tourPart]
+  );
+
   useEffect(
     () => {
       if (currentStep === 3) {
@@ -55,15 +90,34 @@ const HomeTour = () => {
         Object.values(validationResult).length !== 0 &&
         validationStarted === false
       ) {
-        setTourSteps(tableTourSteps);
+        const checkToRunTour = async () => {
+          const result = await getTourStatus();
+          setTourObject(result);
+          if (
+            result.hasFinishedTableTour === false ||
+            typeof result.hasFinishedTableTour === "undefined"
+          ) {
+            setTourPart(2);
+            setTourSteps(tableTourSteps);
 
-        setStepEnabled(true);
+            setStepEnabled(true);
+          }
+        };
+
+        checkToRunTour();
       }
     },
     [validationStarted]
   );
 
-  const exitHandler = (): void => setStepEnabled(false);
+  const exitHandler = (): void => {
+    setStepEnabled(false);
+    if (tourPart === 1) {
+      setTourData({ ...tourObject, hasFinishedInitialTour: true });
+    } else if (tourPart === 2) {
+      setTourData({ ...tourObject, hasFinishedTableTour: true });
+    }
+  };
 
   const onChangeHandler = (index): void => {
     setCurrentStep(index);

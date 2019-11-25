@@ -1,5 +1,6 @@
 // @flow
 import { app, Menu, shell, BrowserWindow } from "electron";
+import { setTourData } from "./LocalStorage/TourDataLocalStorage/tourDataLocalStorage";
 
 export default class MenuBuilder {
   mainWindow: BrowserWindow;
@@ -182,20 +183,16 @@ export default class MenuBuilder {
   buildDefaultTemplate() {
     const templateDefault = [
       {
-        label: "&File",
-        submenu: [
-          {
-            label: "&Open",
-            accelerator: "Ctrl+O"
-          },
-          {
-            label: "&Close",
-            accelerator: "Ctrl+W",
-            click: () => {
-              this.mainWindow.close();
-            }
-          }
-        ]
+        label: "Home",
+        click: () => {
+          this.mainWindow.webContents.send("home");
+        }
+      },
+      {
+        label: "Filter Settings",
+        click: () => {
+          this.mainWindow.webContents.send("setup_hub_filters");
+        }
       },
       {
         label: "&View",
@@ -243,10 +240,10 @@ export default class MenuBuilder {
         submenu: [
           {
             label: "How to use the tool",
-            click() {
-              shell.openExternal(
-                "https://dxcportal.sharepoint.com/:p:/r/sites/ConsumerAndCustomer/Shared%20Documents/CDL%26DH/Service/SIP/Group_Genie_Validation_Tool/v1.1.0/GGVT%20Tool%20Guide.pptx?d=w8e5058ee99f444a2b6f40dcd90acc3b1&csf=1&e=1e8pEm"
-              );
+            click: () => {
+              this.mainWindow.webContents.reload();
+              this.mainWindow.webContents.send("home");
+              setTourData({});
             }
           },
           {
@@ -258,12 +255,6 @@ export default class MenuBuilder {
             }
           }
         ]
-      },
-      {
-        label: "Filter Settings",
-        click: () => {
-          this.mainWindow.webContents.send("setup_hub_filters");
-        }
       }
     ];
 

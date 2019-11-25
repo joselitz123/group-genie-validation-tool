@@ -155,7 +155,7 @@ const GroupFilterLists = (props: Props) => {
     title: "Group Genie Access Groups",
     data: [],
     clicksToEdit: 2,
-    height: 590,
+    height: 620,
     width: 1350,
     defaults: { editable: true },
     nativeScroller: true,

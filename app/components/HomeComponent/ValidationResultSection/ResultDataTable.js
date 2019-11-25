@@ -60,7 +60,7 @@ const ResultDataTable = (props: Props) => {
           filter: { header: true, emptyText: "Filter" }
         },
         {
-          title: "Group Name",
+          title: "Genie Group Name",
           index: "group_name",
           type: "string",
           flex: 1,
@@ -205,7 +205,7 @@ const ResultDataTable = (props: Props) => {
             o.inner.dom.onclick = () => {
               const modalColumns = [
                 {
-                  title: "Group Name",
+                  title: "Genie Group Name",
                   index: "name",
                   type: "string",
                   flex: 1,
@@ -312,9 +312,17 @@ const ResultDataTable = (props: Props) => {
           handler: () => {
             gridState.expandAll()
           }
+        }, "|", {
+          type: "button",
+          text: "Collapse all rows",
+          width: 110,
+          handler: () => {
+            gridState.collapseAll()
+          }
         }, "|",{
           type: "button",
           text: "Export File",
+          cls: "export_file",
           width: 120,
           handler: () => {
             gridState.exportToExcel()

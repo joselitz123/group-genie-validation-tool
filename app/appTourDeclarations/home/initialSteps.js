@@ -1,6 +1,6 @@
 const initialSteps = [
   {
-    intro: `Hi there! <br/>Are you a first time user?<br/><br/> Let me assist you by clicking <i>"Next"</i>.`
+    intro: `Hi there! <br/>First time user?<br/><br/> Let me assist you by clicking <i>"Next"</i>.`
   },
   {
     intro: `But first, kindly make sure that you're connected to P&G network, if not, kindly do so.`
@@ -18,11 +18,11 @@ const initialSteps = [
   {
     element: ".groupFilterSelectionBox",
     intro:
-      "By default all access types available on a hub region are selected, but feel free to select only the access/es that are relevant to you after this tour by selecting the textarea."
+      "By default, all access types available on a hub region are all selected, but feel free to select only the access/es that is relevant to you afterward on this tour."
   },
   {
     element: ".valSubmitButton",
-    intro: `Finally, click <i>"VALIDATE"</i> to start the access validation and wait for the result to finish.`
+    intro: `Finally, click the "VALIDATE" button to start the account access validation and wait for the result.`
   }
 ];
 

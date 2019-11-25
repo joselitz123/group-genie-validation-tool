@@ -97,10 +97,12 @@ const HomeTour = () => {
             result.hasFinishedTableTour === false ||
             typeof result.hasFinishedTableTour === "undefined"
           ) {
-            setTourPart(2);
-            setTourSteps(tableTourSteps);
-
-            setStepEnabled(true);
+            setTimeout(() => {
+              setTourPart(2);
+              setTourSteps(tableTourSteps);
+              stepRef.current.introJs.setOptions({ disableInteraction: true });
+              setStepEnabled(true);
+            }, 1000);
           }
         };
 

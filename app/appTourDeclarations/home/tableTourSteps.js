@@ -42,6 +42,9 @@ const tableTourSteps = [
   {
     element: ".export_file",
     intro: `You can even export the result of the account access validation in an Excel file.`
+  },
+  {
+    intro: `If you need a walkthrough with the tool once again, kindly click in the upper left Menu (Help &rarr; How to Use the tool)`
   }
 ];
 
